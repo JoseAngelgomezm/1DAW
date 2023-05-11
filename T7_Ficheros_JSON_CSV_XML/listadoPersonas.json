@@ -1,0 +1,181 @@
+[ {
+  "nombreEmpleado" : "Cárdenas Díaz Laura",
+  "puesto" : "Educación Física P.E.S.",
+  "fechaTomaPosesion" : [ 2010, 9, 1 ],
+  "fechaCese" : [ -999999999, 1, 1 ],
+  "telefono" : 617704193,
+  "evaluador" : true,
+  "coordinador" : true,
+  "dni" : "26800485B"
+}, {
+  "nombreEmpleado" : "Díaz Puerto Francisco Javier",
+  "puesto" : "Filosofía P.E.S.",
+  "fechaTomaPosesion" : [ 2012, 9, 1 ],
+  "fechaCese" : [ -999999999, 1, 1 ],
+  "telefono" : 655526696,
+  "evaluador" : true,
+  "coordinador" : true,
+  "dni" : "50602307F"
+}, {
+  "nombreEmpleado" : "Domínguez Tamayo Julen",
+  "puesto" : "Inglés P.E.S.",
+  "fechaTomaPosesion" : [ 2012, 9, 1 ],
+  "fechaCese" : [ -999999999, 1, 1 ],
+  "telefono" : 951249955,
+  "evaluador" : true,
+  "coordinador" : true,
+  "dni" : "03888739Z"
+}, {
+  "nombreEmpleado" : "Fagundo García Emilia",
+  "puesto" : "Tecnología P.E.S.",
+  "fechaTomaPosesion" : [ 2012, 9, 1 ],
+  "fechaCese" : [ -999999999, 1, 1 ],
+  "telefono" : 689100483,
+  "evaluador" : true,
+  "coordinador" : true,
+  "dni" : "12731426Y"
+}, {
+  "nombreEmpleado" : "Fernández Luzón Rodrigo",
+  "puesto" : "Informática P.E.S.",
+  "fechaTomaPosesion" : [ 2010, 9, 1 ],
+  "fechaCese" : [ -999999999, 1, 1 ],
+  "telefono" : 717121280,
+  "evaluador" : true,
+  "coordinador" : true,
+  "dni" : "74663933E"
+}, {
+  "nombreEmpleado" : "Fortea Molina Pastora",
+  "puesto" : "Francés P.E.S.",
+  "fechaTomaPosesion" : [ 2009, 9, 1 ],
+  "fechaCese" : [ -999999999, 1, 1 ],
+  "telefono" : 656491528,
+  "evaluador" : true,
+  "coordinador" : true,
+  "dni" : "77455412Z"
+}, {
+  "nombreEmpleado" : "Garrocho González Cristina",
+  "puesto" : "Matemáticas P.E.S.",
+  "fechaTomaPosesion" : [ 2011, 9, 1 ],
+  "fechaCese" : [ -999999999, 1, 1 ],
+  "telefono" : 0,
+  "evaluador" : true,
+  "coordinador" : true,
+  "dni" : "33397284L"
+}, {
+  "nombreEmpleado" : "Giráldez Cuevas María",
+  "puesto" : "Física y Química P.E.S.",
+  "fechaTomaPosesion" : [ 2012, 9, 1 ],
+  "fechaCese" : [ -999999999, 1, 1 ],
+  "telefono" : 636443041,
+  "evaluador" : true,
+  "coordinador" : true,
+  "dni" : "07986998H"
+}, {
+  "nombreEmpleado" : "González Astilleros Verónica",
+  "puesto" : "Informática P.E.S.",
+  "fechaTomaPosesion" : [ 2009, 6, 22 ],
+  "fechaCese" : [ 2021, 1, 24 ],
+  "telefono" : 952795965,
+  "evaluador" : true,
+  "coordinador" : true,
+  "dni" : "25565241M"
+}, {
+  "nombreEmpleado" : "Hernández Lozano Remedios",
+  "puesto" : "Inglés P.E.S.",
+  "fechaTomaPosesion" : [ 2008, 9, 1 ],
+  "fechaCese" : [ -999999999, 1, 1 ],
+  "telefono" : 952807303,
+  "evaluador" : true,
+  "coordinador" : true,
+  "dni" : "26485849S"
+}, {
+  "nombreEmpleado" : "Lirola Oliva Ana",
+  "puesto" : "Lengua Castellana y Literatura P.E.S.",
+  "fechaTomaPosesion" : [ 2008, 9, 1 ],
+  "fechaCese" : [ -999999999, 1, 1 ],
+  "telefono" : 665475984,
+  "evaluador" : true,
+  "coordinador" : true,
+  "dni" : "74868422H"
+}, {
+  "nombreEmpleado" : "Macías Laynez Magdalena",
+  "puesto" : "Matemáticas P.E.S.",
+  "fechaTomaPosesion" : [ 2010, 9, 1 ],
+  "fechaCese" : [ -999999999, 1, 1 ],
+  "telefono" : 951965362,
+  "evaluador" : true,
+  "coordinador" : true,
+  "dni" : "25583669X"
+}, {
+  "nombreEmpleado" : "Márquez Pineda Jacqueline Cristina",
+  "puesto" : "Orientación Educativa P.E.S.",
+  "fechaTomaPosesion" : [ 2008, 9, 1 ],
+  "fechaCese" : [ -999999999, 1, 1 ],
+  "telefono" : 952340738,
+  "evaluador" : true,
+  "coordinador" : true,
+  "dni" : "74867075M"
+}, {
+  "nombreEmpleado" : "Martínez Fernández Inés",
+  "puesto" : "Inglés P.E.S.",
+  "fechaTomaPosesion" : [ 2009, 9, 1 ],
+  "fechaCese" : [ -999999999, 1, 1 ],
+  "telefono" : 952805153,
+  "evaluador" : true,
+  "coordinador" : true,
+  "dni" : "53682231R"
+}, {
+  "nombreEmpleado" : "Núñez Murillo Margarita",
+  "puesto" : "Sistemas y Aplic. Informáticos P.T.F.P.",
+  "fechaTomaPosesion" : [ 2012, 9, 1 ],
+  "fechaCese" : [ -999999999, 1, 1 ],
+  "telefono" : 699987772,
+  "evaluador" : true,
+  "coordinador" : true,
+  "dni" : "75111043N"
+}, {
+  "nombreEmpleado" : "Pacheco Rodríguez Isabel María",
+  "puesto" : "Orientación Educativa P.E.S.",
+  "fechaTomaPosesion" : [ 2012, 9, 1 ],
+  "fechaCese" : [ 2020, 9, 4 ],
+  "telefono" : 952796064,
+  "evaluador" : true,
+  "coordinador" : true,
+  "dni" : "24882305P"
+}, {
+  "nombreEmpleado" : "Rodríguez Montero Rocío",
+  "puesto" : "Lengua Castellana y Literatura P.E.S.",
+  "fechaTomaPosesion" : [ 2010, 9, 1 ],
+  "fechaCese" : [ -999999999, 1, 1 ],
+  "telefono" : 952890188,
+  "evaluador" : true,
+  "coordinador" : true,
+  "dni" : "74816539T"
+}, {
+  "nombreEmpleado" : "Serena León Ana María",
+  "puesto" : "Educación Física P.E.S.",
+  "fechaTomaPosesion" : [ 2010, 9, 1 ],
+  "fechaCese" : [ -999999999, 1, 1 ],
+  "telefono" : 639675154,
+  "evaluador" : true,
+  "coordinador" : true,
+  "dni" : "26012958G"
+}, {
+  "nombreEmpleado" : "Torres Silva Antonia",
+  "puesto" : "Sistemas y Aplic. Informáticos P.T.F.P.",
+  "fechaTomaPosesion" : [ 2008, 9, 1 ],
+  "fechaCese" : [ -999999999, 1, 1 ],
+  "telefono" : 654167765,
+  "evaluador" : true,
+  "coordinador" : true,
+  "dni" : "08929037T"
+}, {
+  "nombreEmpleado" : "Vidal Morillas María Nieves",
+  "puesto" : "Física y Química P.E.S.",
+  "fechaTomaPosesion" : [ 2012, 9, 1 ],
+  "fechaCese" : [ -999999999, 1, 1 ],
+  "telefono" : 605837861,
+  "evaluador" : true,
+  "coordinador" : true,
+  "dni" : "27347116R"
+} ]
