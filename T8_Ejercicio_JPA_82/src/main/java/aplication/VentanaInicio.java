@@ -10,12 +10,12 @@ import java.awt.Color;
  *
  * @author joseangel
  */
-public class Aplicacion8_2 extends javax.swing.JFrame {
+public class VentanaInicio extends javax.swing.JFrame {
 
     /**
      * Creates new form Aplicacion8_2
      */
-    public Aplicacion8_2() {
+    public VentanaInicio() {
         initComponents();
     }
 
@@ -42,15 +42,16 @@ public class Aplicacion8_2 extends javax.swing.JFrame {
         VentanaPrincipal.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         Titulo.setBackground(new java.awt.Color(255, 225, 148));
-        Titulo.setFont(new java.awt.Font("Liberation Sans", 0, 48)); // NOI18N
+        Titulo.setFont(new java.awt.Font("Liberation Sans", 1, 48)); // NOI18N
         Titulo.setForeground(new java.awt.Color(232, 246, 239));
         Titulo.setText("Operaciones tabla Factura");
-        VentanaPrincipal.add(Titulo, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 50, 580, 90));
+        VentanaPrincipal.add(Titulo, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 40, 610, 90));
 
         BotonActualizar.setBackground(new java.awt.Color(76, 76, 109));
         BotonActualizar.setFont(new java.awt.Font("Liberation Sans", 1, 36)); // NOI18N
         BotonActualizar.setForeground(new java.awt.Color(255, 225, 148));
         BotonActualizar.setText("Actualizar Factura");
+        BotonActualizar.setBorder(javax.swing.BorderFactory.createMatteBorder(3, 3, 3, 3, new java.awt.Color(232, 246, 239)));
         BotonActualizar.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 BotonActualizarMouseEntered(evt);
@@ -70,6 +71,7 @@ public class Aplicacion8_2 extends javax.swing.JFrame {
         BotonAñadir.setFont(new java.awt.Font("Liberation Sans", 1, 36)); // NOI18N
         BotonAñadir.setForeground(new java.awt.Color(255, 225, 148));
         BotonAñadir.setText("Añadir Facturas");
+        BotonAñadir.setBorder(javax.swing.BorderFactory.createMatteBorder(3, 3, 3, 3, new java.awt.Color(232, 246, 239)));
         BotonAñadir.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 BotonAñadirMouseEntered(evt);
@@ -89,6 +91,7 @@ public class Aplicacion8_2 extends javax.swing.JFrame {
         BotonConsultar.setFont(new java.awt.Font("Liberation Sans", 1, 36)); // NOI18N
         BotonConsultar.setForeground(new java.awt.Color(255, 225, 148));
         BotonConsultar.setText("Consultar Facturas");
+        BotonConsultar.setBorder(javax.swing.BorderFactory.createMatteBorder(3, 3, 3, 3, new java.awt.Color(232, 246, 239)));
         BotonConsultar.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 BotonConsultarMouseEntered(evt);
@@ -108,6 +111,7 @@ public class Aplicacion8_2 extends javax.swing.JFrame {
         BotonBorrar.setFont(new java.awt.Font("Liberation Sans", 1, 36)); // NOI18N
         BotonBorrar.setForeground(new java.awt.Color(255, 225, 148));
         BotonBorrar.setText("Borrar Factura");
+        BotonBorrar.setBorder(javax.swing.BorderFactory.createMatteBorder(3, 3, 3, 3, new java.awt.Color(232, 246, 239)));
         BotonBorrar.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 BotonBorrarMouseEntered(evt);
@@ -123,9 +127,10 @@ public class Aplicacion8_2 extends javax.swing.JFrame {
         });
         VentanaPrincipal.add(BotonBorrar, new org.netbeans.lib.awtextra.AbsoluteConstraints(460, 320, 400, 60));
 
-        getContentPane().add(VentanaPrincipal, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 878, 528));
+        getContentPane().add(VentanaPrincipal, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 878, 490));
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void BotonActualizarMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_BotonActualizarMouseEntered
@@ -151,10 +156,29 @@ public class Aplicacion8_2 extends javax.swing.JFrame {
     private void BotonActualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BotonActualizarActionPerformed
         // TODO add your handling code here:
         
+        // crear la ventana nueva
+        VentanaActualizar ventana = new VentanaActualizar();
+        // hacerla visible
+        ventana.setVisible(true);
+        
+        // hacer que se cierre esta ventana y abrir la nueva
+        this.dispose();
+        
     }//GEN-LAST:event_BotonActualizarActionPerformed
 
     private void BotonAñadirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BotonAñadirActionPerformed
         // TODO add your handling code here:
+        
+        // crear la ventana nueva
+        VentanaAñadir ventana = new VentanaAñadir();
+        // hacerla visible
+        ventana.setVisible(true);
+        
+         // hacer que se cierre esta ventana y abrir la nueva
+        this.dispose();
+        
+        
+         
     }//GEN-LAST:event_BotonAñadirActionPerformed
 
     private void BotonConsultarMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_BotonConsultarMouseEntered
@@ -169,6 +193,17 @@ public class Aplicacion8_2 extends javax.swing.JFrame {
 
     private void BotonConsultarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BotonConsultarActionPerformed
         // TODO add your handling code here:
+        
+        // crear la ventana nueva
+        VentanaConsulta ventana = new VentanaConsulta();
+        // hacerla visible
+        ventana.setVisible(true);
+        
+         // hacer que se cierre esta ventana y abrir la nueva
+        this.dispose();
+        
+        
+        
     }//GEN-LAST:event_BotonConsultarActionPerformed
 
     private void BotonBorrarMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_BotonBorrarMouseEntered
@@ -183,6 +218,14 @@ public class Aplicacion8_2 extends javax.swing.JFrame {
 
     private void BotonBorrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BotonBorrarActionPerformed
         // TODO add your handling code here:
+        
+        // crear la ventana nueva
+        VentanaBorrado ventana = new VentanaBorrado();
+        ventana.setVisible(true);
+        
+         // hacer que se cierre esta ventana y abrir la nueva
+        this.dispose();
+        
         
         
     }//GEN-LAST:event_BotonBorrarActionPerformed
@@ -204,20 +247,23 @@ public class Aplicacion8_2 extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(Aplicacion8_2.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(VentanaInicio.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(Aplicacion8_2.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(VentanaInicio.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(Aplicacion8_2.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(VentanaInicio.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(Aplicacion8_2.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(VentanaInicio.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new Aplicacion8_2().setVisible(true);
+                new VentanaInicio().setVisible(true);
             }
         });
     }

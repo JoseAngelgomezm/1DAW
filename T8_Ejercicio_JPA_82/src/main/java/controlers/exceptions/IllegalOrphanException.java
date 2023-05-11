@@ -1,4 +1,4 @@
-package conectors.exceptions;
+package controlers.exceptions;
 
 import java.util.ArrayList;
 import java.util.List;

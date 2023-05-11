@@ -18,7 +18,7 @@ import javax.persistence.TemporalType;
 
 /**
  *
- * @author joseangel
+ * @author Jose Angel
  */
 @Entity
 @Table(name = "facturas")
@@ -38,7 +38,6 @@ public class Facturas implements Serializable {
     @Column(name = "fecha")
     @Temporal(TemporalType.DATE)
     private Date fecha;
-    @Basic(optional = false)
     @Column(name = "descripcion")
     private String descripcion;
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
@@ -50,11 +49,6 @@ public class Facturas implements Serializable {
 
     public Facturas(Integer codigo) {
         this.codigo = codigo;
-    }
-
-    public Facturas(Integer codigo, String descripcion) {
-        this.codigo = codigo;
-        this.descripcion = descripcion;
     }
 
     public Integer getCodigo() {

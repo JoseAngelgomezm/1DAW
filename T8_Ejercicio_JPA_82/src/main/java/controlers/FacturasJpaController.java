@@ -4,8 +4,8 @@
  */
 package controlers;
 
-import conectors.exceptions.NonexistentEntityException;
-import conectors.exceptions.PreexistingEntityException;
+import controlers.exceptions.NonexistentEntityException;
+import controlers.exceptions.PreexistingEntityException;
 import entities.Facturas;
 import java.io.Serializable;
 import java.util.List;
@@ -18,7 +18,7 @@ import javax.persistence.criteria.Root;
 
 /**
  *
- * @author joseangel
+ * @author Jose Angel
  */
 public class FacturasJpaController implements Serializable {
 
