@@ -120,7 +120,7 @@ public class InterfazGrafica extends javax.swing.JFrame {
         salidaVerde.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         PanelDatos.add(salidaVerde, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 460, 110, 120));
 
-        bola4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/photos/bolaMundo.png"))); // NOI18N
+        bola4.setIcon(new javax.swing.ImageIcon("C:\\Users\\Jose Angel\\Documents\\NetBeansProjects\\1DAW\\T7_Interfaz_Grafica_Huella_Carbono\\src\\main\\resources\\photos\\bolaMundo.png")); // NOI18N
         PanelDatos.add(bola4, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 430, 190, 190));
 
         textoBytes.setFont(new java.awt.Font("Comic Sans MS", 1, 18)); // NOI18N
@@ -133,7 +133,7 @@ public class InterfazGrafica extends javax.swing.JFrame {
         salidaBytes.setForeground(new java.awt.Color(255, 255, 255));
         PanelDatos.add(salidaBytes, new org.netbeans.lib.awtextra.AbsoluteConstraints(410, 510, 110, 110));
 
-        bola5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/photos/bolaMundo.png"))); // NOI18N
+        bola5.setIcon(new javax.swing.ImageIcon("C:\\Users\\Jose Angel\\Documents\\NetBeansProjects\\1DAW\\T7_Interfaz_Grafica_Huella_Carbono\\src\\main\\resources\\photos\\bolaMundo.png")); // NOI18N
         PanelDatos.add(bola5, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 470, 190, 190));
 
         textoMasLimpia.setFont(new java.awt.Font("Comic Sans MS", 1, 18)); // NOI18N
@@ -144,7 +144,7 @@ public class InterfazGrafica extends javax.swing.JFrame {
         salidaCleanerThan.setFont(new java.awt.Font("Comic Sans MS", 1, 36)); // NOI18N
         PanelDatos.add(salidaCleanerThan, new org.netbeans.lib.awtextra.AbsoluteConstraints(760, 460, 110, 110));
 
-        bola6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/photos/bolaMundo.png"))); // NOI18N
+        bola6.setIcon(new javax.swing.ImageIcon("C:\\Users\\Jose Angel\\Documents\\NetBeansProjects\\1DAW\\T7_Interfaz_Grafica_Huella_Carbono\\src\\main\\resources\\photos\\bolaMundo.png")); // NOI18N
         PanelDatos.add(bola6, new org.netbeans.lib.awtextra.AbsoluteConstraints(710, 420, 190, 190));
 
         textoEnergiaConsumida.setFont(new java.awt.Font("Comic Sans MS", 1, 18)); // NOI18N
@@ -156,7 +156,7 @@ public class InterfazGrafica extends javax.swing.JFrame {
         salidaEnergiaConsumida.setForeground(new java.awt.Color(255, 255, 255));
         PanelDatos.add(salidaEnergiaConsumida, new org.netbeans.lib.awtextra.AbsoluteConstraints(750, 140, 110, 110));
 
-        bola1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/photos/bolaMundo.png"))); // NOI18N
+        bola1.setIcon(new javax.swing.ImageIcon("C:\\Users\\Jose Angel\\Documents\\NetBeansProjects\\1DAW\\T7_Interfaz_Grafica_Huella_Carbono\\src\\main\\resources\\photos\\bolaMundo.png")); // NOI18N
         PanelDatos.add(bola1, new org.netbeans.lib.awtextra.AbsoluteConstraints(710, 100, 190, 190));
 
         salidaRedCo2.setFont(new java.awt.Font("Comic Sans MS", 1, 30)); // NOI18N
@@ -168,7 +168,7 @@ public class InterfazGrafica extends javax.swing.JFrame {
         textoRedCo2.setText("<html> <p>Cantidad Co2 emitida <br> por energía de la red pública:</p> </html> ");
         PanelDatos.add(textoRedCo2, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 30, 310, 60));
 
-        bola7.setIcon(new javax.swing.ImageIcon(getClass().getResource("/photos/bolaMundo.png"))); // NOI18N
+        bola7.setIcon(new javax.swing.ImageIcon("C:\\Users\\Jose Angel\\Documents\\NetBeansProjects\\1DAW\\T7_Interfaz_Grafica_Huella_Carbono\\src\\main\\resources\\photos\\bolaMundo.png")); // NOI18N
         PanelDatos.add(bola7, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 100, 190, 190));
 
         NubeCo2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/photos/nubeCo2.png"))); // NOI18N
