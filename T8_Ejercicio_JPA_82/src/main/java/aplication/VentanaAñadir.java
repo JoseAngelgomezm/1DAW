@@ -28,16 +28,25 @@ public class VentanaAñadir extends javax.swing.JFrame {
 
         jPanel1 = new javax.swing.JPanel();
         BotonRegresar = new javax.swing.JButton();
+        Codigo = new javax.swing.JTextField();
+        Descripcion = new javax.swing.JTextField();
+        Importe = new javax.swing.JTextField();
+        jLabel2 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
+        jLabel5 = new javax.swing.JLabel();
+        BotonInsertar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jPanel1.setBackground(new java.awt.Color(76, 76, 109));
+        jPanel1.setForeground(new java.awt.Color(255, 225, 148));
         jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        BotonRegresar.setBackground(new java.awt.Color(27, 156, 133));
+        BotonRegresar.setBackground(new java.awt.Color(255, 225, 148));
         BotonRegresar.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
-        BotonRegresar.setForeground(new java.awt.Color(232, 246, 239));
+        BotonRegresar.setForeground(new java.awt.Color(76, 76, 109));
         BotonRegresar.setText("Regresar");
         BotonRegresar.setBorder(javax.swing.BorderFactory.createMatteBorder(3, 3, 3, 3, new java.awt.Color(232, 246, 239)));
         BotonRegresar.addActionListener(new java.awt.event.ActionListener() {
@@ -45,9 +54,65 @@ public class VentanaAñadir extends javax.swing.JFrame {
                 BotonRegresarActionPerformed(evt);
             }
         });
-        jPanel1.add(BotonRegresar, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 380, 220, 50));
+        jPanel1.add(BotonRegresar, new org.netbeans.lib.awtextra.AbsoluteConstraints(360, 390, 140, -1));
 
-        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 670, 460));
+        Codigo.setBackground(new java.awt.Color(232, 246, 239));
+        Codigo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                CodigoActionPerformed(evt);
+            }
+        });
+        jPanel1.add(Codigo, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 130, 240, 30));
+
+        Descripcion.setBackground(new java.awt.Color(232, 246, 239));
+        Descripcion.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                DescripcionActionPerformed(evt);
+            }
+        });
+        jPanel1.add(Descripcion, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 210, 240, 30));
+
+        Importe.setBackground(new java.awt.Color(232, 246, 239));
+        Importe.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ImporteActionPerformed(evt);
+            }
+        });
+        jPanel1.add(Importe, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 290, 240, 30));
+
+        jLabel2.setFont(new java.awt.Font("Liberation Sans", 0, 36)); // NOI18N
+        jLabel2.setForeground(new java.awt.Color(255, 225, 148));
+        jLabel2.setText("Fecha:");
+        jPanel1.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 120, 110, -1));
+
+        jLabel3.setFont(new java.awt.Font("Liberation Sans", 0, 36)); // NOI18N
+        jLabel3.setForeground(new java.awt.Color(255, 225, 148));
+        jLabel3.setText("Descripcion:");
+        jPanel1.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 200, 200, -1));
+
+        jLabel4.setFont(new java.awt.Font("Liberation Sans", 0, 36)); // NOI18N
+        jLabel4.setForeground(new java.awt.Color(255, 225, 148));
+        jLabel4.setText("Importe:");
+        jPanel1.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 280, 140, -1));
+
+        jLabel5.setFont(new java.awt.Font("Liberation Sans", 1, 48)); // NOI18N
+        jLabel5.setForeground(new java.awt.Color(27, 156, 133));
+        jLabel5.setText("Insertar Factura");
+        jPanel1.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 20, -1, -1));
+
+        BotonInsertar.setBackground(new java.awt.Color(27, 156, 133));
+        BotonInsertar.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
+        BotonInsertar.setForeground(new java.awt.Color(232, 246, 239));
+        BotonInsertar.setText("Ingresar Datos");
+        BotonInsertar.setBorder(javax.swing.BorderFactory.createMatteBorder(3, 3, 3, 3, new java.awt.Color(232, 246, 239)));
+        BotonInsertar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                BotonInsertarActionPerformed(evt);
+            }
+        });
+        jPanel1.add(BotonInsertar, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 380, 220, 50));
+
+        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 0, 670, 460));
 
         pack();
         setLocationRelativeTo(null);
@@ -65,6 +130,25 @@ public class VentanaAñadir extends javax.swing.JFrame {
         this.dispose();
 
     }//GEN-LAST:event_BotonRegresarActionPerformed
+
+    private void CodigoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CodigoActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_CodigoActionPerformed
+
+    private void DescripcionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_DescripcionActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_DescripcionActionPerformed
+
+    private void ImporteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ImporteActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_ImporteActionPerformed
+
+    private void BotonInsertarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BotonInsertarActionPerformed
+        // TODO add your handling code here:
+        
+                
+        
+    }//GEN-LAST:event_BotonInsertarActionPerformed
 
     /**
      * @param args the command line arguments
@@ -102,7 +186,15 @@ public class VentanaAñadir extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton BotonInsertar;
     private javax.swing.JButton BotonRegresar;
+    private javax.swing.JTextField Codigo;
+    private javax.swing.JTextField Descripcion;
+    private javax.swing.JTextField Importe;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
     private javax.swing.JPanel jPanel1;
     // End of variables declaration//GEN-END:variables
 }

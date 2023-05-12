@@ -4,7 +4,14 @@
  */
 package aplication;
 
+import controlers.FacturasJpaController;
+import entities.Facturas;
 import java.awt.Color;
+import java.util.List;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -30,10 +37,9 @@ public class VentanaInicio extends javax.swing.JFrame {
 
         VentanaPrincipal = new javax.swing.JPanel();
         Titulo = new javax.swing.JLabel();
-        BotonActualizar = new javax.swing.JButton();
+        BotonActualizarBorrar = new javax.swing.JButton();
         BotonAñadir = new javax.swing.JButton();
         BotonConsultar = new javax.swing.JButton();
-        BotonBorrar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -47,25 +53,25 @@ public class VentanaInicio extends javax.swing.JFrame {
         Titulo.setText("Operaciones tabla Factura");
         VentanaPrincipal.add(Titulo, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 40, 610, 90));
 
-        BotonActualizar.setBackground(new java.awt.Color(76, 76, 109));
-        BotonActualizar.setFont(new java.awt.Font("Liberation Sans", 1, 36)); // NOI18N
-        BotonActualizar.setForeground(new java.awt.Color(255, 225, 148));
-        BotonActualizar.setText("Actualizar Factura");
-        BotonActualizar.setBorder(javax.swing.BorderFactory.createMatteBorder(3, 3, 3, 3, new java.awt.Color(232, 246, 239)));
-        BotonActualizar.addMouseListener(new java.awt.event.MouseAdapter() {
+        BotonActualizarBorrar.setBackground(new java.awt.Color(76, 76, 109));
+        BotonActualizarBorrar.setFont(new java.awt.Font("Liberation Sans", 1, 36)); // NOI18N
+        BotonActualizarBorrar.setForeground(new java.awt.Color(255, 225, 148));
+        BotonActualizarBorrar.setText("Actualizar / Borrar Factura");
+        BotonActualizarBorrar.setBorder(javax.swing.BorderFactory.createMatteBorder(3, 3, 3, 3, new java.awt.Color(232, 246, 239)));
+        BotonActualizarBorrar.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseEntered(java.awt.event.MouseEvent evt) {
-                BotonActualizarMouseEntered(evt);
+                BotonActualizarBorrarMouseEntered(evt);
             }
             public void mouseExited(java.awt.event.MouseEvent evt) {
-                BotonActualizarMouseExited(evt);
+                BotonActualizarBorrarMouseExited(evt);
             }
         });
-        BotonActualizar.addActionListener(new java.awt.event.ActionListener() {
+        BotonActualizarBorrar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                BotonActualizarActionPerformed(evt);
+                BotonActualizarBorrarActionPerformed(evt);
             }
         });
-        VentanaPrincipal.add(BotonActualizar, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 320, 400, 60));
+        VentanaPrincipal.add(BotonActualizarBorrar, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 330, 820, 60));
 
         BotonAñadir.setBackground(new java.awt.Color(76, 76, 109));
         BotonAñadir.setFont(new java.awt.Font("Liberation Sans", 1, 36)); // NOI18N
@@ -107,128 +113,86 @@ public class VentanaInicio extends javax.swing.JFrame {
         });
         VentanaPrincipal.add(BotonConsultar, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 180, 400, 60));
 
-        BotonBorrar.setBackground(new java.awt.Color(76, 76, 109));
-        BotonBorrar.setFont(new java.awt.Font("Liberation Sans", 1, 36)); // NOI18N
-        BotonBorrar.setForeground(new java.awt.Color(255, 225, 148));
-        BotonBorrar.setText("Borrar Factura");
-        BotonBorrar.setBorder(javax.swing.BorderFactory.createMatteBorder(3, 3, 3, 3, new java.awt.Color(232, 246, 239)));
-        BotonBorrar.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                BotonBorrarMouseEntered(evt);
-            }
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                BotonBorrarMouseExited(evt);
-            }
-        });
-        BotonBorrar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                BotonBorrarActionPerformed(evt);
-            }
-        });
-        VentanaPrincipal.add(BotonBorrar, new org.netbeans.lib.awtextra.AbsoluteConstraints(460, 320, 400, 60));
-
         getContentPane().add(VentanaPrincipal, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 878, 490));
 
         pack();
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void BotonActualizarMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_BotonActualizarMouseEntered
+    private void BotonActualizarBorrarMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_BotonActualizarBorrarMouseEntered
         // TODO add your handling code here:
-        BotonActualizar.setBackground(new java.awt.Color(232,246,239));
-    }//GEN-LAST:event_BotonActualizarMouseEntered
+        BotonActualizarBorrar.setBackground(new java.awt.Color(232, 246, 239));
+    }//GEN-LAST:event_BotonActualizarBorrarMouseEntered
 
-    private void BotonActualizarMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_BotonActualizarMouseExited
+    private void BotonActualizarBorrarMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_BotonActualizarBorrarMouseExited
         // TODO add your handling code here:
-        BotonActualizar.setBackground(new java.awt.Color(76,76,109));
-    }//GEN-LAST:event_BotonActualizarMouseExited
+        BotonActualizarBorrar.setBackground(new java.awt.Color(76, 76, 109));
+    }//GEN-LAST:event_BotonActualizarBorrarMouseExited
 
     private void BotonAñadirMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_BotonAñadirMouseEntered
         // TODO add your handling code here:
-        BotonAñadir.setBackground(new java.awt.Color(232,246,239));
+        BotonAñadir.setBackground(new java.awt.Color(232, 246, 239));
     }//GEN-LAST:event_BotonAñadirMouseEntered
 
     private void BotonAñadirMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_BotonAñadirMouseExited
         // TODO add your handling code here:
-        BotonAñadir.setBackground(new java.awt.Color(76,76,109));
+        BotonAñadir.setBackground(new java.awt.Color(76, 76, 109));
     }//GEN-LAST:event_BotonAñadirMouseExited
 
-    private void BotonActualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BotonActualizarActionPerformed
+    private void BotonActualizarBorrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BotonActualizarBorrarActionPerformed
         // TODO add your handling code here:
-        
+
         // crear la ventana nueva
-        VentanaActualizar ventana = new VentanaActualizar();
+        VentanaActualizarBorrar ventana = new VentanaActualizarBorrar();
         // hacerla visible
         ventana.setVisible(true);
-        
+
         // hacer que se cierre esta ventana y abrir la nueva
         this.dispose();
-        
-    }//GEN-LAST:event_BotonActualizarActionPerformed
+
+    }//GEN-LAST:event_BotonActualizarBorrarActionPerformed
 
     private void BotonAñadirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BotonAñadirActionPerformed
         // TODO add your handling code here:
-        
+
         // crear la ventana nueva
         VentanaAñadir ventana = new VentanaAñadir();
         // hacerla visible
         ventana.setVisible(true);
-        
-         // hacer que se cierre esta ventana y abrir la nueva
+
+        // hacer que se cierre esta ventana y abrir la nueva
         this.dispose();
-        
-        
-         
+
+
     }//GEN-LAST:event_BotonAñadirActionPerformed
 
     private void BotonConsultarMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_BotonConsultarMouseEntered
         // TODO add your handling code here:
-        BotonConsultar.setBackground(new java.awt.Color(232,246,239));
+        BotonConsultar.setBackground(new java.awt.Color(232, 246, 239));
     }//GEN-LAST:event_BotonConsultarMouseEntered
 
     private void BotonConsultarMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_BotonConsultarMouseExited
         // TODO add your handling code here:
-        BotonConsultar.setBackground(new java.awt.Color(76,76,109));
+        BotonConsultar.setBackground(new java.awt.Color(76, 76, 109));
     }//GEN-LAST:event_BotonConsultarMouseExited
 
     private void BotonConsultarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BotonConsultarActionPerformed
         // TODO add your handling code here:
-        
+
         // crear la ventana nueva
         VentanaConsulta ventana = new VentanaConsulta();
         // hacerla visible
         ventana.setVisible(true);
-        
-         // hacer que se cierre esta ventana y abrir la nueva
+
+        // hacer que se cierre esta ventana y abrir la nueva
         this.dispose();
+
+        // los datos de la consulta, se obitnenen y muestran con el evento 
+        // windows opener al abrir la ventana consulta
         
         
-        
+
     }//GEN-LAST:event_BotonConsultarActionPerformed
-
-    private void BotonBorrarMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_BotonBorrarMouseEntered
-        // TODO add your handling code here:
-        BotonBorrar.setBackground(new java.awt.Color(232,246,239));
-    }//GEN-LAST:event_BotonBorrarMouseEntered
-
-    private void BotonBorrarMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_BotonBorrarMouseExited
-        // TODO add your handling code here:
-        BotonBorrar.setBackground(new java.awt.Color(76,76,109));
-    }//GEN-LAST:event_BotonBorrarMouseExited
-
-    private void BotonBorrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BotonBorrarActionPerformed
-        // TODO add your handling code here:
-        
-        // crear la ventana nueva
-        VentanaBorrado ventana = new VentanaBorrado();
-        ventana.setVisible(true);
-        
-         // hacer que se cierre esta ventana y abrir la nueva
-        this.dispose();
-        
-        
-        
-    }//GEN-LAST:event_BotonBorrarActionPerformed
 
     /**
      * @param args the command line arguments
@@ -269,9 +233,8 @@ public class VentanaInicio extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton BotonActualizar;
+    private javax.swing.JButton BotonActualizarBorrar;
     private javax.swing.JButton BotonAñadir;
-    private javax.swing.JButton BotonBorrar;
     private javax.swing.JButton BotonConsultar;
     private javax.swing.JLabel Titulo;
     private javax.swing.JPanel VentanaPrincipal;
