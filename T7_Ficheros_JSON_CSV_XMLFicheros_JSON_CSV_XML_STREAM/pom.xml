@@ -2,7 +2,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>joseangel</groupId>
-    <artifactId>T7_Ficheros_JSON_CSV_XML</artifactId>
+    <artifactId>T7_Ficheros_JSON_CSV_XMLFicheros_JSON_CSV_XML_STREAM</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
     <dependencies>
@@ -63,4 +63,5 @@
         <maven.compiler.target>18</maven.compiler.target>
         <exec.mainClass>joseangel.t7_ficheros_json_csv_xml.T7_Ficheros_JSON_CSV_XML</exec.mainClass>
     </properties>
+    <name>T7_Ficheros_JSON_CSV_XML_STREAM</name>
 </project>
