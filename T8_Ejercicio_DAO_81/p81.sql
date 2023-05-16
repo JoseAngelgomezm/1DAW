@@ -9,3 +9,4 @@ create table facturas(
     importe double,
     constraint pk_factutas primary key (codigo)
 );
+

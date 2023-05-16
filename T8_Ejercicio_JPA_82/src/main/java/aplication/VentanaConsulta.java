@@ -9,7 +9,6 @@ import entities.Facturas;
 import java.util.List;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
-import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -18,11 +17,18 @@ import javax.swing.table.DefaultTableModel;
  */
 public class VentanaConsulta extends javax.swing.JFrame {
 
+    // atributos del JForm
+    private EntityManagerFactory emf; // manejador de entidades
+    private controlers.FacturasJpaController controlador; // controlador para manjeador de entidades
+    private VentanaInicio ventana;  // ventana de inicio para regresar a ella
+    private DefaultTableModel modelo; // modelo para mostrar en la tabla
+    private List<Facturas> listaFacturas; // lista de facturas contenidas
     /**
      * Creates new form VentanaConsulta
      */
     public VentanaConsulta() {
         initComponents();
+
     }
 
     /**
@@ -38,6 +44,7 @@ public class VentanaConsulta extends javax.swing.JFrame {
         BotonRegresar = new javax.swing.JButton();
         ScollTabla = new javax.swing.JScrollPane();
         TablaResultados = new javax.swing.JTable();
+        jLabel5 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         addWindowListener(new java.awt.event.WindowAdapter() {
@@ -60,7 +67,7 @@ public class VentanaConsulta extends javax.swing.JFrame {
                 BotonRegresarActionPerformed(evt);
             }
         });
-        jPanel1.add(BotonRegresar, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 460, 220, 50));
+        jPanel1.add(BotonRegresar, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 480, 220, 50));
 
         TablaResultados.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -75,7 +82,12 @@ public class VentanaConsulta extends javax.swing.JFrame {
         ));
         ScollTabla.setViewportView(TablaResultados);
 
-        jPanel1.add(ScollTabla, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 40, 850, 390));
+        jPanel1.add(ScollTabla, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 100, 850, 350));
+
+        jLabel5.setFont(new java.awt.Font("Liberation Sans", 1, 48)); // NOI18N
+        jLabel5.setForeground(new java.awt.Color(27, 156, 133));
+        jLabel5.setText("Consulta Facturas");
+        jPanel1.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 20, -1, -1));
 
         getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 890, 560));
 
@@ -87,7 +99,7 @@ public class VentanaConsulta extends javax.swing.JFrame {
         // TODO add your handling code here:
 
         // crear la ventana de inicio
-        VentanaInicio ventana = new VentanaInicio();
+        this.ventana = new VentanaInicio();
         // hacerla visible
         ventana.setVisible(true);
 
@@ -99,28 +111,28 @@ public class VentanaConsulta extends javax.swing.JFrame {
 
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
         // TODO add your handling code here:
-        
+
         // bloquear la tabla
         this.TablaResultados.setEnabled(false);
-        
+
         // crear un manejador de entidades con la el nombre de la unidad de persistencia
         // que tenemos en la carpeta META-INF
-        EntityManagerFactory emf = Persistence.createEntityManagerFactory("facturas");
+        this.emf = Persistence.createEntityManagerFactory("facturas");
 
         // crear el controlador pasandole el manejador de entidades
-        controlers.FacturasJpaController controlador = new FacturasJpaController(emf);
+        this.controlador = new FacturasJpaController(emf);
 
         // obtener todos los registros de las facturas
-        List<Facturas> listaFacturas = controlador.findFacturasEntities();
+        this.listaFacturas = controlador.findFacturasEntities();
 
         // crear las columnas que va a tener nuestra tabla        
         String[] columnas = {"Codigo", "Fecha", "Descripcion", "Importe"};
 
         // crear un modelo para la tabla
-        DefaultTableModel modelo = new DefaultTableModel();
+        this.modelo = new DefaultTableModel();
 
         // poner los identificadores de los campos en el modelo
-        modelo.setColumnIdentifiers(columnas);
+        this.modelo.setColumnIdentifiers(columnas);
 
         // recorrer la lista
         for (Facturas f : listaFacturas) {
@@ -128,6 +140,10 @@ public class VentanaConsulta extends javax.swing.JFrame {
             Object[] datosFilaFactura = {f.getCodigo(), f.getFecha(), f.getDescripcion(), f.getImporte()};
             // añadir el array de object como una fila del modelo de la tabla
             modelo.addRow(datosFilaFactura);
+        }
+        
+         for (Facturas f : listaFacturas) {
+             System.out.println(f);
         }
 
         // establecer el modelo a la tabla
@@ -175,6 +191,7 @@ public class VentanaConsulta extends javax.swing.JFrame {
     private javax.swing.JButton BotonRegresar;
     private javax.swing.JScrollPane ScollTabla;
     private javax.swing.JTable TablaResultados;
+    private javax.swing.JLabel jLabel5;
     private javax.swing.JPanel jPanel1;
     // End of variables declaration//GEN-END:variables
 }
