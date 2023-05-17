@@ -38,6 +38,7 @@ public class VentanaActualizarBorrar extends javax.swing.JFrame {
         this.emf = Persistence.createEntityManagerFactory("facturas");
         // crear el controlador pasandole el manejador de entidades
         this.controlador = new FacturasJpaController(emf);
+        
     }
 
     /**
@@ -133,12 +134,12 @@ public class VentanaActualizarBorrar extends javax.swing.JFrame {
 
     private void BotonRegresarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BotonRegresarActionPerformed
         // TODO add your handling code here:
-
+        
         // crear la ventana de inicio
         VentanaInicio ventana = new VentanaInicio();
         // hacerla visible
         ventana.setVisible(true);
-
+        
         // hacer que se cierre esta ventana y abrir la nueva
         this.dispose();
 
@@ -170,7 +171,7 @@ public class VentanaActualizarBorrar extends javax.swing.JFrame {
         for (Facturas f : listaFacturas) {
             System.out.println(f);
         }
-        modelo.isCellEditable(0, 0);
+        
         // establecer el modelo a la tabla
         this.TablaResultados.setModel(modelo);
     }//GEN-LAST:event_formWindowOpened

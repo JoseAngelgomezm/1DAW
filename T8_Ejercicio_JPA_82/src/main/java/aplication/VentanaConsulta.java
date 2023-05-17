@@ -117,15 +117,8 @@ public class VentanaConsulta extends javax.swing.JFrame {
         // bloquear la tabla
         this.TablaResultados.setEnabled(false);
 
-        // crear un manejador de entidades con la el nombre de la unidad de persistencia
-        // que tenemos en la carpeta META-INF
-        EntityManagerFactory emf = Persistence.createEntityManagerFactory("facturas");
-
-        // crear el controlador pasandole el manejador de entidades
-        controlers.FacturasJpaController controlador = new FacturasJpaController(emf);
-
         // obtener todos los registros de las facturas
-        List<Facturas> listaFacturas = controlador.findFacturasEntities();
+        List<Facturas> listaFacturas = this.controlador.findFacturasEntities();
 
         // crear las columnas que va a tener nuestra tabla        
         String[] columnas = {"Codigo", "Fecha", "Descripcion", "Importe"};
