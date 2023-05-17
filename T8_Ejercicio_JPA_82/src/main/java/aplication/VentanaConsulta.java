@@ -18,17 +18,19 @@ import javax.swing.table.DefaultTableModel;
 public class VentanaConsulta extends javax.swing.JFrame {
 
     // atributos del JForm
-    private EntityManagerFactory emf; // manejador de entidades
-    private controlers.FacturasJpaController controlador; // controlador para manjeador de entidades
-    private VentanaInicio ventana;  // ventana de inicio para regresar a ella
-    private DefaultTableModel modelo; // modelo para mostrar en la tabla
-    private List<Facturas> listaFacturas; // lista de facturas contenidas
+    private EntityManagerFactory emf;
+    private controlers.FacturasJpaController controlador;
+
     /**
      * Creates new form VentanaConsulta
      */
     public VentanaConsulta() {
         initComponents();
-
+        // crear un manejador de entidades con la el nombre de la unidad de persistencia
+        // que tenemos en la carpeta META-INF
+        this.emf = Persistence.createEntityManagerFactory("facturas");
+        // crear el controlador pasandole el manejador de entidades
+        this.controlador = new FacturasJpaController(emf);
     }
 
     /**
@@ -99,7 +101,7 @@ public class VentanaConsulta extends javax.swing.JFrame {
         // TODO add your handling code here:
 
         // crear la ventana de inicio
-        this.ventana = new VentanaInicio();
+        VentanaInicio ventana = new VentanaInicio();
         // hacerla visible
         ventana.setVisible(true);
 
@@ -117,22 +119,22 @@ public class VentanaConsulta extends javax.swing.JFrame {
 
         // crear un manejador de entidades con la el nombre de la unidad de persistencia
         // que tenemos en la carpeta META-INF
-        this.emf = Persistence.createEntityManagerFactory("facturas");
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("facturas");
 
         // crear el controlador pasandole el manejador de entidades
-        this.controlador = new FacturasJpaController(emf);
+        controlers.FacturasJpaController controlador = new FacturasJpaController(emf);
 
         // obtener todos los registros de las facturas
-        this.listaFacturas = controlador.findFacturasEntities();
+        List<Facturas> listaFacturas = controlador.findFacturasEntities();
 
         // crear las columnas que va a tener nuestra tabla        
         String[] columnas = {"Codigo", "Fecha", "Descripcion", "Importe"};
 
         // crear un modelo para la tabla
-        this.modelo = new DefaultTableModel();
+        DefaultTableModel modelo = new DefaultTableModel();
 
         // poner los identificadores de los campos en el modelo
-        this.modelo.setColumnIdentifiers(columnas);
+        modelo.setColumnIdentifiers(columnas);
 
         // recorrer la lista
         for (Facturas f : listaFacturas) {
@@ -141,9 +143,9 @@ public class VentanaConsulta extends javax.swing.JFrame {
             // añadir el array de object como una fila del modelo de la tabla
             modelo.addRow(datosFilaFactura);
         }
-        
-         for (Facturas f : listaFacturas) {
-             System.out.println(f);
+
+        for (Facturas f : listaFacturas) {
+            System.out.println(f);
         }
 
         // establecer el modelo a la tabla

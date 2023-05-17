@@ -10,8 +10,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.persistence.EntityManagerFactory;
@@ -24,16 +22,20 @@ import javax.swing.JOptionPane;
  */
 public class VentanaAñadir extends javax.swing.JFrame {
 
-    // atributos del JForm
-    private List<Facturas> listaFacturas; // lista de las factuas en la bd
-    private EntityManagerFactory emf; // manejador de entidades
-    private controlers.FacturasJpaController controlador; // controlador para manjeador de entidades
+    // atributos del JFORM
+    private EntityManagerFactory emf;
+    private controlers.FacturasJpaController controlador;
 
     /**
      * Creates new form VentanaAñadir
      */
     public VentanaAñadir() {
         initComponents();
+        // crear un manejador de entidades con la el nombre de la unidad de persistencia
+        // que tenemos en la carpeta META-INF
+        this.emf = Persistence.createEntityManagerFactory("facturas");
+        // crear el controlador pasandole el manejador de entidades
+        this.controlador = new FacturasJpaController(emf);
     }
 
     /**
@@ -165,26 +167,19 @@ public class VentanaAñadir extends javax.swing.JFrame {
     private void BotonInsertarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BotonInsertarActionPerformed
         // TODO add your handling code here:
 
-        // crear un manejador de entidades con la el nombre de la unidad de persistencia
-        // que tenemos en la carpeta META-INF
-        this.emf = Persistence.createEntityManagerFactory("facturas");
-
-        // crear el controlador pasandole el manejador de entidades
-        this.controlador = new FacturasJpaController(emf);
-
         // obtener todos los registros de las facturas
-        this.listaFacturas = controlador.findFacturasEntities();
+        List<Facturas> listaFacturas = controlador.findFacturasEntities();
 
         // crear la facturas con los datos vacios
         Facturas facturaIntroducir = new Facturas();
 
         // si la lista de facturas esta vacia poner el codigo a 0
-        if (this.listaFacturas.isEmpty()) {
+        if (listaFacturas.isEmpty()) {
             facturaIntroducir.setCodigo(0);
             // sino obtener la ultima factura y ponerle el codigo de esa +1
         } else {
-            int indiceUltima = this.listaFacturas.size() -1;
-            Facturas ultimaFactura = this.listaFacturas.get(indiceUltima);
+            int indiceUltima = listaFacturas.size() - 1;
+            Facturas ultimaFactura = listaFacturas.get(indiceUltima);
             int codigo = ultimaFactura.getCodigo() + 1;
             // ponerle el codigo a la factura a introducir de la ultima +1
             facturaIntroducir.setCodigo(codigo);
@@ -257,7 +252,7 @@ public class VentanaAñadir extends javax.swing.JFrame {
             // intentar introducir la factura
             try {
                 controlador.create(facturaIntroducir);
-                 JOptionPane.showMessageDialog(rootPane, "Factura Introducida correctamente :)");
+                JOptionPane.showMessageDialog(rootPane, "Factura Introducida correctamente :)");
             } catch (Exception ex) {
                 JOptionPane.showMessageDialog(rootPane, "Error al añadir factura, seguramente de conexion :)");
             }

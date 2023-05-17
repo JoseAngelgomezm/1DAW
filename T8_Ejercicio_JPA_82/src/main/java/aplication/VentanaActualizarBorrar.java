@@ -5,10 +5,6 @@
 package aplication;
 
 import controlers.FacturasJpaController;
-import entities.Facturas;
-import javax.persistence.Persistence;
-import javax.swing.table.DefaultTableModel;
-import controlers.FacturasJpaController;
 import controlers.exceptions.NonexistentEntityException;
 import entities.Facturas;
 import java.text.ParseException;
@@ -28,17 +24,20 @@ import javax.swing.table.DefaultTableModel;
  */
 public class VentanaActualizarBorrar extends javax.swing.JFrame {
 
-    private EntityManagerFactory emf; // manejador de entidades
-    private controlers.FacturasJpaController controlador; // controlador para manjeador de entidades
-    private VentanaInicio ventana;  // ventana de inicio para regresar a ella
-    private DefaultTableModel modelo; // modelo para mostrar en la tabla
-    private List<Facturas> listaFacturas; // lista de facturas contenidas
+    // atributos del JForm
+    private EntityManagerFactory emf;
+    private controlers.FacturasJpaController controlador;
 
     /**
      * Creates new form VentanaActualizar
      */
     public VentanaActualizarBorrar() {
         initComponents();
+        // crear un manejador de entidades con la el nombre de la unidad de persistencia
+        // que tenemos en la carpeta META-INF
+        this.emf = Persistence.createEntityManagerFactory("facturas");
+        // crear el controlador pasandole el manejador de entidades
+        this.controlador = new FacturasJpaController(emf);
     }
 
     /**
@@ -148,24 +147,17 @@ public class VentanaActualizarBorrar extends javax.swing.JFrame {
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
         // TODO add your handling code here:
 
-        // crear un manejador de entidades con la el nombre de la unidad de persistencia
-        // que tenemos en la carpeta META-INF
-        this.emf = Persistence.createEntityManagerFactory("facturas");
-
-        // crear el controlador pasandole el manejador de entidades
-        this.controlador = new FacturasJpaController(emf);
-
         // obtener todos los registros de las facturas
-        this.listaFacturas = controlador.findFacturasEntities();
+        List<Facturas> listaFacturas = this.controlador.findFacturasEntities();
 
         // crear las columnas que va a tener nuestra tabla        
         String[] columnas = {"Codigo", "Fecha", "Descripcion", "Importe"};
 
         // crear un modelo para la tabla
-        this.modelo = new DefaultTableModel();
+        DefaultTableModel modelo = new DefaultTableModel();
 
         // poner los identificadores de los campos en el modelo
-        this.modelo.setColumnIdentifiers(columnas);
+        modelo.setColumnIdentifiers(columnas);
 
         // recorrer la lista
         for (Facturas f : listaFacturas) {
@@ -184,15 +176,7 @@ public class VentanaActualizarBorrar extends javax.swing.JFrame {
     }//GEN-LAST:event_formWindowOpened
 
     private void BotonActualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BotonActualizarActionPerformed
-        // TODO add your handling code here:
-        
-        
-        // crear un manejador de entidades con la el nombre de la unidad de persistencia
-        // que tenemos en la carpeta META-INF
-        this.emf = Persistence.createEntityManagerFactory("facturas");
-
-        // crear el controlador pasandole el manejador de entidades
-        this.controlador = new FacturasJpaController(emf);
+        // TODO add your handling code heree:
 
         // obtener la fila que esta seleccionada
         int fila = TablaResultados.getSelectedRow();
@@ -221,11 +205,9 @@ public class VentanaActualizarBorrar extends javax.swing.JFrame {
         facturaActualizar.setFecha(fecha);
         facturaActualizar.setDescripcion(descripcion);
         facturaActualizar.setImporte(importe);
-        
-        
+
         // intentar editar
         try {
-
             controlador.edit(facturaActualizar);
         } catch (Exception ex) {
             Logger.getLogger(VentanaActualizarBorrar.class.getName()).log(Level.SEVERE, null, ex);
@@ -233,16 +215,16 @@ public class VentanaActualizarBorrar extends javax.swing.JFrame {
 
         // mostrar de nuevo los datos actualizados 
         // obtener todos los registros de las facturas
-        this.listaFacturas = controlador.findFacturasEntities();
+        List<Facturas> listaFacturas = controlador.findFacturasEntities();
 
         // crear las columnas que va a tener nuestra tabla        
         String[] columnas = {"Codigo", "Fecha", "Descripcion", "Importe"};
 
         // crear un modelo para la tabla
-        this.modelo = new DefaultTableModel();
+        DefaultTableModel modelo = new DefaultTableModel();
 
         // poner los identificadores de los campos en el modelo
-        this.modelo.setColumnIdentifiers(columnas);
+        modelo.setColumnIdentifiers(columnas);
 
         // recorrer la lista
         for (Facturas f : listaFacturas) {
@@ -256,20 +238,13 @@ public class VentanaActualizarBorrar extends javax.swing.JFrame {
             System.out.println(f);
         }
 
-        // establecer el modelo a la tabla
+        // establecer el nuevo modelo a la tabla
         this.TablaResultados.setModel(modelo);
 
     }//GEN-LAST:event_BotonActualizarActionPerformed
 
     private void BotonBorrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BotonBorrarActionPerformed
         // TODO add your handling code here:
-
-        // crear un manejador de entidades con la el nombre de la unidad de persistencia
-        // que tenemos en la carpeta META-INF
-        this.emf = Persistence.createEntityManagerFactory("facturas");
-
-        // crear el controlador pasandole el manejador de entidades
-        this.controlador = new FacturasJpaController(emf);
 
         // obtener la fila que esta seleccionada
         int fila = TablaResultados.getSelectedRow();
@@ -279,23 +254,23 @@ public class VentanaActualizarBorrar extends javax.swing.JFrame {
         System.out.println(idBorrar);
         // intentar borrar la factura por el id
         try {
-            this.controlador.destroy(idBorrar);
+            controlador.destroy(idBorrar);
         } catch (NonexistentEntityException ex) {
             JOptionPane.showMessageDialog(rootPane, "No se ha podido borrar la factura");
         }
 
         // actualizar los datos de la tabla
         // obtener todos los registros de las facturas
-        this.listaFacturas = controlador.findFacturasEntities();
+        List<Facturas> listaFacturas = controlador.findFacturasEntities();
 
         // crear las columnas que va a tener nuestra tabla        
         String[] columnas = {"Codigo", "Fecha", "Descripcion", "Importe"};
 
         // crear un modelo para la tabla
-        this.modelo = new DefaultTableModel();
+        DefaultTableModel modelo = new DefaultTableModel();
 
         // poner los identificadores de los campos en el modelo
-        this.modelo.setColumnIdentifiers(columnas);
+        modelo.setColumnIdentifiers(columnas);
 
         // recorrer la lista
         for (Facturas f : listaFacturas) {

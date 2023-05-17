@@ -5,13 +5,9 @@
 package aplication;
 
 import controlers.FacturasJpaController;
-import entities.Facturas;
-import java.awt.Color;
-import java.util.List;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
-import javax.swing.JTable;
-import javax.swing.table.DefaultTableModel;
+
 
 /**
  *
@@ -19,11 +15,20 @@ import javax.swing.table.DefaultTableModel;
  */
 public class VentanaInicio extends javax.swing.JFrame {
 
+    // atributos del JForm
+    private EntityManagerFactory emf;
+    private controlers.FacturasJpaController controlador;
+
     /**
      * Creates new form Aplicacion8_2
      */
     public VentanaInicio() {
         initComponents();
+        // crear un manejador de entidades con la el nombre de la unidad de persistencia
+        // que tenemos en la carpeta META-INF
+        this.emf = Persistence.createEntityManagerFactory("facturas");
+        // crear el controlador pasandole el manejador de entidades
+        this.controlador = new FacturasJpaController(emf);
     }
 
     /**
@@ -189,8 +194,6 @@ public class VentanaInicio extends javax.swing.JFrame {
 
         // los datos de la consulta, se obitnenen y muestran con el evento 
         // windows opener al abrir la ventana consulta
-        
-        
 
     }//GEN-LAST:event_BotonConsultarActionPerformed
 
