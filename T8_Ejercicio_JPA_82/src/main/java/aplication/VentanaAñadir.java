@@ -173,9 +173,9 @@ public class VentanaAñadir extends javax.swing.JFrame {
         // crear la facturas con los datos vacios
         Facturas facturaIntroducir = new Facturas();
 
-        // si la lista de facturas esta vacia poner el codigo a 0
+        // si la lista de facturas esta vacia poner el codigo a 1
         if (listaFacturas.isEmpty()) {
-            facturaIntroducir.setCodigo(0);
+            facturaIntroducir.setCodigo(1);
             // sino obtener la ultima factura y ponerle el codigo de esa +1
         } else {
             int indiceUltima = listaFacturas.size() - 1;
@@ -254,7 +254,7 @@ public class VentanaAñadir extends javax.swing.JFrame {
                 controlador.create(facturaIntroducir);
                 JOptionPane.showMessageDialog(rootPane, "Factura Introducida correctamente :)");
             } catch (Exception ex) {
-                JOptionPane.showMessageDialog(rootPane, "Error al añadir factura, seguramente de conexion :)");
+                JOptionPane.showMessageDialog(rootPane, "Error al añadir factura");
             }
         }
 
