@@ -187,7 +187,7 @@ public class VentanaAñadir extends javax.swing.JFrame {
 
         // crear una expresion para que se introduzca una fecha con el patron "yyyy-MM-dd"
         // crear el patron con un string
-        final String patron1 = "\\d{4}-\\d{2}-\\d{2}";
+        final String patron1 = "^\\d{4}\\-(0[1-9]|1[012])\\-(0[1-9]|[12][0-9]|3[01])$";
         // crear el texto que vamos a comprobar que cumple la expresion regular
         final String prueba1 = EntradaFecha.getText();
 

@@ -38,7 +38,7 @@ public class VentanaActualizarBorrar extends javax.swing.JFrame {
         this.emf = Persistence.createEntityManagerFactory("facturas");
         // crear el controlador pasandole el manejador de entidades
         this.controlador = new FacturasJpaController(emf);
-        
+
     }
 
     /**
@@ -91,7 +91,15 @@ public class VentanaActualizarBorrar extends javax.swing.JFrame {
             new String [] {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
-        ));
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, true, true, true
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
         jScrollPane1.setViewportView(TablaResultados);
 
         jPanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 120, 740, 220));
@@ -134,12 +142,12 @@ public class VentanaActualizarBorrar extends javax.swing.JFrame {
 
     private void BotonRegresarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BotonRegresarActionPerformed
         // TODO add your handling code here:
-        
+
         // crear la ventana de inicio
         VentanaInicio ventana = new VentanaInicio();
         // hacerla visible
         ventana.setVisible(true);
-        
+
         // hacer que se cierre esta ventana y abrir la nueva
         this.dispose();
 
@@ -154,8 +162,17 @@ public class VentanaActualizarBorrar extends javax.swing.JFrame {
         // crear las columnas que va a tener nuestra tabla        
         String[] columnas = {"Codigo", "Fecha", "Descripcion", "Importe"};
 
-        // crear un modelo para la tabla
-        DefaultTableModel modelo = new DefaultTableModel();
+        // crear un modelo para la tabla con la columna 0 no editable
+        DefaultTableModel modelo = new DefaultTableModel() {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                if (column == 0) {
+                    return false;
+                }
+                return true;
+            }
+
+        };
 
         // poner los identificadores de los campos en el modelo
         modelo.setColumnIdentifiers(columnas);
@@ -171,10 +188,15 @@ public class VentanaActualizarBorrar extends javax.swing.JFrame {
         for (Facturas f : listaFacturas) {
             System.out.println(f);
         }
-        
+
         // establecer el modelo a la tabla
         this.TablaResultados.setModel(modelo);
+
+        this.TablaResultados.getModel().isCellEditable(this.TablaResultados.getSelectedRow(), 0);
+
+
     }//GEN-LAST:event_formWindowOpened
+
 
     private void BotonActualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BotonActualizarActionPerformed
         // TODO add your handling code heree:
