@@ -191,10 +191,6 @@ public class VentanaActualizarBorrar extends javax.swing.JFrame {
 
         // establecer el modelo a la tabla
         this.TablaResultados.setModel(modelo);
-
-        this.TablaResultados.getModel().isCellEditable(this.TablaResultados.getSelectedRow(), 0);
-
-
     }//GEN-LAST:event_formWindowOpened
 
 
