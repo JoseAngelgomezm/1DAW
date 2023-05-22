@@ -4,11 +4,15 @@
  */
 package Aplicacion;
 
+import entities.Clientes;
 import entities.Proveedores;
 import entities.TarjetasBancarias;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -16,11 +20,11 @@ import javax.swing.table.DefaultTableModel;
  * @author Jose Angel
  */
 public class VentanaAñadirTarjetas extends javax.swing.JFrame {
-    
+
     // atributos del JForm
     private EntityManagerFactory emf;
     private controllers.TarjetasBancariasJpaController controladorTarjetas;
-    
+
     /**
      * Creates new form VentanaAñadirProveedores2
      */
@@ -132,14 +136,60 @@ public class VentanaAñadirTarjetas extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_EntradaNumeroTarjetaActionPerformed
 
+    private boolean verificarTarjeta(String numeroTarjeta) {
+
+        final String regexTarjeta = "\\d{16}";
+        // crear el texto que vamos a comprobar que cumple la expresion regular
+        final String pruebaTarjeta = numeroTarjeta;
+
+        // crear el pattern y pasarle el patron
+        final Pattern patternTarjeta = Pattern.compile(regexTarjeta, Pattern.UNIX_LINES);
+        // crear el matcher pasandole el texto a comprobar
+        final Matcher matcherTarjeta = patternTarjeta.matcher(pruebaTarjeta);
+
+        // si el numero de tarjeta coincide
+        if (matcherTarjeta.matches()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     private void BotonAñadirTarjetaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BotonAñadirTarjetaActionPerformed
         // TODO add your handling code here:
-              
-    }//GEN-LAST:event_BotonAñadirTarjetaActionPerformed
 
-    private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
-        // TODO add your handling code here:
-            // bloquear la tabla
+        // obtener la lista de tarjetas
+        List<TarjetasBancarias> listaTarjetas = controladorTarjetas.findTarjetasBancariasEntities();
+
+        // crear una nueva tarjeta 
+        TarjetasBancarias nuevaTarjeta = new TarjetasBancarias();
+
+        // verificar que la tarjeta sea una numero valido
+        if (verificarTarjeta(this.EntradaNumeroTarjeta.getText())) {
+
+            // comprobar que la tarjeta no existe
+            for (TarjetasBancarias t : listaTarjetas) {
+                if (t.getNumeroTarjeta().equalsIgnoreCase(this.EntradaNumeroTarjeta.getText())) {
+                    JOptionPane.showMessageDialog(rootPane, "La tarjeta ya existe");
+                    break;
+                    // si no existe ponerle el numero e intentar introducirla
+                } else {
+                    nuevaTarjeta.setNumeroTarjeta(this.EntradaNumeroTarjeta.getText());
+
+                }
+            }
+
+            controladorTarjetas.create(nuevaTarjeta);
+            actualizarTablaResultados();
+        } else {
+            JOptionPane.showMessageDialog(rootPane, "Numero de tarjeta no valido");
+        }
+
+
+    }//GEN-LAST:event_BotonAñadirTarjetaActionPerformed
+    private void actualizarTablaResultados() {
+
+        // bloquear la tabla
         this.TablaResultadosTarjetas.setEnabled(false);
 
         // obtener todos los registros de las facturas
@@ -164,11 +214,16 @@ public class VentanaAñadirTarjetas extends javax.swing.JFrame {
 
         // establecer el modelo a la tabla
         this.TablaResultadosTarjetas.setModel(modelo);
+    }
+
+    private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
+        // TODO add your handling code here:
+        actualizarTablaResultados();
     }//GEN-LAST:event_formWindowOpened
 
     private void BotonRegresarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BotonRegresarActionPerformed
         // TODO add your handling code here:
-        Main_Aplicacion_83 ventana = new Main_Aplicacion_83();
+        VentanaAñadirClientes ventana = new VentanaAñadirClientes();
         ventana.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_BotonRegresarActionPerformed

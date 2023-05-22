@@ -5,9 +5,22 @@
 package Aplicacion;
 
 import entities.Clientes;
+import entities.Facturas;
+import entities.TarjetasBancarias;
+import entities.exceptions.IllegalOrphanException;
+import entities.exceptions.NonexistentEntityException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -15,19 +28,21 @@ import javax.swing.table.DefaultTableModel;
  * @author Jose Angel
  */
 public class VentanaAñadirClientes extends javax.swing.JFrame {
-    
-        // atributos del JForm
+
+    // atributos del JForm
     private EntityManagerFactory emf;
     private controllers.ClientesJpaController controladorClientes;
-    
+    private controllers.TarjetasBancariasJpaController controladorTarjetas;
+
     /**
      * Creates new form VentanaAñadirProveedores2
      */
     public VentanaAñadirClientes() {
         initComponents();
         this.emf = Persistence.createEntityManagerFactory("bdp83");
-        // crear el controlador pasandole el manejador de entidades
+        // crear los controladores pasandole el manejador de entidades
         this.controladorClientes = new controllers.ClientesJpaController(emf);
+        this.controladorTarjetas = new controllers.TarjetasBancariasJpaController(emf);
     }
 
     /**
@@ -51,11 +66,13 @@ public class VentanaAñadirClientes extends javax.swing.JFrame {
         jLabel4 = new javax.swing.JLabel();
         EntradaNIFCliente = new javax.swing.JTextField();
         EntradaFechaNacimientoCliente = new javax.swing.JTextField();
-        ListaTarjetas = new javax.swing.JComboBox<>();
+        DesplegableTarjetas = new javax.swing.JComboBox<>();
         jLabel5 = new javax.swing.JLabel();
         BotonAñadirCliente = new javax.swing.JButton();
         jLabel6 = new javax.swing.JLabel();
         BotonRegresar = new javax.swing.JButton();
+        BotonModificar = new javax.swing.JButton();
+        BotonEliminar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         addWindowListener(new java.awt.event.WindowAdapter() {
@@ -101,7 +118,7 @@ public class VentanaAñadirClientes extends javax.swing.JFrame {
         ));
         jScrollPane1.setViewportView(TablaResultadosClientes);
 
-        jPanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 90, 620, 260));
+        jPanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 90, 720, 260));
 
         BotonAñadirTarjeta.setText("Añadir Tarjeta");
         BotonAñadirTarjeta.addActionListener(new java.awt.event.ActionListener() {
@@ -109,7 +126,7 @@ public class VentanaAñadirClientes extends javax.swing.JFrame {
                 BotonAñadirTarjetaActionPerformed(evt);
             }
         });
-        jPanel1.add(BotonAñadirTarjeta, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 540, -1, 30));
+        jPanel1.add(BotonAñadirTarjeta, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 550, -1, 30));
 
         jLabel3.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
         jLabel3.setText("Fecha Nacimiento: ");
@@ -133,12 +150,12 @@ public class VentanaAñadirClientes extends javax.swing.JFrame {
         });
         jPanel1.add(EntradaFechaNacimientoCliente, new org.netbeans.lib.awtextra.AbsoluteConstraints(560, 440, 130, -1));
 
-        ListaTarjetas.addActionListener(new java.awt.event.ActionListener() {
+        DesplegableTarjetas.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                ListaTarjetasActionPerformed(evt);
+                DesplegableTarjetasActionPerformed(evt);
             }
         });
-        jPanel1.add(ListaTarjetas, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 490, 140, -1));
+        jPanel1.add(DesplegableTarjetas, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 490, 140, -1));
 
         jLabel5.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
         jLabel5.setText("Nombre:");
@@ -150,7 +167,7 @@ public class VentanaAñadirClientes extends javax.swing.JFrame {
                 BotonAñadirClienteActionPerformed(evt);
             }
         });
-        jPanel1.add(BotonAñadirCliente, new org.netbeans.lib.awtextra.AbsoluteConstraints(560, 540, -1, 30));
+        jPanel1.add(BotonAñadirCliente, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 550, -1, 30));
 
         jLabel6.setFont(new java.awt.Font("Segoe UI", 0, 48)); // NOI18N
         jLabel6.setText("Añadir Cliente");
@@ -162,7 +179,23 @@ public class VentanaAñadirClientes extends javax.swing.JFrame {
                 BotonRegresarActionPerformed(evt);
             }
         });
-        jPanel1.add(BotonRegresar, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 550, -1, -1));
+        jPanel1.add(BotonRegresar, new org.netbeans.lib.awtextra.AbsoluteConstraints(640, 550, -1, 30));
+
+        BotonModificar.setText("Modificar");
+        BotonModificar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                BotonModificarActionPerformed(evt);
+            }
+        });
+        jPanel1.add(BotonModificar, new org.netbeans.lib.awtextra.AbsoluteConstraints(490, 550, 90, 30));
+
+        BotonEliminar.setText("Eliminar");
+        BotonEliminar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                BotonEliminarActionPerformed(evt);
+            }
+        });
+        jPanel1.add(BotonEliminar, new org.netbeans.lib.awtextra.AbsoluteConstraints(360, 550, 80, 30));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -201,27 +234,109 @@ public class VentanaAñadirClientes extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_EntradaFechaNacimientoClienteActionPerformed
 
-    private void BotonAñadirClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BotonAñadirClienteActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_BotonAñadirClienteActionPerformed
+    private boolean verificarNif(String nif) {
+// crear una expresion para que se introduzca un nif valido con un regex
+        final String regexNIF = "[0-9]{8}[A-Z]";
+        // crear el texto que vamos a comprobar que cumple la expresion regular
+        final String pruebaNIF = this.EntradaNIFCliente.getText();
 
-    private void ListaTarjetasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ListaTarjetasActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_ListaTarjetasActionPerformed
+        // crear el pattern y pasarle el regex
+        final Pattern patternNIF = Pattern.compile(regexNIF, Pattern.UNIX_LINES);
+        // crear el matcher pasandole el texto a comprobar
+        final Matcher matcherNIF = patternNIF.matcher(pruebaNIF);
 
-    private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
-        // TODO add your handling code here:
-         // bloquear la tabla
-        this.TablaResultadosClientes.setEnabled(false);
+        // si el nif introducido es valido
+        if (matcherNIF.matches()) {
+            return true;
 
+        } else {
+            return false;
+        }
+
+    }
+
+    private boolean verificarNombre(String nombre) {
+
+        // crear una expresion para que se introduzca un nombre valido
+        final String regexNombre = ".+";
+        // crear el texto que vamos a comprobar que cumple la expresion regular
+        final String pruebaNombre = nombre;
+
+        // crear el pattern y pasarle el regex
+        final Pattern patternNombre = Pattern.compile(regexNombre, Pattern.UNIX_LINES);
+        // crear el matcher pasandole el texto a comprobar
+        final Matcher matcherNombre = patternNombre.matcher(pruebaNombre);
+
+        // si el nombre introducido es valido
+        if (matcherNombre.matches()) {
+            return true;
+
+        } else {// si el nombre no es valido
+            return false;
+        }
+    }
+
+    private boolean verificarApellido(String apellido) {
+        // crear una expresion para que se introduzca un nombre valido
+        final String regexNombre = ".+";
+        // podemos utilizar el regex del nombre
+        // crear el texto que vamos a comprobar que cumple la expresion regular
+        final String pruebaApellido = this.EntradaApellidoCliente.getText();
+
+        // crear el pattern y pasarle el regex
+        final Pattern patternApelllido = Pattern.compile(regexNombre, Pattern.UNIX_LINES);
+        // crear el matcher pasandole el texto a comprobar
+        final Matcher matcherApellido = patternApelllido.matcher(pruebaApellido);
+
+        // si el apellido introducido es valido
+        if (matcherApellido.matches()) {
+            // obtener el apellido
+            return true;
+        } else {// si el apellido no es valido
+            return false;
+        }
+    }
+
+    private boolean verificarFechaNacimiento(String fecha) {
+        // fecha nacimiento
+        // crear una expresion para que se introduzca una fecha con el patron "yyyy-MM-dd"
+        // crear el patron con un string
+        final String regexFecha = "^\\d{4}\\-(0[1-9]|1[012])\\-(0[1-9]|[12][0-9]|3[01])$";
+        // crear el texto que vamos a comprobar que cumple la expresion regular
+        final String pruebaFechaNacimiento = this.EntradaFechaNacimientoCliente.getText();
+
+        // crear el pattern y pasarle el patron
+        final Pattern patternFechaNacimiento = Pattern.compile(regexFecha, Pattern.UNIX_LINES);
+        // crear el matcher pasandole el texto a comprobar
+        final Matcher matcherFechaNacimiento = patternFechaNacimiento.matcher(pruebaFechaNacimiento);
+
+        // si la fecha introducida coincide
+        if (matcherFechaNacimiento.matches()) {
+            // intentar parsear la fecha y establecer la fecha de nacimiento
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    private void actualizarTablaResultados() {
+        // crear un modelo para la tabla con la columna 0 y 1 no editable
+        DefaultTableModel modelo = new DefaultTableModel() {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                if (column == 0 || column == 1) {
+                    return false;
+                }
+                return true;
+            }
+
+        };
+        
         // obtener todos los registros de las facturas
         List<Clientes> listaClientes = this.controladorClientes.findClientesEntities();
 
         // crear las columnas que va a tener nuestra tabla        
-        String[] columnas = {"ID", "ID_Tarjeta", "NIF", "Nombre", "Apellido" , "Fecha Nacimiento"};
-
-        // crear un modelo para la tabla
-        DefaultTableModel modelo = new DefaultTableModel();
+        String[] columnas = {"ID", "ID_Tarjeta", "NIF", "Nombre", "Apellido", "Fecha Nacimiento"};
 
         // poner los identificadores de los campos en el modelo
         modelo.setColumnIdentifiers(columnas);
@@ -236,6 +351,92 @@ public class VentanaAñadirClientes extends javax.swing.JFrame {
 
         // establecer el modelo a la tabla
         this.TablaResultadosClientes.setModel(modelo);
+    }
+
+    private void BotonAñadirClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BotonAñadirClienteActionPerformed
+        // TODO add your handling code here:
+
+        // obtener todos los registros de los clientes
+        List<Clientes> listaClientes = this.controladorClientes.findClientesEntities();
+
+        // crear un cliente que sera el que se introducirá
+        Clientes nuevoCliente = new Clientes();
+
+        // verificar que el nif sea valido
+        if (verificarNif(this.EntradaNIFCliente.getText())) {
+            nuevoCliente.setNifCliente(this.EntradaNIFCliente.getText());
+
+            // verificar la fecha de nacimiento
+            if (verificarFechaNacimiento(this.EntradaFechaNacimientoCliente.getText())) {
+                // intentar parsear la fecha y establecer la fecha de nacimiento del cliente
+                try {
+                    SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+                    Date fecha = formatter.parse(this.EntradaFechaNacimientoCliente.getText());
+                    nuevoCliente.setFechaNacimientocliente(fecha);
+                } catch (ParseException ex) {
+                    JOptionPane.showMessageDialog(rootPane, "FECHA no se ha podido convertir");
+                }
+
+                // verificar el nombre
+                if (verificarNombre(this.EntradaNombreCliente.getText())) {
+                    nuevoCliente.setNombrecliente(this.EntradaNombreCliente.getText());
+
+                    // verificar el apellido
+                    if (verificarApellido(this.EntradaApellidoCliente.getText())) {
+                        nuevoCliente.setApellidosCliente(this.EntradaApellidoCliente.getText());
+
+                        // tarjeta bancaria
+                        String datosTarjetaSeleccionada = this.DesplegableTarjetas.getSelectedItem().toString();
+                        // obtener el id y el numero de tarjeta
+                        String[] tarjetaDividida = datosTarjetaSeleccionada.split("-");
+                        // quitar los espacios en blanco
+                        for (int i = 0; i < tarjetaDividida.length; i++) {
+                            tarjetaDividida[i] = tarjetaDividida[i].replaceAll(" ", "");
+
+                        }
+                        // crear una tarjeta con los datos y añadir la tarjeta al cliente
+                        TarjetasBancarias tarjetaNuevoCliente = new TarjetasBancarias();
+                        tarjetaNuevoCliente.setIdtarjetaBancaria(Integer.parseInt(tarjetaDividida[0]));
+                        tarjetaNuevoCliente.setNumeroTarjeta((tarjetaDividida[1]));
+                        nuevoCliente.setIdtarjetaBancaria(tarjetaNuevoCliente);
+
+                        // cliente tiene todos los datos correctos
+                        controladorClientes.create(nuevoCliente);
+
+                    } else {
+                        JOptionPane.showMessageDialog(rootPane, "Apellido no valido");
+                    }
+
+                } else {
+                    JOptionPane.showMessageDialog(rootPane, "Nombre no valido");
+                }
+
+            } else {
+                JOptionPane.showMessageDialog(rootPane, "Fecha de nacimiento no valida");
+            }
+
+        } else {
+            JOptionPane.showMessageDialog(rootPane, "NIF no valido");
+        }
+
+        actualizarTablaResultados();
+    }//GEN-LAST:event_BotonAñadirClienteActionPerformed
+
+    private void DesplegableTarjetasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_DesplegableTarjetasActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_DesplegableTarjetasActionPerformed
+
+    private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
+        actualizarTablaResultados();
+
+        // recoger las tarjetas para mostrarlas en el desplegable
+        List<TarjetasBancarias> tarjetas = controladorTarjetas.findTarjetasBancariasEntities();
+
+        for (TarjetasBancarias t : tarjetas) {
+            this.DesplegableTarjetas.addItem(t.getIdtarjetaBancaria() + "-" + t.getNumeroTarjeta());
+        }
+
+
     }//GEN-LAST:event_formWindowOpened
 
     private void BotonRegresarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BotonRegresarActionPerformed
@@ -244,6 +445,70 @@ public class VentanaAñadirClientes extends javax.swing.JFrame {
         ventana.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_BotonRegresarActionPerformed
+
+    private void BotonEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BotonEliminarActionPerformed
+        try {
+            // TODO add your handling code here:
+            // obtener la fila que esta seleccionada
+            int fila = TablaResultadosClientes.getSelectedRow();
+
+            // obtener el id del cliente de la columna
+            int idBorrar = Integer.parseInt(TablaResultadosClientes.getValueAt(fila, 0).toString());
+
+            // intentar borrar la factura por el id
+            controladorClientes.destroy(idBorrar);
+        } catch (IllegalOrphanException ex) {
+            Logger.getLogger(VentanaAñadirClientes.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (NonexistentEntityException ex) {
+            Logger.getLogger(VentanaAñadirClientes.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        actualizarTablaResultados();
+
+    }//GEN-LAST:event_BotonEliminarActionPerformed
+
+    private void BotonModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BotonModificarActionPerformed
+        // TODO add your handling code here:
+
+        // obtener la fila que esta seleccionada
+        int fila = TablaResultadosClientes.getSelectedRow();
+
+        // obtener el id del cliente a actualizar
+        int id_cliente = Integer.parseInt(this.TablaResultadosClientes.getValueAt(fila, 0).toString());
+
+        // obtener el id de la tarjeta bancaria
+        int id_tarjeta = Integer.parseInt(this.TablaResultadosClientes.getValueAt(fila, 1).toString());
+
+        // obtener el nif del cliente
+        String nif = this.TablaResultadosClientes.getValueAt(fila, 2).toString();
+
+        // obtener el nombre del cliente
+        String nombre = this.TablaResultadosClientes.getValueAt(fila, 3).toString();
+
+        // obtener el apellido del cliente
+        String apellido = this.TablaResultadosClientes.getValueAt(fila, 4).toString();
+
+        // obtener la fecha de nacimiento del cliente a actualizar
+        
+
+        // crear el cliente con los datos obtenidos de la tabla
+        Clientes clienteActualizar = new Clientes();
+        clienteActualizar.setIdCliente(id_cliente);
+        clienteActualizar.getIdtarjetaBancaria().setIdtarjetaBancaria(id_tarjeta);
+        clienteActualizar.setNifCliente(nif);
+        clienteActualizar.setApellidosCliente(apellido);
+        clienteActualizar.setFechaNacimientocliente(fecha);
+
+        // intentar editar
+        try {
+            controladorClientes.edit(clienteActualizar);
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(rootPane, "No se ha podido actualizar el cliente");
+        }
+
+        // actualizar datos de la tabla
+        actualizarTablaResultados();
+    }//GEN-LAST:event_BotonModificarActionPerformed
 
     /**
      * @param args the command line arguments
@@ -286,12 +551,14 @@ public class VentanaAñadirClientes extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton BotonAñadirCliente;
     private javax.swing.JButton BotonAñadirTarjeta;
+    private javax.swing.JButton BotonEliminar;
+    private javax.swing.JButton BotonModificar;
     private javax.swing.JButton BotonRegresar;
+    private javax.swing.JComboBox<String> DesplegableTarjetas;
     private javax.swing.JTextField EntradaApellidoCliente;
     private javax.swing.JTextField EntradaFechaNacimientoCliente;
     private javax.swing.JTextField EntradaNIFCliente;
     private javax.swing.JTextField EntradaNombreCliente;
-    private javax.swing.JComboBox<String> ListaTarjetas;
     private javax.swing.JTable TablaResultadosClientes;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;

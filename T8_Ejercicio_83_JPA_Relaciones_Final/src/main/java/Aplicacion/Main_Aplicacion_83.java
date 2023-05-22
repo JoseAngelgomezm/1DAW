@@ -41,14 +41,14 @@ public class Main_Aplicacion_83 extends javax.swing.JFrame {
         BotonAñadirProveedores.setBackground(new java.awt.Color(141, 153, 174));
         BotonAñadirProveedores.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
         BotonAñadirProveedores.setForeground(new java.awt.Color(237, 242, 244));
-        BotonAñadirProveedores.setText("Añadir Proveedores");
+        BotonAñadirProveedores.setText("Añadir / Actualizar Proveedores");
         BotonAñadirProveedores.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(216, 0, 50), 4));
         BotonAñadirProveedores.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 BotonAñadirProveedoresActionPerformed(evt);
             }
         });
-        jPanel1.add(BotonAñadirProveedores, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 120, 260, 40));
+        jPanel1.add(BotonAñadirProveedores, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 70, 380, 50));
 
         BotonGenerarFactura.setBackground(new java.awt.Color(141, 153, 174));
         BotonGenerarFactura.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
@@ -60,33 +60,33 @@ public class Main_Aplicacion_83 extends javax.swing.JFrame {
                 BotonGenerarFacturaActionPerformed(evt);
             }
         });
-        jPanel1.add(BotonGenerarFactura, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 330, 260, 40));
+        jPanel1.add(BotonGenerarFactura, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 340, 260, 50));
 
         BotonAñadirProductos.setBackground(new java.awt.Color(141, 153, 174));
         BotonAñadirProductos.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
         BotonAñadirProductos.setForeground(new java.awt.Color(237, 242, 244));
-        BotonAñadirProductos.setText("Añadir Productos");
+        BotonAñadirProductos.setText("Añadir / Actualizar Productos");
         BotonAñadirProductos.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(216, 0, 50), 4));
         BotonAñadirProductos.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 BotonAñadirProductosActionPerformed(evt);
             }
         });
-        jPanel1.add(BotonAñadirProductos, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 190, 260, 40));
+        jPanel1.add(BotonAñadirProductos, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 160, 380, 50));
 
         BotonAñadirClientes.setBackground(new java.awt.Color(141, 153, 174));
         BotonAñadirClientes.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
         BotonAñadirClientes.setForeground(new java.awt.Color(237, 242, 244));
-        BotonAñadirClientes.setText("Añadir Clientes");
+        BotonAñadirClientes.setText("Añadir / Actualizar Clientes");
         BotonAñadirClientes.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(216, 0, 50), 4));
         BotonAñadirClientes.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 BotonAñadirClientesActionPerformed(evt);
             }
         });
-        jPanel1.add(BotonAñadirClientes, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 260, 260, 40));
+        jPanel1.add(BotonAñadirClientes, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 250, 380, 50));
 
-        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 820, 560));
+        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 560, 460));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
