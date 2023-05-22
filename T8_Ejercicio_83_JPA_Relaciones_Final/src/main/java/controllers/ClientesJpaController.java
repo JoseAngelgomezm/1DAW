@@ -2,17 +2,18 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package controlers;
+package controllers;
 
-import controlers.exceptions.IllegalOrphanException;
-import controlers.exceptions.NonexistentEntityException;
 import entities.Clientes;
+import entities.Facturas;
+import entities.TarjetasBancarias;
+import entities.exceptions.IllegalOrphanException;
+import entities.exceptions.NonexistentEntityException;
 import java.io.Serializable;
 import javax.persistence.Query;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
-import entities.Facturas;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.EntityManager;
@@ -41,6 +42,11 @@ public class ClientesJpaController implements Serializable {
         try {
             em = getEntityManager();
             em.getTransaction().begin();
+            TarjetasBancarias idtarjetaBancaria = clientes.getIdtarjetaBancaria();
+            if (idtarjetaBancaria != null) {
+                idtarjetaBancaria = em.getReference(idtarjetaBancaria.getClass(), idtarjetaBancaria.getIdtarjetaBancaria());
+                clientes.setIdtarjetaBancaria(idtarjetaBancaria);
+            }
             List<Facturas> attachedFacturasList = new ArrayList<Facturas>();
             for (Facturas facturasListFacturasToAttach : clientes.getFacturasList()) {
                 facturasListFacturasToAttach = em.getReference(facturasListFacturasToAttach.getClass(), facturasListFacturasToAttach.getFacturasPK());
@@ -48,6 +54,10 @@ public class ClientesJpaController implements Serializable {
             }
             clientes.setFacturasList(attachedFacturasList);
             em.persist(clientes);
+            if (idtarjetaBancaria != null) {
+                idtarjetaBancaria.getClientesList().add(clientes);
+                idtarjetaBancaria = em.merge(idtarjetaBancaria);
+            }
             for (Facturas facturasListFacturas : clientes.getFacturasList()) {
                 Clientes oldClientesOfFacturasListFacturas = facturasListFacturas.getClientes();
                 facturasListFacturas.setClientes(clientes);
@@ -71,6 +81,8 @@ public class ClientesJpaController implements Serializable {
             em = getEntityManager();
             em.getTransaction().begin();
             Clientes persistentClientes = em.find(Clientes.class, clientes.getIdCliente());
+            TarjetasBancarias idtarjetaBancariaOld = persistentClientes.getIdtarjetaBancaria();
+            TarjetasBancarias idtarjetaBancariaNew = clientes.getIdtarjetaBancaria();
             List<Facturas> facturasListOld = persistentClientes.getFacturasList();
             List<Facturas> facturasListNew = clientes.getFacturasList();
             List<String> illegalOrphanMessages = null;
@@ -85,6 +97,10 @@ public class ClientesJpaController implements Serializable {
             if (illegalOrphanMessages != null) {
                 throw new IllegalOrphanException(illegalOrphanMessages);
             }
+            if (idtarjetaBancariaNew != null) {
+                idtarjetaBancariaNew = em.getReference(idtarjetaBancariaNew.getClass(), idtarjetaBancariaNew.getIdtarjetaBancaria());
+                clientes.setIdtarjetaBancaria(idtarjetaBancariaNew);
+            }
             List<Facturas> attachedFacturasListNew = new ArrayList<Facturas>();
             for (Facturas facturasListNewFacturasToAttach : facturasListNew) {
                 facturasListNewFacturasToAttach = em.getReference(facturasListNewFacturasToAttach.getClass(), facturasListNewFacturasToAttach.getFacturasPK());
@@ -93,6 +109,14 @@ public class ClientesJpaController implements Serializable {
             facturasListNew = attachedFacturasListNew;
             clientes.setFacturasList(facturasListNew);
             clientes = em.merge(clientes);
+            if (idtarjetaBancariaOld != null && !idtarjetaBancariaOld.equals(idtarjetaBancariaNew)) {
+                idtarjetaBancariaOld.getClientesList().remove(clientes);
+                idtarjetaBancariaOld = em.merge(idtarjetaBancariaOld);
+            }
+            if (idtarjetaBancariaNew != null && !idtarjetaBancariaNew.equals(idtarjetaBancariaOld)) {
+                idtarjetaBancariaNew.getClientesList().add(clientes);
+                idtarjetaBancariaNew = em.merge(idtarjetaBancariaNew);
+            }
             for (Facturas facturasListNewFacturas : facturasListNew) {
                 if (!facturasListOld.contains(facturasListNewFacturas)) {
                     Clientes oldClientesOfFacturasListNewFacturas = facturasListNewFacturas.getClientes();
@@ -143,6 +167,11 @@ public class ClientesJpaController implements Serializable {
             }
             if (illegalOrphanMessages != null) {
                 throw new IllegalOrphanException(illegalOrphanMessages);
+            }
+            TarjetasBancarias idtarjetaBancaria = clientes.getIdtarjetaBancaria();
+            if (idtarjetaBancaria != null) {
+                idtarjetaBancaria.getClientesList().remove(clientes);
+                idtarjetaBancaria = em.merge(idtarjetaBancaria);
             }
             em.remove(clientes);
             em.getTransaction().commit();

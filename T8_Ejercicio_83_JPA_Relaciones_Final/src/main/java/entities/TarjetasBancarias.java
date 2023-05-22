@@ -5,6 +5,7 @@
 package entities;
 
 import java.io.Serializable;
+import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -13,6 +14,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 /**
@@ -35,6 +37,8 @@ public class TarjetasBancarias implements Serializable {
     private Integer idtarjetaBancaria;
     @Column(name = "numero_tarjeta")
     private String numeroTarjeta;
+    @OneToMany(mappedBy = "idtarjetaBancaria")
+    private List<Clientes> clientesList;
 
     public TarjetasBancarias() {
     }
@@ -57,6 +61,14 @@ public class TarjetasBancarias implements Serializable {
 
     public void setNumeroTarjeta(String numeroTarjeta) {
         this.numeroTarjeta = numeroTarjeta;
+    }
+
+    public List<Clientes> getClientesList() {
+        return clientesList;
+    }
+
+    public void setClientesList(List<Clientes> clientesList) {
+        this.clientesList = clientesList;
     }
 
     @Override

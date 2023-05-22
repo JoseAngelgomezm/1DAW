@@ -31,11 +31,13 @@ create table if not exists tarjetasBancarias(
 
 create table if not exists clientes(
 	id_cliente int auto_increment,
+    id_tarjetaBancaria int,
     nif_cliente varchar(9),
     nombrecliente varchar(60),
     apellidos_cliente varchar(120),
 	fechaNacimiento_cliente date,
-    constraint pk_clientes primary key (id_cliente)
+    constraint pk_clientes primary key (id_cliente),
+    constraint fk_clientes_tarjetasBancarias foreign key (id_tarjetaBancaria)  references tarjetasBancarias (id_tarjetaBancaria)
 );
 
 create table if not exists facturas(
@@ -65,13 +67,14 @@ insert into productos values
 insert into tarjetasBancarias values 
 (default, '47889998837662638'),
 (default, '32888847567567573'),
+(default, '48391246237542375'),
 (default, '23723784578478345');
 
 insert into clientes values 
-(default, '72348543F', 'Juan Francisco', 'Perez Melenguez', '1989-02-07'),
-(default, '23475895G', 'Andres', 'Diaz Fernandez', '1976-04-01'),
-(default, '83764758F', 'Miguel', 'Lomena', '1992-08-03'),
-(default, '73365890L', 'Alejandro', 'Hidalgo', '1998-07-22');
+(default, '1', '72348543F', 'Juan Francisco', 'Perez Melenguez', '1989-02-07'),
+(default, '2', '23475895G', 'Andres', 'Diaz Fernandez', '1976-04-01'),
+(default, '3', '83764758F', 'Miguel', 'Lomena', '1992-08-03'),
+(default, '4', '73365890L', 'Alejandro', 'Hidalgo', '1998-07-22');
 
 insert into facturas values
 ('1', '1', '2', '2023-05-19', '400'),

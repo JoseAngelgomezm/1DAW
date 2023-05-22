@@ -14,6 +14,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
@@ -53,6 +55,9 @@ public class Clientes implements Serializable {
     private Date fechaNacimientocliente;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "clientes")
     private List<Facturas> facturasList;
+    @JoinColumn(name = "id_tarjetaBancaria", referencedColumnName = "id_tarjetaBancaria")
+    @ManyToOne
+    private TarjetasBancarias idtarjetaBancaria;
 
     public Clientes() {
     }
@@ -107,6 +112,14 @@ public class Clientes implements Serializable {
 
     public void setFacturasList(List<Facturas> facturasList) {
         this.facturasList = facturasList;
+    }
+
+    public TarjetasBancarias getIdtarjetaBancaria() {
+        return idtarjetaBancaria;
+    }
+
+    public void setIdtarjetaBancaria(TarjetasBancarias idtarjetaBancaria) {
+        this.idtarjetaBancaria = idtarjetaBancaria;
     }
 
     @Override
