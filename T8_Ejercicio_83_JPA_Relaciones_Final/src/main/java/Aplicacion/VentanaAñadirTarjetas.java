@@ -14,6 +14,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -174,25 +175,23 @@ public class VentanaAñadirTarjetas extends javax.swing.JFrame {
             return false;
         }
     }
+    
+    private boolean comprobarSiNumeroTarjetaExiste(String numeroTarjeta) {
+        boolean noExiste = true;
+        // cargar los productos
+        List<TarjetasBancarias> listaTarjetasBancarias = this.controladorTarjetas.findTarjetasBancariasEntities();
 
-
-    private void BotonAñadirTarjetaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BotonAñadirTarjetaActionPerformed
-        // TODO add your handling code here:
-
-        // obtener la lista de tarjetas
-        List<TarjetasBancarias> listaTarjetas = controladorTarjetas.findTarjetasBancariasEntities();
-
-        // crear una nueva tarjeta 
-        TarjetasBancarias nuevaTarjeta = new TarjetasBancarias();
-
-        // verificar que la tarjeta sea una numero valido
-        if (verificarTarjeta(this.EntradaNumeroTarjeta.getText())) {
-        
+        // recorrer la lista
+        for (TarjetasBancarias t : listaTarjetasBancarias) {
+            // si encuentra algun numero de tarjeta igual
+            if (t.getNumeroTarjeta().equalsIgnoreCase(numeroTarjeta)) {
+                noExiste = false;
+                break;
+            }
         }
-       
+        return noExiste;
+    }
 
-
-    }//GEN-LAST:event_BotonAñadirTarjetaActionPerformed
     private void actualizarTablaResultados() {
         // crear un modelo para la tabla con la columna 0 no editable
         DefaultTableModel modelo = new DefaultTableModel() {
@@ -226,7 +225,32 @@ public class VentanaAñadirTarjetas extends javax.swing.JFrame {
         // establecer el modelo a la tabla
         this.TablaResultadosTarjetas.setModel(modelo);
     }
+    
+    private void BotonAñadirTarjetaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BotonAñadirTarjetaActionPerformed
+        // TODO add your handling code here:
 
+        // obtener la lista de tarjetas
+        List<TarjetasBancarias> listaTarjetas = controladorTarjetas.findTarjetasBancariasEntities();
+
+        // crear una nueva tarjeta 
+        TarjetasBancarias nuevaTarjeta = new TarjetasBancarias();
+
+        // verificar que la tarjeta sea una numero valido y no exista
+        if (verificarTarjeta(this.EntradaNumeroTarjeta.getText()) && comprobarSiNumeroTarjetaExiste(this.EntradaNumeroTarjeta.getText())) {
+            // poner los datos de la nueva tarjeta
+            nuevaTarjeta.setNumeroTarjeta(this.EntradaNumeroTarjeta.getText());
+            // insertar la tarjeta
+            controladorTarjetas.create(nuevaTarjeta);
+            // actualizar la tabla de resultados
+            actualizarTablaResultados();
+        }else{
+            JOptionPane.showMessageDialog(rootPane, "Numero tarjeta no valido o existente");
+        }
+       
+
+
+    }//GEN-LAST:event_BotonAñadirTarjetaActionPerformed
+   
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
         // TODO add your handling code here:
         actualizarTablaResultados();

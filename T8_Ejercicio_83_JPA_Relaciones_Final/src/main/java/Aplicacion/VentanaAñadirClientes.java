@@ -352,6 +352,22 @@ public class VentanaAñadirClientes extends javax.swing.JFrame {
         this.TablaResultadosClientes.setModel(modelo);
     }
 
+    private boolean comprobarSiNifClienteExiste(String nifCliente) {
+        boolean noExiste = true;
+        // cargar los productos
+        List<Clientes> listaClientes = this.controladorClientes.findClientesEntities();
+
+        // recorrer la lista
+        for (Clientes c : listaClientes) {
+            // si encuentra algun numero de tarjeta igual
+            if (c.getNifCliente().equalsIgnoreCase(nifCliente)) {
+                noExiste = false;
+                break;
+            }
+        }
+        return noExiste;
+    }
+
     private void BotonAñadirClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BotonAñadirClienteActionPerformed
         // TODO add your handling code here:
 
@@ -362,8 +378,7 @@ public class VentanaAñadirClientes extends javax.swing.JFrame {
         Clientes nuevoCliente = new Clientes();
 
         // verificar que el nif sea valido
-        if (verificarNif(this.EntradaNIFCliente.getText())) {
-            nuevoCliente.setNifCliente(this.EntradaNIFCliente.getText());
+        if (verificarNif(this.EntradaNIFCliente.getText()) && comprobarSiNifClienteExiste(this.EntradaNIFCliente.getText())) {
 
             // verificar la fecha de nacimiento
             if (verificarFechaNacimiento(this.EntradaFechaNacimientoCliente.getText())) {
@@ -378,29 +393,32 @@ public class VentanaAñadirClientes extends javax.swing.JFrame {
 
                 // verificar el nombre
                 if (verificarNombre(this.EntradaNombreCliente.getText())) {
-                    nuevoCliente.setNombrecliente(this.EntradaNombreCliente.getText());
 
                     // verificar el apellido
                     if (verificarApellido(this.EntradaApellidoCliente.getText())) {
+
+                        // establecer los datos 
+                        nuevoCliente.setNifCliente(this.EntradaNIFCliente.getText());
+                        nuevoCliente.setNombrecliente(this.EntradaNombreCliente.getText());
                         nuevoCliente.setApellidosCliente(this.EntradaApellidoCliente.getText());
 
-                        // tarjeta bancaria
+                        // tarjeta bancaria desde el desplegable
                         String datosTarjetaSeleccionada = this.DesplegableTarjetas.getSelectedItem().toString();
-                        // obtener el id y el numero de tarjeta
-                        String[] tarjetaDividida = datosTarjetaSeleccionada.split("-");
-                        // quitar los espacios en blanco
-                        for (int i = 0; i < tarjetaDividida.length; i++) {
-                            tarjetaDividida[i] = tarjetaDividida[i].replaceAll(" ", "");
 
-                        }
-                        // crear una tarjeta con los datos y añadir la tarjeta al cliente
-                        TarjetasBancarias tarjetaNuevoCliente = new TarjetasBancarias();
-                        tarjetaNuevoCliente.setIdtarjetaBancaria(Integer.parseInt(tarjetaDividida[0]));
-                        tarjetaNuevoCliente.setNumeroTarjeta((tarjetaDividida[1]));
-                        nuevoCliente.setIdtarjetaBancaria(tarjetaNuevoCliente);
+                        // obtener el id de la tarjeta asociada al cliente
+                        int id = Character.getNumericValue(datosTarjetaSeleccionada.charAt(0));
 
-                        // cliente tiene todos los datos correctos
+                        // obtener la tarjeta asociada al cliente
+                        TarjetasBancarias tarjetaAsociada = controladorTarjetas.findTarjetasBancarias(id);
+
+                        // poner la tarjeta al nuevo cliente
+                        nuevoCliente.setIdtarjetaBancaria(tarjetaAsociada);
+
+                        // insertar el cliente
                         controladorClientes.create(nuevoCliente);
+
+                        // actualizar resultados
+                        actualizarTablaResultados();
 
                     } else {
                         JOptionPane.showMessageDialog(rootPane, "Apellido no valido");
@@ -415,10 +433,10 @@ public class VentanaAñadirClientes extends javax.swing.JFrame {
             }
 
         } else {
-            JOptionPane.showMessageDialog(rootPane, "NIF no valido");
+            JOptionPane.showMessageDialog(rootPane, "NIF no valido o existente");
         }
 
-        actualizarTablaResultados();
+
     }//GEN-LAST:event_BotonAñadirClienteActionPerformed
 
     private void DesplegableTarjetasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_DesplegableTarjetasActionPerformed
@@ -474,8 +492,6 @@ public class VentanaAñadirClientes extends javax.swing.JFrame {
 
         // obtener la fila que esta seleccionada
         int fila = TablaResultadosClientes.getSelectedRow();
-
-        
 
         // actualizar datos de la tabla
         actualizarTablaResultados();

@@ -218,17 +218,9 @@ public class VentanaAñadirProveedores extends javax.swing.JFrame {
         // crear un nuevo proveedor
         Proveedores nuevoProveedor = new Proveedores();
 
-        // verificar que el dni sea valido
-        if (verificarNif(EntradaNIFProveedor.getText())) {
-            // si el nif es valido, comprobar que no este en la lista
-            for (Proveedores p : listaProveedores) {
-                if (p.getNifProveedor().equals(EntradaNIFProveedor.getText())) {
-                    JOptionPane.showMessageDialog(rootPane, "NIF Ya existente");
-                    break;
-                }
-            }
-
-            // si no existe, verificar nombre
+        // verificar que el dni sea valido y que no este en la base de datos
+        if (verificarNif(EntradaNIFProveedor.getText()) && comprobarNifNoExiste(EntradaNIFProveedor.getText())) {
+            // verificar el nombre
             if (verificarNombre(EntradaNombreProveedor1.getText())) {
                 // verificar direccion
                 if (verificarNombre(EntradaDireccionProveedor.getText())) {
@@ -250,7 +242,7 @@ public class VentanaAñadirProveedores extends javax.swing.JFrame {
             }
 
         } else {
-            JOptionPane.showMessageDialog(rootPane, "NIF Proveedor no valido");
+            JOptionPane.showMessageDialog(rootPane, "NIF Proveedor no valido o existente");
         }
 
 
@@ -259,6 +251,22 @@ public class VentanaAñadirProveedores extends javax.swing.JFrame {
     private void EntradaNombreProveedor1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_EntradaNombreProveedor1ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_EntradaNombreProveedor1ActionPerformed
+
+    private boolean comprobarNifNoExiste(String nif) {
+        boolean noExiste = true;
+        // cargar los proveedores
+        List<Proveedores> listaProveedores = this.controladorProveedores.findProveedoresEntities();
+
+        // recorrer la lista
+        for (Proveedores p : listaProveedores) {
+            // si encuentra algun nif de proveedor igual, devuelve false
+            if (p.getNifProveedor().equalsIgnoreCase(nif)) {
+                noExiste = false;
+                break;
+            }
+        }
+        return noExiste;
+    }
 
     private void actualizarTablaResultados() {
         // crear un modelo para la tabla con la columna 0 no editable
@@ -333,8 +341,6 @@ public class VentanaAñadirProveedores extends javax.swing.JFrame {
 
         // obtener la fila que esta seleccionada
         int fila = TablaResultadosProveedores.getSelectedRow();
-
-        
 
         // actualizar datos de la tabla
         actualizarTablaResultados();

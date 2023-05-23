@@ -64,10 +64,10 @@ insert into productos values
 (default, '3',  '34242342', 'Gigabyte b550 AORUS ELITE', '130');
 
 insert into tarjetasBancarias values 
-(default, '47889998837662638'),
-(default, '32888847567567573'),
-(default, '48391246237542375'),
-(default, '23723784578478345');
+(default, '4788999883766263'),
+(default, '3288884756756757'),
+(default, '4839124623754237'),
+(default, '2372378457847834');
 
 insert into clientes values 
 (default, '1', '72348543F', 'Juan Francisco', 'Perez Melenguez', '1989-02-07'),

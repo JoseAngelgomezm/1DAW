@@ -160,7 +160,6 @@ public class VentanaAñadirProductos extends javax.swing.JFrame {
         });
         jPanel1.add(BotonModificar, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 560, 90, 30));
 
-        DesplegableProveedores.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         jPanel1.add(DesplegableProveedores, new org.netbeans.lib.awtextra.AbsoluteConstraints(500, 450, 130, 20));
 
         jLabel6.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
@@ -195,7 +194,7 @@ public class VentanaAñadirProductos extends javax.swing.JFrame {
     private void EntradaREFProductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_EntradaREFProductoActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_EntradaREFProductoActionPerformed
-    
+
     private boolean verificarRef(String refProducto) {
         // crear una expresion para que se introduzca un nif valido con un regex
         final String regexNIF = "[0-9]{10}";
@@ -210,13 +209,13 @@ public class VentanaAñadirProductos extends javax.swing.JFrame {
         // si el nif introducido es valido
         if (matcherNIF.matches()) {
             return true;
-            
+
         } else {
             return false;
         }
-        
+
     }
-    
+
     private boolean verificarNombre(String nombre) {
         // crear una expresion para que se introduzca un nif valido con un regex
         final String regexNombre = ".+";
@@ -231,13 +230,13 @@ public class VentanaAñadirProductos extends javax.swing.JFrame {
         // si el nif introducido es valido
         if (matcherNIF.matches()) {
             return true;
-            
+
         } else {
             return false;
         }
-        
+
     }
-    
+
     private boolean verificarImporte(String importe) {
         // crear una expresion para que se introduzca un nif valido con un regex
         final String regexImporte = "\\d+(\\.\\d{1,4})?";
@@ -252,62 +251,30 @@ public class VentanaAñadirProductos extends javax.swing.JFrame {
         // si el nif introducido es valido
         if (matcherNIF.matches()) {
             return true;
-            
+
         } else {
             return false;
         }
-        
+
     }
 
-    private void BotonAñadirProductosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BotonAñadirProductosActionPerformed
-        // TODO add your handling code here:
-        // crear un producto
-        Productos productoIntroducir = new Productos();
+    private boolean comprobarSiNifExiste(String ref) {
+        boolean noExiste = true;
+        // cargar los productos
+        List<Productos> listaProductos = this.controladorProductos.findProductosEntities();
 
-        // verificar que lo datos que hemos introducido son correctos
-        if (verificarRef(EntradaREFProducto.getText())) {
-            
-            if (verificarNombre(EntradaNombreProducto.getText())) {
-                
-                if (verificarImporte(EntradaImporteProducto.getText())) {
-
-                    // si todos los datos son correctos, asignarlos al nuevo producto
-                    productoIntroducir.setRefProducto(EntradaREFProducto.getText());
-                    productoIntroducir.setNombreProducto(EntradaNombreProducto.getText());
-                    productoIntroducir.setImporteProducto(Double.valueOf(EntradaImporteProducto.getText()));
-
-                    // obtener el id del proveedor del cual es el producto
-                    String proveedorSeleccionado = DesplegableProveedores.getSelectedItem().toString();
-                    int id = Integer.valueOf(proveedorSeleccionado.charAt(0));
-                    
-                    // buscar el proveedor
-                    Proveedores proveedorAsignado = controladorProveedores.findProveedores(id);
-                    
-                    // asignar el proveedor al nuevo producto
-                    productoIntroducir.setIdProveedor(proveedorAsignado);
-                    
-                    // introducir el producto en la base de datos
-                    controladorProductos.create(productoIntroducir);
-                    
-                    
-                } else {
-                    JOptionPane.showMessageDialog(rootPane, "Importe del producto no valido");
-                }
-                
-            } else {
-                JOptionPane.showMessageDialog(rootPane, "Nombre del producto no valido");
+        // recorrer la lista
+        for (Productos p : listaProductos) {
+            // si encuentra algun nif de proveedor igual, devuelve false
+            if (p.getRefProducto().equalsIgnoreCase(ref)) {
+                noExiste = false;
+                break;
             }
-            
-        } else {
-            JOptionPane.showMessageDialog(rootPane, "Referencia producto no valida");
         }
-
-    }//GEN-LAST:event_BotonAñadirProductosActionPerformed
-
-    private void EntradaNombreProductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_EntradaNombreProductoActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_EntradaNombreProductoActionPerformed
-    private void actualizarTablaResultados() {
+        return noExiste;
+    }
+    
+     private void actualizarTablaResultados() {
         // crear un modelo para la tabla con la columna 0 no editable
         DefaultTableModel modelo = new DefaultTableModel() {
             @Override
@@ -317,7 +284,7 @@ public class VentanaAñadirProductos extends javax.swing.JFrame {
                 }
                 return true;
             }
-            
+
         };
 
         // obtener todos los registros de las tarjetas
@@ -340,6 +307,62 @@ public class VentanaAñadirProductos extends javax.swing.JFrame {
         // establecer el modelo a la tabla
         this.TablaResultadosProductos.setModel(modelo);
     }
+    
+    private void BotonAñadirProductosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BotonAñadirProductosActionPerformed
+        // TODO add your handling code here:
+        // crear un producto
+        Productos productoIntroducir = new Productos();
+
+        // verificar que lo datos que hemos introducido son correctos
+        if (verificarRef(EntradaREFProducto.getText()) && comprobarSiNifExiste(EntradaREFProducto.getText())) {
+
+            if (verificarNombre(EntradaNombreProducto.getText())) {
+
+                if (verificarImporte(EntradaImporteProducto.getText())) {
+
+                    // si todos los datos son correctos, asignarlos al nuevo producto
+                    productoIntroducir.setRefProducto(EntradaREFProducto.getText());
+                    productoIntroducir.setNombreProducto(EntradaNombreProducto.getText());
+                    productoIntroducir.setImporteProducto(Double.valueOf(EntradaImporteProducto.getText()));
+
+                    // obtener el string de lo que tenemos en el desplegable
+                    String proveedorSeleccionado = DesplegableProveedores.getSelectedItem().toString();
+
+                    // obtener el id de ese proveedor
+                    int id = Character.getNumericValue(proveedorSeleccionado.charAt(0));
+
+                    // buscar el proveedor
+                    Proveedores proveedorAsignado = controladorProveedores.findProveedores(id);
+
+                    System.out.println(proveedorAsignado);
+
+                    // asignar el proveedor al nuevo producto
+                    productoIntroducir.setIdProveedor(proveedorAsignado);
+
+                    // introducir el producto en la base de datos
+                    controladorProductos.create(productoIntroducir);
+
+                    // actualizar la tabla de consulta
+                    actualizarTablaResultados();
+
+                } else {
+                    JOptionPane.showMessageDialog(rootPane, "Importe del producto no valido");
+                }
+
+            } else {
+                JOptionPane.showMessageDialog(rootPane, "Nombre del producto no valido");
+            }
+
+        } else {
+            JOptionPane.showMessageDialog(rootPane, "Referencia producto no valida o existente");
+        }
+
+    }//GEN-LAST:event_BotonAñadirProductosActionPerformed
+
+    private void EntradaNombreProductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_EntradaNombreProductoActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_EntradaNombreProductoActionPerformed
+   
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
         // TODO add your handling code here:
         actualizarTablaResultados();
@@ -350,7 +373,7 @@ public class VentanaAñadirProductos extends javax.swing.JFrame {
         for (Proveedores p : listaProveedores) {
             DesplegableProveedores.addItem(p.getIdProveedor() + "-" + p.getNombreProveedor());
         }
-        
+
     }//GEN-LAST:event_formWindowOpened
 
     private void BotonRegresarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BotonRegresarActionPerformed
@@ -361,7 +384,7 @@ public class VentanaAñadirProductos extends javax.swing.JFrame {
     }//GEN-LAST:event_BotonRegresarActionPerformed
 
     private void BotonEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BotonEliminarActionPerformed
-        
+
         try {
             // TODO add your handling code here:
             // obtener la fila que esta seleccionada
@@ -372,7 +395,7 @@ public class VentanaAñadirProductos extends javax.swing.JFrame {
 
             // intentar borrar el producto por el id
             controladorProductos.destroy(idBorrar);
-            
+
             actualizarTablaResultados();
         } catch (IllegalOrphanException ex) {
             Logger.getLogger(VentanaAñadirProductos.class.getName()).log(Level.SEVERE, null, ex);
