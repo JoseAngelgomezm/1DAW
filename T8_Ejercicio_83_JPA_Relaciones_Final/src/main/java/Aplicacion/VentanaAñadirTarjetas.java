@@ -7,7 +7,10 @@ package Aplicacion;
 import entities.Clientes;
 import entities.Proveedores;
 import entities.TarjetasBancarias;
+import entities.exceptions.NonexistentEntityException;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.persistence.EntityManagerFactory;
@@ -52,6 +55,8 @@ public class VentanaAñadirTarjetas extends javax.swing.JFrame {
         BotonAñadirTarjeta = new javax.swing.JButton();
         jLabel3 = new javax.swing.JLabel();
         BotonRegresar = new javax.swing.JButton();
+        BotonEliminar = new javax.swing.JButton();
+        BotonModificar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         addWindowListener(new java.awt.event.WindowAdapter() {
@@ -64,14 +69,14 @@ public class VentanaAñadirTarjetas extends javax.swing.JFrame {
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
         jLabel1.setText("Número Tarjeta:");
-        jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 400, -1, -1));
+        jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 390, -1, -1));
 
         EntradaNumeroTarjeta.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 EntradaNumeroTarjetaActionPerformed(evt);
             }
         });
-        jPanel1.add(EntradaNumeroTarjeta, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 410, 130, -1));
+        jPanel1.add(EntradaNumeroTarjeta, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 390, 130, 30));
 
         TablaResultadosTarjetas.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -94,7 +99,7 @@ public class VentanaAñadirTarjetas extends javax.swing.JFrame {
                 BotonAñadirTarjetaActionPerformed(evt);
             }
         });
-        jPanel1.add(BotonAñadirTarjeta, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 460, -1, 30));
+        jPanel1.add(BotonAñadirTarjeta, new org.netbeans.lib.awtextra.AbsoluteConstraints(410, 390, -1, 30));
 
         jLabel3.setFont(new java.awt.Font("Segoe UI", 0, 48)); // NOI18N
         jLabel3.setText("Añadir Tarjeta");
@@ -106,7 +111,23 @@ public class VentanaAñadirTarjetas extends javax.swing.JFrame {
                 BotonRegresarActionPerformed(evt);
             }
         });
-        jPanel1.add(BotonRegresar, new org.netbeans.lib.awtextra.AbsoluteConstraints(450, 470, -1, -1));
+        jPanel1.add(BotonRegresar, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 450, -1, 30));
+
+        BotonEliminar.setText("Eliminar");
+        BotonEliminar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                BotonEliminarActionPerformed(evt);
+            }
+        });
+        jPanel1.add(BotonEliminar, new org.netbeans.lib.awtextra.AbsoluteConstraints(540, 390, 80, 30));
+
+        BotonModificar.setText("Modificar");
+        BotonModificar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                BotonModificarActionPerformed(evt);
+            }
+        });
+        jPanel1.add(BotonModificar, new org.netbeans.lib.awtextra.AbsoluteConstraints(480, 450, 90, 30));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -121,12 +142,12 @@ public class VentanaAñadirTarjetas extends javax.swing.JFrame {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 569, Short.MAX_VALUE)
+            .addGap(0, 610, Short.MAX_VALUE)
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                     .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 557, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 598, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addContainerGap()))
         );
 
         pack();
@@ -155,6 +176,7 @@ public class VentanaAñadirTarjetas extends javax.swing.JFrame {
         }
     }
 
+
     private void BotonAñadirTarjetaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BotonAñadirTarjetaActionPerformed
         // TODO add your handling code here:
 
@@ -175,12 +197,10 @@ public class VentanaAñadirTarjetas extends javax.swing.JFrame {
                     // si no existe ponerle el numero e intentar introducirla
                 } else {
                     nuevaTarjeta.setNumeroTarjeta(this.EntradaNumeroTarjeta.getText());
-
+                    controladorTarjetas.create(nuevaTarjeta);
+                    actualizarTablaResultados();
                 }
             }
-
-            controladorTarjetas.create(nuevaTarjeta);
-            actualizarTablaResultados();
         } else {
             JOptionPane.showMessageDialog(rootPane, "Numero de tarjeta no valido");
         }
@@ -188,18 +208,23 @@ public class VentanaAñadirTarjetas extends javax.swing.JFrame {
 
     }//GEN-LAST:event_BotonAñadirTarjetaActionPerformed
     private void actualizarTablaResultados() {
+        // crear un modelo para la tabla con la columna 0 no editable
+        DefaultTableModel modelo = new DefaultTableModel() {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                if (column == 0) {
+                    return false;
+                }
+                return true;
+            }
 
-        // bloquear la tabla
-        this.TablaResultadosTarjetas.setEnabled(false);
+        };
 
         // obtener todos los registros de las facturas
         List<TarjetasBancarias> listaTarjetas = this.controladorTarjetas.findTarjetasBancariasEntities();
 
         // crear las columnas que va a tener nuestra tabla        
         String[] columnas = {"ID", "Numero_Tarjeta"};
-
-        // crear un modelo para la tabla
-        DefaultTableModel modelo = new DefaultTableModel();
 
         // poner los identificadores de los campos en el modelo
         modelo.setColumnIdentifiers(columnas);
@@ -227,6 +252,37 @@ public class VentanaAñadirTarjetas extends javax.swing.JFrame {
         ventana.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_BotonRegresarActionPerformed
+
+    private void BotonEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BotonEliminarActionPerformed
+
+        // TODO add your handling code here:
+        // obtener la fila que esta seleccionada
+        int fila = TablaResultadosTarjetas.getSelectedRow();
+
+        // obtener el id de la tarjeta a eliminar
+        int idBorrar = Integer.parseInt(TablaResultadosTarjetas.getValueAt(fila, 0).toString());
+
+        try {
+            // intentar borrar la tarjeta por id
+            controladorTarjetas.destroy(idBorrar);
+        } catch (NonexistentEntityException ex) {
+            Logger.getLogger(VentanaAñadirTarjetas.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        actualizarTablaResultados();
+    }//GEN-LAST:event_BotonEliminarActionPerformed
+
+    private void BotonModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BotonModificarActionPerformed
+        // TODO add your handling code here:
+        // crear un proveedor con los nuevos datos
+        Proveedores proveedorActualizar = new Proveedores();
+
+        // obtener la fila que esta seleccionada
+        int fila = TablaResultadosTarjetas.getSelectedRow();
+
+        // actualizar datos de la tabla
+        actualizarTablaResultados();
+    }//GEN-LAST:event_BotonModificarActionPerformed
 
     /**
      * @param args the command line arguments
@@ -268,6 +324,8 @@ public class VentanaAñadirTarjetas extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton BotonAñadirTarjeta;
+    private javax.swing.JButton BotonEliminar;
+    private javax.swing.JButton BotonModificar;
     private javax.swing.JButton BotonRegresar;
     private javax.swing.JTextField EntradaNumeroTarjeta;
     private javax.swing.JTable TablaResultadosTarjetas;

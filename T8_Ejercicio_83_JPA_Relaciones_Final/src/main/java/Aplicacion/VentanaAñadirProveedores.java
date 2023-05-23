@@ -4,11 +4,17 @@
  */
 package Aplicacion;
 
-import entities.Productos;
 import entities.Proveedores;
+import entities.TarjetasBancarias;
+import entities.exceptions.NonexistentEntityException;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -16,7 +22,7 @@ import javax.swing.table.DefaultTableModel;
  * @author Jose Angel
  */
 public class VentanaAñadirProveedores extends javax.swing.JFrame {
-    
+
     // atributos del JForm
     private EntityManagerFactory emf;
     private controllers.ProveedoresJpaController controladorProveedores;
@@ -52,6 +58,8 @@ public class VentanaAñadirProveedores extends javax.swing.JFrame {
         jLabel4 = new javax.swing.JLabel();
         EntradaNombreProveedor1 = new javax.swing.JTextField();
         BotonRegresar = new javax.swing.JButton();
+        BotonEliminar = new javax.swing.JButton();
+        BotonModificar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         addWindowListener(new java.awt.event.WindowAdapter() {
@@ -106,7 +114,7 @@ public class VentanaAñadirProveedores extends javax.swing.JFrame {
                 BotonAñadirProveedorActionPerformed(evt);
             }
         });
-        jPanel1.add(BotonAñadirProveedor, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 500, -1, 30));
+        jPanel1.add(BotonAñadirProveedor, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 520, -1, 30));
 
         jLabel3.setFont(new java.awt.Font("Segoe UI", 0, 48)); // NOI18N
         jLabel3.setText("Añadir Proveedor");
@@ -129,9 +137,25 @@ public class VentanaAñadirProveedores extends javax.swing.JFrame {
                 BotonRegresarActionPerformed(evt);
             }
         });
-        jPanel1.add(BotonRegresar, new org.netbeans.lib.awtextra.AbsoluteConstraints(530, 500, -1, -1));
+        jPanel1.add(BotonRegresar, new org.netbeans.lib.awtextra.AbsoluteConstraints(530, 520, -1, 30));
 
-        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 770, 570));
+        BotonEliminar.setText("Eliminar");
+        BotonEliminar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                BotonEliminarActionPerformed(evt);
+            }
+        });
+        jPanel1.add(BotonEliminar, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 520, 80, 30));
+
+        BotonModificar.setText("Modificar");
+        BotonModificar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                BotonModificarActionPerformed(evt);
+            }
+        });
+        jPanel1.add(BotonModificar, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 520, 90, 30));
+
+        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 770, 590));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -144,27 +168,116 @@ public class VentanaAñadirProveedores extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_EntradaNIFProveedorActionPerformed
 
+    private boolean verificarNif(String nif) {
+// crear una expresion para que se introduzca un nif valido con un regex
+        final String regexNIF = "[0-9]{8}[A-Z]";
+        // crear el texto que vamos a comprobar que cumple la expresion regular
+        final String pruebaNIF = this.EntradaNIFProveedor.getText();
+
+        // crear el pattern y pasarle el regex
+        final Pattern patternNIF = Pattern.compile(regexNIF, Pattern.UNIX_LINES);
+        // crear el matcher pasandole el texto a comprobar
+        final Matcher matcherNIF = patternNIF.matcher(pruebaNIF);
+
+        // si el nif introducido es valido
+        if (matcherNIF.matches()) {
+            return true;
+
+        } else {
+            return false;
+        }
+
+    }
+
+    private boolean verificarNombre(String nombre) {
+
+        // crear una expresion para que se introduzca un nombre valido
+        final String regexNombre = ".+";
+        // crear el texto que vamos a comprobar que cumple la expresion regular
+        final String pruebaNombre = nombre;
+
+        // crear el pattern y pasarle el regex
+        final Pattern patternNombre = Pattern.compile(regexNombre, Pattern.UNIX_LINES);
+        // crear el matcher pasandole el texto a comprobar
+        final Matcher matcherNombre = patternNombre.matcher(pruebaNombre);
+
+        // si el nombre introducido es valido
+        if (matcherNombre.matches()) {
+            return true;
+
+        } else {// si el nombre no es valido
+            return false;
+        }
+    }
+
     private void BotonAñadirProveedorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BotonAñadirProveedorActionPerformed
         // TODO add your handling code here:
+        // obtener la lista de tarjetas
+        List<Proveedores> listaProveedores = controladorProveedores.findProveedoresEntities();
+
+        // crear un nuevo proveedor
+        Proveedores nuevoProveedor = new Proveedores();
+
+        // verificar que el dni sea valido
+        if (verificarNif(EntradaNIFProveedor.getText())) {
+            // si el nif es valido, comprobar que no este en la lista
+            for (Proveedores p : listaProveedores) {
+                if (p.getNifProveedor().equals(EntradaNIFProveedor.getText())) {
+                    JOptionPane.showMessageDialog(rootPane, "NIF Ya existente");
+                    break;
+                }
+            }
+
+            // si no existe, verificar nombre
+            if (verificarNombre(EntradaNombreProveedor1.getText())) {
+                // verificar direccion
+                if (verificarNombre(EntradaDireccionProveedor.getText())) {
+                    // todos los datos correcto, poner los datos el nuevo proveedor
+                    // poner el nombre
+                    nuevoProveedor.setNombreProveedor(EntradaNombreProveedor1.getText());
+                    // poner el nif
+                    nuevoProveedor.setNifProveedor(EntradaNIFProveedor.getText());
+                    // poner la direccion
+                    nuevoProveedor.setDireccionProveedor(EntradaDireccionProveedor.getText());
+                    // si todo esta correcto, añadir al proveedor
+                    controladorProveedores.create(nuevoProveedor);
+                    actualizarTablaResultados();
+                } else {
+                    JOptionPane.showMessageDialog(rootPane, "Direccion Proveedor no valida");
+                }
+            } else {
+                JOptionPane.showMessageDialog(rootPane, "Nombre Proveedor no valido");
+            }
+
+        } else {
+            JOptionPane.showMessageDialog(rootPane, "NIF Proveedor no valido");
+        }
+
+
     }//GEN-LAST:event_BotonAñadirProveedorActionPerformed
 
     private void EntradaNombreProveedor1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_EntradaNombreProveedor1ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_EntradaNombreProveedor1ActionPerformed
 
-    private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
-        // TODO add your handling code here:
-                // bloquear la tabla
-        this.TablaResultadosProveedores.setEnabled(false);
+    private void actualizarTablaResultados() {
+        // crear un modelo para la tabla con la columna 0 no editable
+        DefaultTableModel modelo = new DefaultTableModel() {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                if (column == 0) {
+                    return false;
+                }
+                return true;
+            }
 
-        // obtener todos los registros de las facturas
+        };
+
+        // obtener todos los registros de las tarjetas
         List<Proveedores> listaProveedores = this.controladorProveedores.findProveedoresEntities();
 
         // crear las columnas que va a tener nuestra tabla        
-        String[] columnas = {"ID", "NIF_Proveedor", "Nombre_Proveedor" , "Direccion_Proveedor"};
-
-        // crear un modelo para la tabla
-        DefaultTableModel modelo = new DefaultTableModel();
+        String[] columnas = {"ID_proveedor", "NIF_proveedor", "Nombre_Proveedor", "Direccion_Proveedor"};
 
         // poner los identificadores de los campos en el modelo
         modelo.setColumnIdentifiers(columnas);
@@ -172,14 +285,19 @@ public class VentanaAñadirProveedores extends javax.swing.JFrame {
         // recorrer la lista
         for (Proveedores p : listaProveedores) {
             // añadir los datos de cada factura a un array de object
-            Object[] datosFilaFactura = {p.getIdProveedor(), p.getNifProveedor(), p.getNombreProveedor(), p.getDireccionProveedor()};
+            Object[] datosFila = {p.getIdProveedor(), p.getNifProveedor(), p.getNombreProveedor(), p.getDireccionProveedor()};
             // añadir el array de object como una fila del modelo de la tabla
-            modelo.addRow(datosFilaFactura);
+            modelo.addRow(datosFila);
         }
 
         // establecer el modelo a la tabla
         this.TablaResultadosProveedores.setModel(modelo);
-        
+    }
+
+    private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
+        // TODO add your handling code here:
+        actualizarTablaResultados();
+
     }//GEN-LAST:event_formWindowOpened
 
     private void BotonRegresarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BotonRegresarActionPerformed
@@ -188,6 +306,39 @@ public class VentanaAñadirProveedores extends javax.swing.JFrame {
         ventana.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_BotonRegresarActionPerformed
+
+    private void BotonEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BotonEliminarActionPerformed
+
+        // TODO add your handling code here:
+        // obtener la fila que esta seleccionada
+        int fila = TablaResultadosProveedores.getSelectedRow();
+
+        // obtener el id del cliente de la columna
+        int idBorrar = Integer.parseInt(TablaResultadosProveedores.getValueAt(fila, 0).toString());
+
+        try {
+            // intentar borrar el proveedor por el id
+            controladorProveedores.destroy(idBorrar);
+        } catch (NonexistentEntityException ex) {
+            Logger.getLogger(VentanaAñadirProveedores.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        actualizarTablaResultados();
+    }//GEN-LAST:event_BotonEliminarActionPerformed
+
+    private void BotonModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BotonModificarActionPerformed
+        // TODO add your handling code here:
+        // crear un proveedor con los nuevos datos
+        Proveedores proveedorActualizar = new Proveedores();
+
+        // obtener la fila que esta seleccionada
+        int fila = TablaResultadosProveedores.getSelectedRow();
+
+        
+
+        // actualizar datos de la tabla
+        actualizarTablaResultados();
+    }//GEN-LAST:event_BotonModificarActionPerformed
 
     /**
      * @param args the command line arguments
@@ -227,6 +378,8 @@ public class VentanaAñadirProveedores extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton BotonAñadirProveedor;
+    private javax.swing.JButton BotonEliminar;
+    private javax.swing.JButton BotonModificar;
     private javax.swing.JButton BotonRegresar;
     private javax.swing.JTextField EntradaDireccionProveedor;
     private javax.swing.JTextField EntradaNIFProveedor;

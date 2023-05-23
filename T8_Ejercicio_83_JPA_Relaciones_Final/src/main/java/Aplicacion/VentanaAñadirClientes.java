@@ -5,13 +5,11 @@
 package Aplicacion;
 
 import entities.Clientes;
-import entities.Facturas;
 import entities.TarjetasBancarias;
 import entities.exceptions.IllegalOrphanException;
 import entities.exceptions.NonexistentEntityException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
@@ -235,7 +233,7 @@ public class VentanaAñadirClientes extends javax.swing.JFrame {
     }//GEN-LAST:event_EntradaFechaNacimientoClienteActionPerformed
 
     private boolean verificarNif(String nif) {
-// crear una expresion para que se introduzca un nif valido con un regex
+        // crear una expresion para que se introduzca un nif valido con un regex
         final String regexNIF = "[0-9]{8}[A-Z]";
         // crear el texto que vamos a comprobar que cumple la expresion regular
         final String pruebaNIF = this.EntradaNIFCliente.getText();
@@ -301,7 +299,7 @@ public class VentanaAñadirClientes extends javax.swing.JFrame {
         // fecha nacimiento
         // crear una expresion para que se introduzca una fecha con el patron "yyyy-MM-dd"
         // crear el patron con un string
-        final String regexFecha = "^\\d{4}\\-(0[1-9]|1[012])\\-(0[1-9]|[12][0-9]|3[01])$";
+        final String regexFecha = "^\\d{1,2}-\\d{1,2}-\\d{4}$";
         // crear el texto que vamos a comprobar que cumple la expresion regular
         final String pruebaFechaNacimiento = this.EntradaFechaNacimientoCliente.getText();
 
@@ -331,7 +329,7 @@ public class VentanaAñadirClientes extends javax.swing.JFrame {
             }
 
         };
-        
+
         // obtener todos los registros de las facturas
         List<Clientes> listaClientes = this.controladorClientes.findClientesEntities();
 
@@ -370,7 +368,7 @@ public class VentanaAñadirClientes extends javax.swing.JFrame {
             if (verificarFechaNacimiento(this.EntradaFechaNacimientoCliente.getText())) {
                 // intentar parsear la fecha y establecer la fecha de nacimiento del cliente
                 try {
-                    SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+                    SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
                     Date fecha = formatter.parse(this.EntradaFechaNacimientoCliente.getText());
                     nuevoCliente.setFechaNacimientocliente(fecha);
                 } catch (ParseException ex) {
@@ -468,46 +466,19 @@ public class VentanaAñadirClientes extends javax.swing.JFrame {
     }//GEN-LAST:event_BotonEliminarActionPerformed
 
     private void BotonModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BotonModificarActionPerformed
+
         // TODO add your handling code here:
+        // crear un cliente para pasar al metodo actualizar
+        Clientes clienteActualizar = new Clientes();
 
         // obtener la fila que esta seleccionada
         int fila = TablaResultadosClientes.getSelectedRow();
 
-        // obtener el id del cliente a actualizar
-        int id_cliente = Integer.parseInt(this.TablaResultadosClientes.getValueAt(fila, 0).toString());
-
-        // obtener el id de la tarjeta bancaria
-        int id_tarjeta = Integer.parseInt(this.TablaResultadosClientes.getValueAt(fila, 1).toString());
-
-        // obtener el nif del cliente
-        String nif = this.TablaResultadosClientes.getValueAt(fila, 2).toString();
-
-        // obtener el nombre del cliente
-        String nombre = this.TablaResultadosClientes.getValueAt(fila, 3).toString();
-
-        // obtener el apellido del cliente
-        String apellido = this.TablaResultadosClientes.getValueAt(fila, 4).toString();
-
-        // obtener la fecha de nacimiento del cliente a actualizar
         
-
-        // crear el cliente con los datos obtenidos de la tabla
-        Clientes clienteActualizar = new Clientes();
-        clienteActualizar.setIdCliente(id_cliente);
-        clienteActualizar.getIdtarjetaBancaria().setIdtarjetaBancaria(id_tarjeta);
-        clienteActualizar.setNifCliente(nif);
-        clienteActualizar.setApellidosCliente(apellido);
-        clienteActualizar.setFechaNacimientocliente(fecha);
-
-        // intentar editar
-        try {
-            controladorClientes.edit(clienteActualizar);
-        } catch (Exception ex) {
-            JOptionPane.showMessageDialog(rootPane, "No se ha podido actualizar el cliente");
-        }
 
         // actualizar datos de la tabla
         actualizarTablaResultados();
+
     }//GEN-LAST:event_BotonModificarActionPerformed
 
     /**

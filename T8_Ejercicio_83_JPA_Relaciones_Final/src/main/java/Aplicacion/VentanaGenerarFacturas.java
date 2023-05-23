@@ -65,26 +65,32 @@ public class VentanaGenerarFacturas extends javax.swing.JFrame {
         jLabel3.setText("Generar Factura");
         jPanel1.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 50, -1, -1));
 
-        jPanel1.add(ListaClientes, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 150, -1, -1));
+        jPanel1.add(ListaClientes, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 142, 120, 30));
 
         jLabel4.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
         jLabel4.setText("Importe Total: ");
-        jPanel1.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 320, -1, -1));
+        jPanel1.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 320, -1, -1));
 
         jLabel5.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
         jLabel5.setText("Selecciona cliente:");
-        jPanel1.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 140, -1, -1));
-        jPanel1.add(EntradaImporte, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 330, -1, -1));
+        jPanel1.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 140, -1, -1));
+
+        EntradaImporte.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                EntradaImporteActionPerformed(evt);
+            }
+        });
+        jPanel1.add(EntradaImporte, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 330, 120, -1));
 
         jLabel6.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
         jLabel6.setText("Cantidad productos:");
-        jPanel1.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 200, -1, -1));
+        jPanel1.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 200, -1, -1));
 
         jLabel7.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
         jLabel7.setText("Fecha factura:");
-        jPanel1.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 260, -1, -1));
-        jPanel1.add(EntradaCantidad, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 200, -1, -1));
-        jPanel1.add(EntradaFecha, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 260, -1, -1));
+        jPanel1.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 260, -1, -1));
+        jPanel1.add(EntradaCantidad, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 200, 120, -1));
+        jPanel1.add(EntradaFecha, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 270, 120, -1));
 
         BotonRegresar.setText("Regresar");
         BotonRegresar.addActionListener(new java.awt.event.ActionListener() {
@@ -109,6 +115,10 @@ public class VentanaGenerarFacturas extends javax.swing.JFrame {
         ventana.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_BotonRegresarActionPerformed
+
+    private void EntradaImporteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_EntradaImporteActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_EntradaImporteActionPerformed
 
     /**
      * @param args the command line arguments

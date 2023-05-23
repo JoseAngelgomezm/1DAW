@@ -6,7 +6,11 @@ package Aplicacion;
 
 import entities.Clientes;
 import entities.Productos;
+import entities.exceptions.IllegalOrphanException;
+import entities.exceptions.NonexistentEntityException;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.swing.table.DefaultTableModel;
@@ -16,7 +20,7 @@ import javax.swing.table.DefaultTableModel;
  * @author Jose Angel
  */
 public class VentanaAñadirProductos extends javax.swing.JFrame {
-    
+
 // atributos del JForm
     private EntityManagerFactory emf;
     private controllers.ProductosJpaController controladorProductos;
@@ -26,7 +30,7 @@ public class VentanaAñadirProductos extends javax.swing.JFrame {
      */
     public VentanaAñadirProductos() {
         initComponents();
-         this.emf = Persistence.createEntityManagerFactory("bdp83");
+        this.emf = Persistence.createEntityManagerFactory("bdp83");
         // crear el controlador pasandole el manejador de entidades
         this.controladorProductos = new controllers.ProductosJpaController(emf);
     }
@@ -52,6 +56,8 @@ public class VentanaAñadirProductos extends javax.swing.JFrame {
         EntradaNombreProducto = new javax.swing.JTextField();
         jLabel5 = new javax.swing.JLabel();
         BotonRegresar = new javax.swing.JButton();
+        BotonEliminar = new javax.swing.JButton();
+        BotonModificar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         addWindowListener(new java.awt.event.WindowAdapter() {
@@ -101,7 +107,7 @@ public class VentanaAñadirProductos extends javax.swing.JFrame {
                 BotonAñadirProveedorActionPerformed(evt);
             }
         });
-        jPanel1.add(BotonAñadirProveedor, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 540, -1, 30));
+        jPanel1.add(BotonAñadirProveedor, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 510, -1, 30));
 
         jLabel3.setFont(new java.awt.Font("Segoe UI", 0, 48)); // NOI18N
         jLabel3.setText("Añadir Productos");
@@ -128,15 +134,33 @@ public class VentanaAñadirProductos extends javax.swing.JFrame {
                 BotonRegresarActionPerformed(evt);
             }
         });
-        jPanel1.add(BotonRegresar, new org.netbeans.lib.awtextra.AbsoluteConstraints(470, 550, -1, -1));
+        jPanel1.add(BotonRegresar, new org.netbeans.lib.awtextra.AbsoluteConstraints(560, 510, -1, 30));
+
+        BotonEliminar.setText("Eliminar");
+        BotonEliminar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                BotonEliminarActionPerformed(evt);
+            }
+        });
+        jPanel1.add(BotonEliminar, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 510, 80, 30));
+
+        BotonModificar.setText("Modificar");
+        BotonModificar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                BotonModificarActionPerformed(evt);
+            }
+        });
+        jPanel1.add(BotonModificar, new org.netbeans.lib.awtextra.AbsoluteConstraints(410, 510, 90, 30));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 776, Short.MAX_VALUE)
+            .addGap(0, 741, Short.MAX_VALUE)
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 776, Short.MAX_VALUE))
+                .addGroup(layout.createSequentialGroup()
+                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 733, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGap(0, 8, Short.MAX_VALUE)))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -163,34 +187,42 @@ public class VentanaAñadirProductos extends javax.swing.JFrame {
     private void EntradaNombreProductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_EntradaNombreProductoActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_EntradaNombreProductoActionPerformed
+    private void actualizarTablaResultados() {
+        // crear un modelo para la tabla con la columna 0 no editable
+        DefaultTableModel modelo = new DefaultTableModel() {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                if (column == 0 || column == 1 || column == 2) {
+                    return false;
+                }
+                return true;
+            }
 
-    private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
-        // TODO add your handling code here:
-        // bloquear la tabla
-        this.TablaResultadosProductos.setEnabled(false);
+        };
 
-        // obtener todos los registros de las facturas
-        List<Productos> listaProductos = this.controladorProductos.findProductosEntities();
+        // obtener todos los registros de las tarjetas
+        List<Productos> listaProductose = this.controladorProductos.findProductosEntities();
 
         // crear las columnas que va a tener nuestra tabla        
-        String[] columnas = {"ID", "ID_Proveedor", "NIF_Proveedor", "REF", "Nombre" , "Importe"};
-
-        // crear un modelo para la tabla
-        DefaultTableModel modelo = new DefaultTableModel();
+        String[] columnas = {"ID_Producto", "ID_Proveedor", "NIF_Proveedor", "REF_Prodcuto", "Nombre_Producto", "Importe_Producto"};
 
         // poner los identificadores de los campos en el modelo
         modelo.setColumnIdentifiers(columnas);
 
         // recorrer la lista
-        for (Productos p : listaProductos) {
+        for (Productos p : listaProductose) {
             // añadir los datos de cada factura a un array de object
-            Object[] datosFilaFactura = {p.getIdProducto(), p.getIdProveedor(), p.getNifProveedor(), p.getRefProducto(), p.getNombreProducto(), p.getImporteProducto()};
+            Object[] datosFila = {p.getIdProducto(), p.getIdProveedor(), p.getNifProveedor(), p.getRefProducto(), p.getNombreProducto(), p.getImporteProducto()};
             // añadir el array de object como una fila del modelo de la tabla
-            modelo.addRow(datosFilaFactura);
+            modelo.addRow(datosFila);
         }
 
         // establecer el modelo a la tabla
         this.TablaResultadosProductos.setModel(modelo);
+    }
+    private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
+        // TODO add your handling code here:
+        actualizarTablaResultados();
     }//GEN-LAST:event_formWindowOpened
 
     private void BotonRegresarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BotonRegresarActionPerformed
@@ -199,6 +231,41 @@ public class VentanaAñadirProductos extends javax.swing.JFrame {
         ventana.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_BotonRegresarActionPerformed
+
+    private void BotonEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BotonEliminarActionPerformed
+
+        try {
+            // TODO add your handling code here:
+            // obtener la fila que esta seleccionada
+            int fila = TablaResultadosProductos.getSelectedRow();
+
+            // obtener el id del producto de la columna
+            int idBorrar = Integer.parseInt(TablaResultadosProductos.getValueAt(fila, 0).toString());
+
+            // intentar borrar el producto por el id
+            controladorProductos.destroy(idBorrar);
+
+            actualizarTablaResultados();
+        } catch (IllegalOrphanException ex) {
+            Logger.getLogger(VentanaAñadirProductos.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (NonexistentEntityException ex) {
+            Logger.getLogger(VentanaAñadirProductos.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_BotonEliminarActionPerformed
+
+    private void BotonModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BotonModificarActionPerformed
+        // TODO add your handling code here:
+        // crear un proveedor con los nuevos datos
+        Productos prodcutoActualizar = new Productos();
+
+        // obtener la fila que esta seleccionada
+        int fila = TablaResultadosProductos.getSelectedRow();
+
+       
+
+        // actualizar datos de la tabla
+        actualizarTablaResultados();
+    }//GEN-LAST:event_BotonModificarActionPerformed
 
     /**
      * @param args the command line arguments
@@ -240,6 +307,8 @@ public class VentanaAñadirProductos extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton BotonAñadirProveedor;
+    private javax.swing.JButton BotonEliminar;
+    private javax.swing.JButton BotonModificar;
     private javax.swing.JButton BotonRegresar;
     private javax.swing.JTextField EntradaImporteProducto;
     private javax.swing.JTextField EntradaNombreProducto;
