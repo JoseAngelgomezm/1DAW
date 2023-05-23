@@ -22,8 +22,8 @@ import javax.swing.table.DefaultTableModel;
 public class VentanaAñadirProductos extends javax.swing.JFrame {
 
 // atributos del JForm
-    private EntityManagerFactory emf;
-    private controllers.ProductosJpaController controladorProductos;
+    private final EntityManagerFactory emf;
+    private final controllers.ProductosJpaController controladorProductos;
 
     /**
      * Creates new form VentanaAñadirProveedores2
@@ -50,7 +50,7 @@ public class VentanaAñadirProductos extends javax.swing.JFrame {
         EntradaREFProducto = new javax.swing.JTextField();
         jScrollPane1 = new javax.swing.JScrollPane();
         TablaResultadosProductos = new javax.swing.JTable();
-        BotonAñadirProveedor = new javax.swing.JButton();
+        BotonAñadirProductos = new javax.swing.JButton();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         EntradaNombreProducto = new javax.swing.JTextField();
@@ -101,13 +101,13 @@ public class VentanaAñadirProductos extends javax.swing.JFrame {
 
         jPanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 100, 620, 260));
 
-        BotonAñadirProveedor.setText("Añadir Producto");
-        BotonAñadirProveedor.addActionListener(new java.awt.event.ActionListener() {
+        BotonAñadirProductos.setText("Añadir Producto");
+        BotonAñadirProductos.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                BotonAñadirProveedorActionPerformed(evt);
+                BotonAñadirProductosActionPerformed(evt);
             }
         });
-        jPanel1.add(BotonAñadirProveedor, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 510, -1, 30));
+        jPanel1.add(BotonAñadirProductos, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 510, -1, 30));
 
         jLabel3.setFont(new java.awt.Font("Segoe UI", 0, 48)); // NOI18N
         jLabel3.setText("Añadir Productos");
@@ -170,6 +170,7 @@ public class VentanaAñadirProductos extends javax.swing.JFrame {
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void EntradaImporteProductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_EntradaImporteProductoActionPerformed
@@ -180,9 +181,11 @@ public class VentanaAñadirProductos extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_EntradaREFProductoActionPerformed
 
-    private void BotonAñadirProveedorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BotonAñadirProveedorActionPerformed
+    private void BotonAñadirProductosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BotonAñadirProductosActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_BotonAñadirProveedorActionPerformed
+        
+        
+    }//GEN-LAST:event_BotonAñadirProductosActionPerformed
 
     private void EntradaNombreProductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_EntradaNombreProductoActionPerformed
         // TODO add your handling code here:
@@ -306,7 +309,7 @@ public class VentanaAñadirProductos extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton BotonAñadirProveedor;
+    private javax.swing.JButton BotonAñadirProductos;
     private javax.swing.JButton BotonEliminar;
     private javax.swing.JButton BotonModificar;
     private javax.swing.JButton BotonRegresar;

@@ -24,8 +24,8 @@ import javax.swing.table.DefaultTableModel;
 public class VentanaAñadirProveedores extends javax.swing.JFrame {
 
     // atributos del JForm
-    private EntityManagerFactory emf;
-    private controllers.ProveedoresJpaController controladorProveedores;
+    private final EntityManagerFactory emf;
+    private final controllers.ProveedoresJpaController controladorProveedores;
 
     /**
      * Creates new form VentanaAñadirProveedores2
@@ -158,6 +158,7 @@ public class VentanaAñadirProveedores extends javax.swing.JFrame {
         getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 770, 590));
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void EntradaDireccionProveedorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_EntradaDireccionProveedorActionPerformed

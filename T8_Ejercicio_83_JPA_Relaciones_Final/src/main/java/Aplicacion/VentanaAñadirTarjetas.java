@@ -4,7 +4,6 @@
  */
 package Aplicacion;
 
-import entities.Clientes;
 import entities.Proveedores;
 import entities.TarjetasBancarias;
 import entities.exceptions.NonexistentEntityException;
@@ -15,7 +14,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
-import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -25,8 +23,8 @@ import javax.swing.table.DefaultTableModel;
 public class VentanaAñadirTarjetas extends javax.swing.JFrame {
 
     // atributos del JForm
-    private EntityManagerFactory emf;
-    private controllers.TarjetasBancariasJpaController controladorTarjetas;
+    private final EntityManagerFactory emf;
+    private final controllers.TarjetasBancariasJpaController controladorTarjetas;
 
     /**
      * Creates new form VentanaAñadirProveedores2
@@ -151,6 +149,7 @@ public class VentanaAñadirTarjetas extends javax.swing.JFrame {
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void EntradaNumeroTarjetaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_EntradaNumeroTarjetaActionPerformed
@@ -188,22 +187,9 @@ public class VentanaAñadirTarjetas extends javax.swing.JFrame {
 
         // verificar que la tarjeta sea una numero valido
         if (verificarTarjeta(this.EntradaNumeroTarjeta.getText())) {
-
-            // comprobar que la tarjeta no existe
-            for (TarjetasBancarias t : listaTarjetas) {
-                if (t.getNumeroTarjeta().equalsIgnoreCase(this.EntradaNumeroTarjeta.getText())) {
-                    JOptionPane.showMessageDialog(rootPane, "La tarjeta ya existe");
-                    break;
-                    // si no existe ponerle el numero e intentar introducirla
-                } else {
-                    nuevaTarjeta.setNumeroTarjeta(this.EntradaNumeroTarjeta.getText());
-                    controladorTarjetas.create(nuevaTarjeta);
-                    actualizarTablaResultados();
-                }
-            }
-        } else {
-            JOptionPane.showMessageDialog(rootPane, "Numero de tarjeta no valido");
+        
         }
+       
 
 
     }//GEN-LAST:event_BotonAñadirTarjetaActionPerformed

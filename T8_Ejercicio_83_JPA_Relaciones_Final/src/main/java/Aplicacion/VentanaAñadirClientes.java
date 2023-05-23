@@ -28,9 +28,9 @@ import javax.swing.table.DefaultTableModel;
 public class VentanaAñadirClientes extends javax.swing.JFrame {
 
     // atributos del JForm
-    private EntityManagerFactory emf;
-    private controllers.ClientesJpaController controladorClientes;
-    private controllers.TarjetasBancariasJpaController controladorTarjetas;
+    private final EntityManagerFactory emf;
+    private final controllers.ClientesJpaController controladorClientes;
+    private final controllers.TarjetasBancariasJpaController controladorTarjetas;
 
     /**
      * Creates new form VentanaAñadirProveedores2
@@ -207,6 +207,7 @@ public class VentanaAñadirClientes extends javax.swing.JFrame {
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void EntradaApellidoClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_EntradaApellidoClienteActionPerformed

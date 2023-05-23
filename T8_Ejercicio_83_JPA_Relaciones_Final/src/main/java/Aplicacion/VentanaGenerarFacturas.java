@@ -4,6 +4,9 @@
  */
 package Aplicacion;
 
+import entities.Clientes;
+import entities.Productos;
+import java.util.List;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 
@@ -12,10 +15,13 @@ import javax.persistence.Persistence;
  * @author Jose Angel
  */
 public class VentanaGenerarFacturas extends javax.swing.JFrame {
-    
+
     // atributos del JForm
-    private EntityManagerFactory emf;
-    private controllers.FacturasJpaController controladorFacturas;
+    private final EntityManagerFactory emf;
+    private final controllers.FacturasJpaController controladorFacturas;
+    private final controllers.ClientesJpaController controladorClientes;
+    private final controllers.ProductosJpaController controladorProductos;
+
     /**
      * Creates new form VentanaAñadirProveedores2
      */
@@ -24,6 +30,8 @@ public class VentanaGenerarFacturas extends javax.swing.JFrame {
         this.emf = Persistence.createEntityManagerFactory("bdp83");
         // crear el controlador pasandole el manejador de entidades
         this.controladorFacturas = new controllers.FacturasJpaController(emf);
+        this.controladorClientes = new controllers.ClientesJpaController(emf);
+        this.controladorProductos = new controllers.ProductosJpaController(emf);
     }
 
     /**
@@ -38,7 +46,7 @@ public class VentanaGenerarFacturas extends javax.swing.JFrame {
         jPanel1 = new javax.swing.JPanel();
         BotonAñadirProveedor = new javax.swing.JButton();
         jLabel3 = new javax.swing.JLabel();
-        ListaClientes = new javax.swing.JComboBox<>();
+        DesplegableProductos = new javax.swing.JComboBox<>();
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
         EntradaImporte = new javax.swing.JTextField();
@@ -47,8 +55,17 @@ public class VentanaGenerarFacturas extends javax.swing.JFrame {
         EntradaCantidad = new javax.swing.JTextField();
         EntradaFecha = new javax.swing.JTextField();
         BotonRegresar = new javax.swing.JButton();
+        jLabel8 = new javax.swing.JLabel();
+        DesplegableClientes = new javax.swing.JComboBox<>();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jTable1 = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowOpened(java.awt.event.WindowEvent evt) {
+                formWindowOpened(evt);
+            }
+        });
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -59,38 +76,38 @@ public class VentanaGenerarFacturas extends javax.swing.JFrame {
                 BotonAñadirProveedorActionPerformed(evt);
             }
         });
-        jPanel1.add(BotonAñadirProveedor, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 400, -1, 30));
+        jPanel1.add(BotonAñadirProveedor, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 420, -1, 30));
 
         jLabel3.setFont(new java.awt.Font("Segoe UI", 0, 48)); // NOI18N
         jLabel3.setText("Generar Factura");
-        jPanel1.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 50, -1, -1));
+        jPanel1.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 70, -1, -1));
 
-        jPanel1.add(ListaClientes, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 142, 120, 30));
+        jPanel1.add(DesplegableProductos, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 200, 120, 30));
 
         jLabel4.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
         jLabel4.setText("Importe Total: ");
-        jPanel1.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 320, -1, -1));
+        jPanel1.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 350, -1, -1));
 
         jLabel5.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
-        jLabel5.setText("Selecciona cliente:");
-        jPanel1.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 140, -1, -1));
+        jLabel5.setText("Selecciona Producto:");
+        jPanel1.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 200, 250, -1));
 
         EntradaImporte.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 EntradaImporteActionPerformed(evt);
             }
         });
-        jPanel1.add(EntradaImporte, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 330, 120, -1));
+        jPanel1.add(EntradaImporte, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 350, 120, 30));
 
         jLabel6.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
         jLabel6.setText("Cantidad productos:");
-        jPanel1.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 200, -1, -1));
+        jPanel1.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 250, -1, -1));
 
         jLabel7.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
         jLabel7.setText("Fecha factura:");
-        jPanel1.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 260, -1, -1));
-        jPanel1.add(EntradaCantidad, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 200, 120, -1));
-        jPanel1.add(EntradaFecha, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 270, 120, -1));
+        jPanel1.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 300, -1, -1));
+        jPanel1.add(EntradaCantidad, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 250, 120, 30));
+        jPanel1.add(EntradaFecha, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 300, 120, 30));
 
         BotonRegresar.setText("Regresar");
         BotonRegresar.addActionListener(new java.awt.event.ActionListener() {
@@ -98,11 +115,33 @@ public class VentanaGenerarFacturas extends javax.swing.JFrame {
                 BotonRegresarActionPerformed(evt);
             }
         });
-        jPanel1.add(BotonRegresar, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 400, -1, -1));
+        jPanel1.add(BotonRegresar, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 420, -1, 30));
 
-        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 570, 470));
+        jLabel8.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
+        jLabel8.setText("Selecciona Cliente:");
+        jPanel1.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 150, -1, -1));
+
+        jPanel1.add(DesplegableClientes, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 150, 120, 30));
+
+        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        jScrollPane1.setViewportView(jTable1);
+
+        jPanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(430, 60, 640, -1));
+
+        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1090, 560));
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void BotonAñadirProveedorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BotonAñadirProveedorActionPerformed
@@ -119,6 +158,23 @@ public class VentanaGenerarFacturas extends javax.swing.JFrame {
     private void EntradaImporteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_EntradaImporteActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_EntradaImporteActionPerformed
+
+    private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
+        // TODO add your handling code here:
+
+        // obtener clientes
+        List<Clientes> listaClientes = controladorClientes.findClientesEntities();
+        for (Clientes c : listaClientes) {
+            DesplegableClientes.addItem(c.getIdCliente() + "-" + c.getNifCliente());
+        }
+
+        // obtener productos
+        List<Productos> listaProductos = controladorProductos.findProductosEntities();
+        for (Productos p : listaProductos) {
+            DesplegableProductos.addItem(p.getIdProducto() + "-" + p.getRefProducto());
+        }
+        
+    }//GEN-LAST:event_formWindowOpened
 
     /**
      * @param args the command line arguments
@@ -161,15 +217,19 @@ public class VentanaGenerarFacturas extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton BotonAñadirProveedor;
     private javax.swing.JButton BotonRegresar;
+    private javax.swing.JComboBox<String> DesplegableClientes;
+    private javax.swing.JComboBox<String> DesplegableProductos;
     private javax.swing.JTextField EntradaCantidad;
     private javax.swing.JTextField EntradaFecha;
     private javax.swing.JTextField EntradaImporte;
-    private javax.swing.JComboBox<String> ListaClientes;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTable jTable1;
     // End of variables declaration//GEN-END:variables
 }

@@ -35,14 +35,12 @@ public class Main_Aplicacion_83 extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        jPanel1.setBackground(new java.awt.Color(43, 45, 66));
         jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        BotonAñadirProveedores.setBackground(new java.awt.Color(141, 153, 174));
+        BotonAñadirProveedores.setBackground(new java.awt.Color(70, 73, 75));
         BotonAñadirProveedores.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
-        BotonAñadirProveedores.setForeground(new java.awt.Color(237, 242, 244));
         BotonAñadirProveedores.setText("Añadir / Actualizar Proveedores");
-        BotonAñadirProveedores.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(216, 0, 50), 4));
+        BotonAñadirProveedores.setBorder(null);
         BotonAñadirProveedores.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 BotonAñadirProveedoresActionPerformed(evt);
@@ -50,11 +48,10 @@ public class Main_Aplicacion_83 extends javax.swing.JFrame {
         });
         jPanel1.add(BotonAñadirProveedores, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 70, 380, 50));
 
-        BotonGenerarFactura.setBackground(new java.awt.Color(141, 153, 174));
+        BotonGenerarFactura.setBackground(new java.awt.Color(70, 73, 75));
         BotonGenerarFactura.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
-        BotonGenerarFactura.setForeground(new java.awt.Color(237, 242, 244));
         BotonGenerarFactura.setText("Generar Factura");
-        BotonGenerarFactura.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(216, 0, 50), 4));
+        BotonGenerarFactura.setBorder(null);
         BotonGenerarFactura.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 BotonGenerarFacturaActionPerformed(evt);
@@ -62,11 +59,10 @@ public class Main_Aplicacion_83 extends javax.swing.JFrame {
         });
         jPanel1.add(BotonGenerarFactura, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 340, 260, 50));
 
-        BotonAñadirProductos.setBackground(new java.awt.Color(141, 153, 174));
+        BotonAñadirProductos.setBackground(new java.awt.Color(70, 73, 75));
         BotonAñadirProductos.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
-        BotonAñadirProductos.setForeground(new java.awt.Color(237, 242, 244));
         BotonAñadirProductos.setText("Añadir / Actualizar Productos");
-        BotonAñadirProductos.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(216, 0, 50), 4));
+        BotonAñadirProductos.setBorder(null);
         BotonAñadirProductos.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 BotonAñadirProductosActionPerformed(evt);
@@ -74,11 +70,10 @@ public class Main_Aplicacion_83 extends javax.swing.JFrame {
         });
         jPanel1.add(BotonAñadirProductos, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 160, 380, 50));
 
-        BotonAñadirClientes.setBackground(new java.awt.Color(141, 153, 174));
+        BotonAñadirClientes.setBackground(new java.awt.Color(70, 73, 75));
         BotonAñadirClientes.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
-        BotonAñadirClientes.setForeground(new java.awt.Color(237, 242, 244));
         BotonAñadirClientes.setText("Añadir / Actualizar Clientes");
-        BotonAñadirClientes.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(216, 0, 50), 4));
+        BotonAñadirClientes.setBorder(null);
         BotonAñadirClientes.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 BotonAñadirClientesActionPerformed(evt);
@@ -89,6 +84,7 @@ public class Main_Aplicacion_83 extends javax.swing.JFrame {
         getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 560, 460));
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void BotonAñadirProveedoresActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BotonAñadirProveedoresActionPerformed
