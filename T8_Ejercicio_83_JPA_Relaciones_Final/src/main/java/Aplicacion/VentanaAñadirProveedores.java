@@ -336,11 +336,31 @@ public class VentanaAñadirProveedores extends javax.swing.JFrame {
 
     private void BotonModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BotonModificarActionPerformed
         // TODO add your handling code here:
-        // crear un proveedor con los nuevos datos
-        Proveedores proveedorActualizar = new Proveedores();
-
+   
         // obtener la fila que esta seleccionada
         int fila = TablaResultadosProveedores.getSelectedRow();
+
+        // obtener el id del proveedor a actualizar
+        int id = Integer.parseInt(TablaResultadosProveedores.getValueAt(fila, 0).toString());
+
+        // obtener los nuevos datos de la tabla modificados
+        String nif = TablaResultadosProveedores.getValueAt(fila, 1).toString();
+        String nombre = TablaResultadosProveedores.getValueAt(fila, 2).toString();
+        String direccion = TablaResultadosProveedores.getValueAt(fila, 3).toString();
+        
+        // crear un nuevo proveedor con los datos obtenidos de la tabla modificados
+        Proveedores proveedorNuevo = new Proveedores();
+        proveedorNuevo.setIdProveedor(id);
+        proveedorNuevo.setNifProveedor(nif);
+        proveedorNuevo.setNombreProveedor(nombre);
+        proveedorNuevo.setDireccionProveedor(direccion);
+        
+        try {
+            // intentar actualizar
+            controladorProveedores.edit(proveedorNuevo);
+        } catch (Exception ex) {
+            Logger.getLogger(VentanaAñadirProveedores.class.getName()).log(Level.SEVERE, null, ex);
+        }
 
         // actualizar datos de la tabla
         actualizarTablaResultados();

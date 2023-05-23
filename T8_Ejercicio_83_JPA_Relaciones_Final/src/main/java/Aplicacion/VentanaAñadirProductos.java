@@ -334,7 +334,6 @@ public class VentanaAñadirProductos extends javax.swing.JFrame {
                     // buscar el proveedor
                     Proveedores proveedorAsignado = controladorProveedores.findProveedores(id);
 
-                    System.out.println(proveedorAsignado);
 
                     // asignar el proveedor al nuevo producto
                     productoIntroducir.setIdProveedor(proveedorAsignado);

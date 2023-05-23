@@ -193,7 +193,6 @@ public class VentanaActualizarBorrar extends javax.swing.JFrame {
         this.TablaResultados.setModel(modelo);
     }//GEN-LAST:event_formWindowOpened
 
-
     private void BotonActualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BotonActualizarActionPerformed
         // TODO add your handling code heree:
 

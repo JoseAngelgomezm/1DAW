@@ -298,7 +298,7 @@ public class VentanaAñadirClientes extends javax.swing.JFrame {
 
     private boolean verificarFechaNacimiento(String fecha) {
         // fecha nacimiento
-        // crear una expresion para que se introduzca una fecha con el patron "yyyy-MM-dd"
+        // crear una expresion para que se introduzca una fecha con el patron "dd-MM-yyyy"
         // crear el patron con un string
         final String regexFecha = "^\\d{1,2}-\\d{1,2}-\\d{4}$";
         // crear el texto que vamos a comprobar que cumple la expresion regular
@@ -492,7 +492,13 @@ public class VentanaAñadirClientes extends javax.swing.JFrame {
 
         // obtener la fila que esta seleccionada
         int fila = TablaResultadosClientes.getSelectedRow();
-
+        
+        // obtener el id del cliente a actualizar
+        int id = Integer.parseInt(TablaResultadosClientes.getValueAt(fila, 0).toString());
+        
+        // obtener los datos de la tabla modificados
+        
+        
         // actualizar datos de la tabla
         actualizarTablaResultados();
 

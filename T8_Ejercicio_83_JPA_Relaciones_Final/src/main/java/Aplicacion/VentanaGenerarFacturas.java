@@ -5,10 +5,20 @@
 package Aplicacion;
 
 import entities.Clientes;
+import entities.Facturas;
 import entities.Productos;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -44,12 +54,10 @@ public class VentanaGenerarFacturas extends javax.swing.JFrame {
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
-        BotonAñadirProveedor = new javax.swing.JButton();
+        BotonAñadirFactura = new javax.swing.JButton();
         jLabel3 = new javax.swing.JLabel();
         DesplegableProductos = new javax.swing.JComboBox<>();
-        jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
-        EntradaImporte = new javax.swing.JTextField();
         jLabel6 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
         EntradaCantidad = new javax.swing.JTextField();
@@ -58,7 +66,7 @@ public class VentanaGenerarFacturas extends javax.swing.JFrame {
         jLabel8 = new javax.swing.JLabel();
         DesplegableClientes = new javax.swing.JComboBox<>();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        TablaResultados = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         addWindowListener(new java.awt.event.WindowAdapter() {
@@ -70,44 +78,33 @@ public class VentanaGenerarFacturas extends javax.swing.JFrame {
 
         jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        BotonAñadirProveedor.setText("Añadir Factura");
-        BotonAñadirProveedor.addActionListener(new java.awt.event.ActionListener() {
+        BotonAñadirFactura.setText("Añadir Factura");
+        BotonAñadirFactura.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                BotonAñadirProveedorActionPerformed(evt);
+                BotonAñadirFacturaActionPerformed(evt);
             }
         });
-        jPanel1.add(BotonAñadirProveedor, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 420, -1, 30));
+        jPanel1.add(BotonAñadirFactura, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 370, -1, 30));
 
         jLabel3.setFont(new java.awt.Font("Segoe UI", 0, 48)); // NOI18N
         jLabel3.setText("Generar Factura");
-        jPanel1.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 70, -1, -1));
+        jPanel1.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 70, -1, -1));
 
-        jPanel1.add(DesplegableProductos, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 200, 120, 30));
-
-        jLabel4.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
-        jLabel4.setText("Importe Total: ");
-        jPanel1.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 350, -1, -1));
+        jPanel1.add(DesplegableProductos, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 200, 120, 30));
 
         jLabel5.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
         jLabel5.setText("Selecciona Producto:");
-        jPanel1.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 200, 250, -1));
-
-        EntradaImporte.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                EntradaImporteActionPerformed(evt);
-            }
-        });
-        jPanel1.add(EntradaImporte, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 350, 120, 30));
+        jPanel1.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 200, 250, -1));
 
         jLabel6.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
         jLabel6.setText("Cantidad productos:");
-        jPanel1.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 250, -1, -1));
+        jPanel1.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 250, -1, -1));
 
         jLabel7.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
         jLabel7.setText("Fecha factura:");
-        jPanel1.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 300, -1, -1));
-        jPanel1.add(EntradaCantidad, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 250, 120, 30));
-        jPanel1.add(EntradaFecha, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 300, 120, 30));
+        jPanel1.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 300, -1, -1));
+        jPanel1.add(EntradaCantidad, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 250, 120, 30));
+        jPanel1.add(EntradaFecha, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 300, 120, 30));
 
         BotonRegresar.setText("Regresar");
         BotonRegresar.addActionListener(new java.awt.event.ActionListener() {
@@ -115,15 +112,15 @@ public class VentanaGenerarFacturas extends javax.swing.JFrame {
                 BotonRegresarActionPerformed(evt);
             }
         });
-        jPanel1.add(BotonRegresar, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 420, -1, 30));
+        jPanel1.add(BotonRegresar, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 370, -1, 30));
 
         jLabel8.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
         jLabel8.setText("Selecciona Cliente:");
-        jPanel1.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 150, -1, -1));
+        jPanel1.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 150, -1, -1));
 
-        jPanel1.add(DesplegableClientes, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 150, 120, 30));
+        jPanel1.add(DesplegableClientes, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 150, 120, 30));
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        TablaResultados.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -134,19 +131,162 @@ public class VentanaGenerarFacturas extends javax.swing.JFrame {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
-        jScrollPane1.setViewportView(jTable1);
+        jScrollPane1.setViewportView(TablaResultados);
 
-        jPanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(430, 60, 640, -1));
+        jPanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(430, 60, 640, 340));
 
-        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1090, 560));
+        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1090, 460));
 
         pack();
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void BotonAñadirProveedorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BotonAñadirProveedorActionPerformed
+    private boolean verificarFecha(String fecha) {
+
+        // crear una expresion para que se introduzca una fecha con el patron "MM-dd-yyy"
+        // crear el patron con un string
+        final String regexFecha = "^\\d{1,2}-\\d{1,2}-\\d{4}$";
+        // crear el texto que vamos a comprobar que cumple la expresion regular
+        final String pruebaFechaNacimiento = fecha;
+
+        // crear el pattern y pasarle el patron
+        final Pattern patternFechaNacimiento = Pattern.compile(regexFecha, Pattern.UNIX_LINES);
+        // crear el matcher pasandole el texto a comprobar
+        final Matcher matcherFechaNacimiento = patternFechaNacimiento.matcher(pruebaFechaNacimiento);
+
+        // si la fecha introducida coincide
+        if (matcherFechaNacimiento.matches()) {
+            // intentar parsear la fecha y establecer la fecha de nacimiento
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    private boolean verificarCantidad(String cantidad) {
+        // fecha nacimiento
+        // crear una expresion para que se introduzca una fecha con el patron "yyyy-MM-dd"
+        // crear el patron con un string
+        final String regexFecha = "[0-9]+";
+        // crear el texto que vamos a comprobar que cumple la expresion regular
+        final String pruebaFechaNacimiento = cantidad;
+
+        // crear el pattern y pasarle el patron
+        final Pattern patternFechaNacimiento = Pattern.compile(regexFecha, Pattern.UNIX_LINES);
+        // crear el matcher pasandole el texto a comprobar
+        final Matcher matcherFechaNacimiento = patternFechaNacimiento.matcher(pruebaFechaNacimiento);
+
+        // si la fecha introducida coincide
+        if (matcherFechaNacimiento.matches()) {
+            // intentar parsear la fecha y establecer la fecha de nacimiento
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    private void actualizarTablaResultados() {
+        // crear un modelo para la tabla con la columna 0 y 1 no editable
+        DefaultTableModel modelo = new DefaultTableModel() {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                if (column == 0 || column == 1) {
+                    return false;
+                }
+                return true;
+            }
+
+        };
+
+        // obtener todos los registros de las facturas
+        List<Facturas> listaFacturas = this.controladorFacturas.findFacturasEntities();
+
+        // crear las columnas que va a tener nuestra tabla        
+        String[] columnas = {"ID_cliente", "ID_Producto", "Cantidad_Prodcutos", "Fecha_Factura", "Importe_Total"};
+
+        // poner los identificadores de los campos en el modelo
+        modelo.setColumnIdentifiers(columnas);
+
+        // recorrer la lista
+        for (Facturas f : listaFacturas) {
+            // añadir los datos de cada factura a un array de object
+            Object[] datosFilaFactura = {f.getClientes(), f.getProductos(), f.getCantidadProductos(), f.getFechaFactura(), f.getImporteTotal()};
+            // añadir el array de object como una fila del modelo de la tabla
+            modelo.addRow(datosFilaFactura);
+        }
+
+        // establecer el modelo a la tabla
+        this.TablaResultados.setModel(modelo);
+    }
+
+    private void BotonAñadirFacturaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BotonAñadirFacturaActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_BotonAñadirProveedorActionPerformed
+        // crear una nueva factura
+        Facturas facturaNueva = new Facturas();
+        
+        // obtener el dato del desplegable de clientes
+        String clienteSeleccionado = DesplegableClientes.getSelectedItem().toString();
+        // obtener el id de ese cliente
+        int id_cliente = Character.getNumericValue(clienteSeleccionado.charAt(0));
+
+        // buscar el cliente
+        Clientes clienteAsignado = controladorClientes.findClientes(id_cliente);
+
+        // asignar el cliente a la nueva factura
+        facturaNueva.setClientes(clienteAsignado);
+        
+        // obtener el dato del desplegable de productos
+        String prodcutoSeleccionado = DesplegableProductos.getSelectedItem().toString();
+        // obtener el id de ese producto
+        int id_producto = Character.getNumericValue(clienteSeleccionado.charAt(0));
+
+        // buscar el producto
+        Productos productoAsignado = controladorProductos.findProductos(id_producto);
+
+        // asignar el cliente a la nueva factura
+        facturaNueva.setClientes(clienteAsignado);
+        // asignar el prodcuto a la nueva factura
+        facturaNueva.setProductos(productoAsignado);
+        
+        // verificar los demas datos de entrada
+        // cantidad
+        if (verificarCantidad(EntradaCantidad.getText())) {
+            // fecha
+            if (verificarFecha(EntradaFecha.getText())) {
+                // si todos los datos son validos
+                // intentar parsear la fecha
+                try {
+                    SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
+                    Date fecha = formatter.parse(this.EntradaFecha.getText());
+                    facturaNueva.setFechaFactura(fecha);
+                } catch (ParseException ex) {
+                    JOptionPane.showMessageDialog(rootPane, "FECHA no se ha podido convertir");
+                }
+                
+                // poner la cantidad a la nueva factura
+                facturaNueva.setCantidadProductos(Integer.valueOf(EntradaCantidad.getText()));
+                
+                // poner el importe a la factura
+                facturaNueva.setImporteTotal(Double.valueOf(EntradaCantidad.getText()) * productoAsignado.getImporteProducto());
+                
+                try {
+                    // insertar la nueva factura
+                    controladorFacturas.create(facturaNueva);
+                } catch (Exception ex) {
+                    Logger.getLogger(VentanaGenerarFacturas.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                
+                // actualizar la lista de datos
+                actualizarTablaResultados();
+                
+            }else{
+                JOptionPane.showMessageDialog(rootPane, "La fecha no es valida");
+            }
+        }else{
+            JOptionPane.showMessageDialog(rootPane, "La cantidad no es valida");
+        }
+
+    }//GEN-LAST:event_BotonAñadirFacturaActionPerformed
 
     private void BotonRegresarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BotonRegresarActionPerformed
         // TODO add your handling code here:
@@ -155,12 +295,10 @@ public class VentanaGenerarFacturas extends javax.swing.JFrame {
         this.dispose();
     }//GEN-LAST:event_BotonRegresarActionPerformed
 
-    private void EntradaImporteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_EntradaImporteActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_EntradaImporteActionPerformed
-
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
         // TODO add your handling code here:
+
+        actualizarTablaResultados();
 
         // obtener clientes
         List<Clientes> listaClientes = controladorClientes.findClientesEntities();
@@ -173,7 +311,7 @@ public class VentanaGenerarFacturas extends javax.swing.JFrame {
         for (Productos p : listaProductos) {
             DesplegableProductos.addItem(p.getIdProducto() + "-" + p.getRefProducto());
         }
-        
+
     }//GEN-LAST:event_formWindowOpened
 
     /**
@@ -215,21 +353,19 @@ public class VentanaGenerarFacturas extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton BotonAñadirProveedor;
+    private javax.swing.JButton BotonAñadirFactura;
     private javax.swing.JButton BotonRegresar;
     private javax.swing.JComboBox<String> DesplegableClientes;
     private javax.swing.JComboBox<String> DesplegableProductos;
     private javax.swing.JTextField EntradaCantidad;
     private javax.swing.JTextField EntradaFecha;
-    private javax.swing.JTextField EntradaImporte;
+    private javax.swing.JTable TablaResultados;
     private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
     // End of variables declaration//GEN-END:variables
 }

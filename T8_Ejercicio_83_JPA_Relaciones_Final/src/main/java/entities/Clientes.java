@@ -144,7 +144,7 @@ public class Clientes implements Serializable {
 
     @Override
     public String toString() {
-        return "entities.Clientes[ idCliente=" + idCliente + " ]";
+        return idCliente.toString();
     }
     
 }
