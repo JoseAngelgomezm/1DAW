@@ -5,7 +5,6 @@
 package entities;
 
 import java.io.Serializable;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import javax.persistence.Basic;
@@ -99,10 +98,8 @@ public class Clientes implements Serializable {
         this.apellidosCliente = apellidosCliente;
     }
 
-    public String getFechaNacimientocliente() {
-         SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
-        String fechaString = formatter.format(this.fechaNacimientocliente);
-        return fechaString;
+    public Date getFechaNacimientocliente() {
+        return fechaNacimientocliente;
     }
 
     public void setFechaNacimientocliente(Date fechaNacimientocliente) {

@@ -4,20 +4,20 @@
  */
 package controllers;
 
-import entities.Clientes;
-import entities.Facturas;
-import entities.FacturasPK;
-import entities.Productos;
-import entities.exceptions.NonexistentEntityException;
-import entities.exceptions.PreexistingEntityException;
+import controllers.exceptions.NonexistentEntityException;
+import controllers.exceptions.PreexistingEntityException;
 import java.io.Serializable;
-import java.util.List;
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
 import javax.persistence.Query;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
+import entities.Clientes;
+import entities.Facturas;
+import entities.FacturasPK;
+import entities.Productos;
+import java.util.List;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
 
 /**
  *

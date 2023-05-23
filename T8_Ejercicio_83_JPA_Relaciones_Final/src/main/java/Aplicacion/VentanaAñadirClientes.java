@@ -6,8 +6,8 @@ package Aplicacion;
 
 import entities.Clientes;
 import entities.TarjetasBancarias;
-import entities.exceptions.IllegalOrphanException;
-import entities.exceptions.NonexistentEntityException;
+import controllers.exceptions.IllegalOrphanException;
+import controllers.exceptions.NonexistentEntityException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -237,7 +237,7 @@ public class VentanaAñadirClientes extends javax.swing.JFrame {
         // crear una expresion para que se introduzca un nif valido con un regex
         final String regexNIF = "[0-9]{8}[A-Z]";
         // crear el texto que vamos a comprobar que cumple la expresion regular
-        final String pruebaNIF = this.EntradaNIFCliente.getText();
+        final String pruebaNIF = nif;
 
         // crear el pattern y pasarle el regex
         final Pattern patternNIF = Pattern.compile(regexNIF, Pattern.UNIX_LINES);
@@ -280,7 +280,7 @@ public class VentanaAñadirClientes extends javax.swing.JFrame {
         final String regexNombre = ".+";
         // podemos utilizar el regex del nombre
         // crear el texto que vamos a comprobar que cumple la expresion regular
-        final String pruebaApellido = this.EntradaApellidoCliente.getText();
+        final String pruebaApellido = apellido;
 
         // crear el pattern y pasarle el regex
         final Pattern patternApelllido = Pattern.compile(regexNombre, Pattern.UNIX_LINES);
@@ -302,7 +302,7 @@ public class VentanaAñadirClientes extends javax.swing.JFrame {
         // crear el patron con un string
         final String regexFecha = "^\\d{1,2}-\\d{1,2}-\\d{4}$";
         // crear el texto que vamos a comprobar que cumple la expresion regular
-        final String pruebaFechaNacimiento = this.EntradaFechaNacimientoCliente.getText();
+        final String pruebaFechaNacimiento = fecha;
 
         // crear el pattern y pasarle el patron
         final Pattern patternFechaNacimiento = Pattern.compile(regexFecha, Pattern.UNIX_LINES);

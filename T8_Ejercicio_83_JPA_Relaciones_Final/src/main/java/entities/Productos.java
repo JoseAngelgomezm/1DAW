@@ -29,7 +29,6 @@ import javax.persistence.Table;
 @NamedQueries({
     @NamedQuery(name = "Productos.findAll", query = "SELECT p FROM Productos p"),
     @NamedQuery(name = "Productos.findByIdProducto", query = "SELECT p FROM Productos p WHERE p.idProducto = :idProducto"),
-    @NamedQuery(name = "Productos.findByNifProveedor", query = "SELECT p FROM Productos p WHERE p.nifProveedor = :nifProveedor"),
     @NamedQuery(name = "Productos.findByRefProducto", query = "SELECT p FROM Productos p WHERE p.refProducto = :refProducto"),
     @NamedQuery(name = "Productos.findByNombreProducto", query = "SELECT p FROM Productos p WHERE p.nombreProducto = :nombreProducto"),
     @NamedQuery(name = "Productos.findByImporteProducto", query = "SELECT p FROM Productos p WHERE p.importeProducto = :importeProducto")})
@@ -41,8 +40,6 @@ public class Productos implements Serializable {
     @Basic(optional = false)
     @Column(name = "id_producto")
     private Integer idProducto;
-    @Column(name = "nif_proveedor")
-    private String nifProveedor;
     @Column(name = "ref_producto")
     private String refProducto;
     @Column(name = "nombre_producto")
@@ -69,14 +66,6 @@ public class Productos implements Serializable {
 
     public void setIdProducto(Integer idProducto) {
         this.idProducto = idProducto;
-    }
-
-    public String getNifProveedor() {
-        return nifProveedor;
-    }
-
-    public void setNifProveedor(String nifProveedor) {
-        this.nifProveedor = nifProveedor;
     }
 
     public String getRefProducto() {

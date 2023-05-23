@@ -14,7 +14,6 @@ create table if not exists proveedores(
 create table if not exists productos(
 	id_producto int auto_increment,
     id_proveedor int,
-    nif_proveedor varchar(9),
     ref_producto varchar (10),
 	nombre_producto varchar(60),
     importe_producto double,
@@ -57,12 +56,12 @@ insert into proveedores values
 (default, '44124633Z', 'Placas Bases PC', 'Calle Lirios 7 San Fernando' );
 
 insert into productos values
-(default, '1', '77754343S', '88887777', 'Samsung oddysey G5 27', '200'),
-(default, '1', '77754343S', '66625212', 'MSI Optix G24C4 23.6', '160'),
-(default, '2', '87553443S', '23137774', 'Gigabyte rtx 3060 12GB', '350'),
-(default, '2', '87553443S', '34242342', 'Gigabyte RX 6700XT', '400'),
-(default, '3', '44124633Z', '23137774', 'Asus TUF GAMING B660 PLUS', '175'),
-(default, '3', '44124633Z', '34242342', 'Gigabyte b550 AORUS ELITE', '130');
+(default, '1',  '88887777', 'Samsung oddysey G5 27', '200'),
+(default, '1',  '66625212', 'MSI Optix G24C4 23.6', '160'),
+(default, '2',  '23137774', 'Gigabyte rtx 3060 12GB', '350'),
+(default, '2',  '34242342', 'Gigabyte RX 6700XT', '400'),
+(default, '3',  '23137774', 'Asus TUF GAMING B660 PLUS', '175'),
+(default, '3',  '34242342', 'Gigabyte b550 AORUS ELITE', '130');
 
 insert into tarjetasBancarias values 
 (default, '47889998837662638'),

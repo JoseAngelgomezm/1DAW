@@ -4,15 +4,19 @@
  */
 package Aplicacion;
 
-import entities.Clientes;
 import entities.Productos;
-import entities.exceptions.IllegalOrphanException;
-import entities.exceptions.NonexistentEntityException;
+import controllers.exceptions.IllegalOrphanException;
+import controllers.exceptions.NonexistentEntityException;
+import entities.Proveedores;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -24,6 +28,7 @@ public class VentanaAñadirProductos extends javax.swing.JFrame {
 // atributos del JForm
     private final EntityManagerFactory emf;
     private final controllers.ProductosJpaController controladorProductos;
+    private final controllers.ProveedoresJpaController controladorProveedores;
 
     /**
      * Creates new form VentanaAñadirProveedores2
@@ -33,6 +38,7 @@ public class VentanaAñadirProductos extends javax.swing.JFrame {
         this.emf = Persistence.createEntityManagerFactory("bdp83");
         // crear el controlador pasandole el manejador de entidades
         this.controladorProductos = new controllers.ProductosJpaController(emf);
+        this.controladorProveedores = new controllers.ProveedoresJpaController(emf);
     }
 
     /**
@@ -58,6 +64,8 @@ public class VentanaAñadirProductos extends javax.swing.JFrame {
         BotonRegresar = new javax.swing.JButton();
         BotonEliminar = new javax.swing.JButton();
         BotonModificar = new javax.swing.JButton();
+        DesplegableProveedores = new javax.swing.JComboBox<>();
+        jLabel6 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         addWindowListener(new java.awt.event.WindowAdapter() {
@@ -107,7 +115,7 @@ public class VentanaAñadirProductos extends javax.swing.JFrame {
                 BotonAñadirProductosActionPerformed(evt);
             }
         });
-        jPanel1.add(BotonAñadirProductos, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 510, -1, 30));
+        jPanel1.add(BotonAñadirProductos, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 560, -1, 30));
 
         jLabel3.setFont(new java.awt.Font("Segoe UI", 0, 48)); // NOI18N
         jLabel3.setText("Añadir Productos");
@@ -125,8 +133,8 @@ public class VentanaAñadirProductos extends javax.swing.JFrame {
         jPanel1.add(EntradaNombreProducto, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 400, 130, -1));
 
         jLabel5.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
-        jLabel5.setText("Importe:");
-        jPanel1.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 390, -1, -1));
+        jLabel5.setText("Proveedor:");
+        jPanel1.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(350, 440, -1, -1));
 
         BotonRegresar.setText("Regresar");
         BotonRegresar.addActionListener(new java.awt.event.ActionListener() {
@@ -134,7 +142,7 @@ public class VentanaAñadirProductos extends javax.swing.JFrame {
                 BotonRegresarActionPerformed(evt);
             }
         });
-        jPanel1.add(BotonRegresar, new org.netbeans.lib.awtextra.AbsoluteConstraints(560, 510, -1, 30));
+        jPanel1.add(BotonRegresar, new org.netbeans.lib.awtextra.AbsoluteConstraints(470, 560, -1, 30));
 
         BotonEliminar.setText("Eliminar");
         BotonEliminar.addActionListener(new java.awt.event.ActionListener() {
@@ -142,7 +150,7 @@ public class VentanaAñadirProductos extends javax.swing.JFrame {
                 BotonEliminarActionPerformed(evt);
             }
         });
-        jPanel1.add(BotonEliminar, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 510, 80, 30));
+        jPanel1.add(BotonEliminar, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 560, 80, 30));
 
         BotonModificar.setText("Modificar");
         BotonModificar.addActionListener(new java.awt.event.ActionListener() {
@@ -150,7 +158,14 @@ public class VentanaAñadirProductos extends javax.swing.JFrame {
                 BotonModificarActionPerformed(evt);
             }
         });
-        jPanel1.add(BotonModificar, new org.netbeans.lib.awtextra.AbsoluteConstraints(410, 510, 90, 30));
+        jPanel1.add(BotonModificar, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 560, 90, 30));
+
+        DesplegableProveedores.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        jPanel1.add(DesplegableProveedores, new org.netbeans.lib.awtextra.AbsoluteConstraints(500, 450, 130, 20));
+
+        jLabel6.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
+        jLabel6.setText("Importe:");
+        jPanel1.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 390, -1, -1));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -180,11 +195,113 @@ public class VentanaAñadirProductos extends javax.swing.JFrame {
     private void EntradaREFProductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_EntradaREFProductoActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_EntradaREFProductoActionPerformed
+    
+    private boolean verificarRef(String refProducto) {
+        // crear una expresion para que se introduzca un nif valido con un regex
+        final String regexNIF = "[0-9]{10}";
+        // crear el texto que vamos a comprobar que cumple la expresion regular
+        final String pruebaNIF = refProducto;
+
+        // crear el pattern y pasarle el regex
+        final Pattern patternNIF = Pattern.compile(regexNIF, Pattern.UNIX_LINES);
+        // crear el matcher pasandole el texto a comprobar
+        final Matcher matcherNIF = patternNIF.matcher(pruebaNIF);
+
+        // si el nif introducido es valido
+        if (matcherNIF.matches()) {
+            return true;
+            
+        } else {
+            return false;
+        }
+        
+    }
+    
+    private boolean verificarNombre(String nombre) {
+        // crear una expresion para que se introduzca un nif valido con un regex
+        final String regexNombre = ".+";
+        // crear el texto que vamos a comprobar que cumple la expresion regular
+        final String pruebaNombre = nombre;
+
+        // crear el pattern y pasarle el regex
+        final Pattern patternNIF = Pattern.compile(regexNombre, Pattern.UNIX_LINES);
+        // crear el matcher pasandole el texto a comprobar
+        final Matcher matcherNIF = patternNIF.matcher(pruebaNombre);
+
+        // si el nif introducido es valido
+        if (matcherNIF.matches()) {
+            return true;
+            
+        } else {
+            return false;
+        }
+        
+    }
+    
+    private boolean verificarImporte(String importe) {
+        // crear una expresion para que se introduzca un nif valido con un regex
+        final String regexImporte = "\\d+(\\.\\d{1,4})?";
+        // crear el texto que vamos a comprobar que cumple la expresion regular
+        final String pruebaImporte = importe;
+
+        // crear el pattern y pasarle el regex
+        final Pattern patternNIF = Pattern.compile(regexImporte, Pattern.UNIX_LINES);
+        // crear el matcher pasandole el texto a comprobar
+        final Matcher matcherNIF = patternNIF.matcher(pruebaImporte);
+
+        // si el nif introducido es valido
+        if (matcherNIF.matches()) {
+            return true;
+            
+        } else {
+            return false;
+        }
+        
+    }
 
     private void BotonAñadirProductosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BotonAñadirProductosActionPerformed
         // TODO add your handling code here:
-        
-        
+        // crear un producto
+        Productos productoIntroducir = new Productos();
+
+        // verificar que lo datos que hemos introducido son correctos
+        if (verificarRef(EntradaREFProducto.getText())) {
+            
+            if (verificarNombre(EntradaNombreProducto.getText())) {
+                
+                if (verificarImporte(EntradaImporteProducto.getText())) {
+
+                    // si todos los datos son correctos, asignarlos al nuevo producto
+                    productoIntroducir.setRefProducto(EntradaREFProducto.getText());
+                    productoIntroducir.setNombreProducto(EntradaNombreProducto.getText());
+                    productoIntroducir.setImporteProducto(Double.valueOf(EntradaImporteProducto.getText()));
+
+                    // obtener el id del proveedor del cual es el producto
+                    String proveedorSeleccionado = DesplegableProveedores.getSelectedItem().toString();
+                    int id = Integer.valueOf(proveedorSeleccionado.charAt(0));
+                    
+                    // buscar el proveedor
+                    Proveedores proveedorAsignado = controladorProveedores.findProveedores(id);
+                    
+                    // asignar el proveedor al nuevo producto
+                    productoIntroducir.setIdProveedor(proveedorAsignado);
+                    
+                    // introducir el producto en la base de datos
+                    controladorProductos.create(productoIntroducir);
+                    
+                    
+                } else {
+                    JOptionPane.showMessageDialog(rootPane, "Importe del producto no valido");
+                }
+                
+            } else {
+                JOptionPane.showMessageDialog(rootPane, "Nombre del producto no valido");
+            }
+            
+        } else {
+            JOptionPane.showMessageDialog(rootPane, "Referencia producto no valida");
+        }
+
     }//GEN-LAST:event_BotonAñadirProductosActionPerformed
 
     private void EntradaNombreProductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_EntradaNombreProductoActionPerformed
@@ -195,19 +312,19 @@ public class VentanaAñadirProductos extends javax.swing.JFrame {
         DefaultTableModel modelo = new DefaultTableModel() {
             @Override
             public boolean isCellEditable(int row, int column) {
-                if (column == 0 || column == 1 || column == 2) {
+                if (column == 0 || column == 1) {
                     return false;
                 }
                 return true;
             }
-
+            
         };
 
         // obtener todos los registros de las tarjetas
         List<Productos> listaProductose = this.controladorProductos.findProductosEntities();
 
         // crear las columnas que va a tener nuestra tabla        
-        String[] columnas = {"ID_Producto", "ID_Proveedor", "NIF_Proveedor", "REF_Prodcuto", "Nombre_Producto", "Importe_Producto"};
+        String[] columnas = {"ID_Producto", "ID_Proveedor", "REF_Prodcuto", "Nombre_Producto", "Importe_Producto"};
 
         // poner los identificadores de los campos en el modelo
         modelo.setColumnIdentifiers(columnas);
@@ -215,7 +332,7 @@ public class VentanaAñadirProductos extends javax.swing.JFrame {
         // recorrer la lista
         for (Productos p : listaProductose) {
             // añadir los datos de cada factura a un array de object
-            Object[] datosFila = {p.getIdProducto(), p.getIdProveedor(), p.getNifProveedor(), p.getRefProducto(), p.getNombreProducto(), p.getImporteProducto()};
+            Object[] datosFila = {p.getIdProducto(), p.getIdProveedor(), p.getRefProducto(), p.getNombreProducto(), p.getImporteProducto()};
             // añadir el array de object como una fila del modelo de la tabla
             modelo.addRow(datosFila);
         }
@@ -226,6 +343,14 @@ public class VentanaAñadirProductos extends javax.swing.JFrame {
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
         // TODO add your handling code here:
         actualizarTablaResultados();
+        // cargar los datos de los proveedores al desplegable
+        List<Proveedores> listaProveedores = controladorProveedores.findProveedoresEntities();
+
+        // una vez tenemos los datos cargarlos al desplegable
+        for (Proveedores p : listaProveedores) {
+            DesplegableProveedores.addItem(p.getIdProveedor() + "-" + p.getNombreProveedor());
+        }
+        
     }//GEN-LAST:event_formWindowOpened
 
     private void BotonRegresarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BotonRegresarActionPerformed
@@ -236,7 +361,7 @@ public class VentanaAñadirProductos extends javax.swing.JFrame {
     }//GEN-LAST:event_BotonRegresarActionPerformed
 
     private void BotonEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BotonEliminarActionPerformed
-
+        
         try {
             // TODO add your handling code here:
             // obtener la fila que esta seleccionada
@@ -247,7 +372,7 @@ public class VentanaAñadirProductos extends javax.swing.JFrame {
 
             // intentar borrar el producto por el id
             controladorProductos.destroy(idBorrar);
-
+            
             actualizarTablaResultados();
         } catch (IllegalOrphanException ex) {
             Logger.getLogger(VentanaAñadirProductos.class.getName()).log(Level.SEVERE, null, ex);
@@ -263,8 +388,6 @@ public class VentanaAñadirProductos extends javax.swing.JFrame {
 
         // obtener la fila que esta seleccionada
         int fila = TablaResultadosProductos.getSelectedRow();
-
-       
 
         // actualizar datos de la tabla
         actualizarTablaResultados();
@@ -313,6 +436,7 @@ public class VentanaAñadirProductos extends javax.swing.JFrame {
     private javax.swing.JButton BotonEliminar;
     private javax.swing.JButton BotonModificar;
     private javax.swing.JButton BotonRegresar;
+    private javax.swing.JComboBox<String> DesplegableProveedores;
     private javax.swing.JTextField EntradaImporteProducto;
     private javax.swing.JTextField EntradaNombreProducto;
     private javax.swing.JTextField EntradaREFProducto;
@@ -321,6 +445,7 @@ public class VentanaAñadirProductos extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     // End of variables declaration//GEN-END:variables

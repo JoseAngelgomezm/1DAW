@@ -93,7 +93,7 @@ public class TarjetasBancarias implements Serializable {
 
     @Override
     public String toString() {
-        return this.idtarjetaBancaria.toString();
+        return "entities.TarjetasBancarias[ idtarjetaBancaria=" + idtarjetaBancaria + " ]";
     }
     
 }

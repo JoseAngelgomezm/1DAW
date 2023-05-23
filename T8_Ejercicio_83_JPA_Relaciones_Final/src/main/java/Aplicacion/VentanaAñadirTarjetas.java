@@ -6,7 +6,7 @@ package Aplicacion;
 
 import entities.Proveedores;
 import entities.TarjetasBancarias;
-import entities.exceptions.NonexistentEntityException;
+import controllers.exceptions.NonexistentEntityException;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
