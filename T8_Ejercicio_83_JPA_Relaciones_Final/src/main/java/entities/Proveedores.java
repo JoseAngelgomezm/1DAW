@@ -115,7 +115,7 @@ public class Proveedores implements Serializable {
 
     @Override
     public String toString() {
-        return "entities.Proveedores[ idProveedor=" + idProveedor + " ]";
+        return idProveedor.toString();
     }
     
 }

@@ -130,7 +130,7 @@ public class Productos implements Serializable {
 
     @Override
     public String toString() {
-        return "entities.Productos[ idProducto=" + idProducto + " ]";
+        return idProducto.toString();
     }
     
 }
