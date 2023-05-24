@@ -60,9 +60,7 @@ public class VentanaGenerarFacturas extends javax.swing.JFrame {
         DesplegableProductos = new javax.swing.JComboBox<>();
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
-        jLabel7 = new javax.swing.JLabel();
         EntradaCantidad = new javax.swing.JTextField();
-        EntradaFecha = new javax.swing.JTextField();
         BotonRegresar = new javax.swing.JButton();
         jLabel8 = new javax.swing.JLabel();
         DesplegableClientes = new javax.swing.JComboBox<>();
@@ -100,12 +98,7 @@ public class VentanaGenerarFacturas extends javax.swing.JFrame {
         jLabel6.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
         jLabel6.setText("Cantidad productos:");
         jPanel1.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 250, -1, -1));
-
-        jLabel7.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
-        jLabel7.setText("Fecha factura:");
-        jPanel1.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 300, -1, -1));
         jPanel1.add(EntradaCantidad, new org.netbeans.lib.awtextra.AbsoluteConstraints(350, 250, 120, 30));
-        jPanel1.add(EntradaFecha, new org.netbeans.lib.awtextra.AbsoluteConstraints(350, 300, 120, 30));
 
         BotonRegresar.setText("Regresar");
         BotonRegresar.addActionListener(new java.awt.event.ActionListener() {
@@ -211,7 +204,7 @@ public class VentanaGenerarFacturas extends javax.swing.JFrame {
         // recorrer la lista
         for (Facturas f : listaFacturas) {
             // añadir los datos de cada factura a un array de object
-            Object[] datosFilaFactura = {f.getClientes(), f.getProductos(), f.getCantidadProductos(), f.getFechaFactura(), f.getImporteTotal()};
+            Object[] datosFilaFactura = {f.getFacturasPK().getIdCliente(), f.getFacturasPK().getIdProducto(), f.getCantidadProductos(), f.getFacturasPK().getFechaFactura(), f.getImporteTotal()};
             // añadir el array de object como una fila del modelo de la tabla
             modelo.addRow(datosFilaFactura);
         }
@@ -224,20 +217,19 @@ public class VentanaGenerarFacturas extends javax.swing.JFrame {
         // TODO add your handling code here:
         // crear una nueva factura
         Facturas facturaNueva = new Facturas();
-        
+
         // obtener el dato del desplegable de clientes
         String clienteSeleccionado = DesplegableClientes.getSelectedItem().toString();
+        
         // obtener el id de ese cliente
         int id_cliente = Character.getNumericValue(clienteSeleccionado.charAt(0));
 
         // buscar el cliente
         Clientes clienteAsignado = controladorClientes.findClientes(id_cliente);
 
-        // asignar el cliente a la nueva factura
-        facturaNueva.setClientes(clienteAsignado);
-        
         // obtener el dato del desplegable de productos
-        String prodcutoSeleccionado = DesplegableProductos.getSelectedItem().toString();
+        String productoSeleccionado = DesplegableProductos.getSelectedItem().toString();
+        
         // obtener el id de ese producto
         int id_producto = Character.getNumericValue(clienteSeleccionado.charAt(0));
 
@@ -248,42 +240,31 @@ public class VentanaGenerarFacturas extends javax.swing.JFrame {
         facturaNueva.setClientes(clienteAsignado);
         // asignar el prodcuto a la nueva factura
         facturaNueva.setProductos(productoAsignado);
-        
+
         // verificar los demas datos de entrada
         // cantidad
         if (verificarCantidad(EntradaCantidad.getText())) {
-            // fecha
-            if (verificarFecha(EntradaFecha.getText())) {
-                // si todos los datos son validos
-                // intentar parsear la fecha
-                try {
-                    SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
-                    DateTime fecha = formatter.parse(this.EntradaFecha.getText());
-                    facturaNueva.setFechaFactura(fecha);
-                } catch (ParseException ex) {
-                    JOptionPane.showMessageDialog(rootPane, "FECHA no se ha podido convertir");
-                }
-                
-                // poner la cantidad a la nueva factura
-                facturaNueva.setCantidadProductos(Integer.valueOf(EntradaCantidad.getText()));
-                
-                // poner el importe a la factura
-                facturaNueva.setImporteTotal(Double.valueOf(EntradaCantidad.getText()) * productoAsignado.getImporteProducto());
-                
-                try {
-                    // insertar la nueva factura
-                    controladorFacturas.create(facturaNueva);
-                } catch (Exception ex) {
-                    Logger.getLogger(VentanaGenerarFacturas.class.getName()).log(Level.SEVERE, null, ex);
-                }
-                
-                // actualizar la lista de datos
-                actualizarTablaResultados();
-                
-            }else{
-                JOptionPane.showMessageDialog(rootPane, "La fecha no es valida");
+
+            // si todos los datos son validos
+            // obtener fecha y hora actual
+            
+            // poner la cantidad a la nueva factura
+            facturaNueva.setCantidadProductos(Integer.valueOf(EntradaCantidad.getText()));
+
+            // poner el importe a la factura
+            facturaNueva.setImporteTotal(Double.valueOf(EntradaCantidad.getText()) * productoAsignado.getImporteProducto());
+
+            try {
+                // insertar la nueva factura
+                controladorFacturas.create(facturaNueva);
+            } catch (Exception ex) {
+                Logger.getLogger(VentanaGenerarFacturas.class.getName()).log(Level.SEVERE, null, ex);
             }
-        }else{
+
+            // actualizar la lista de datos
+            actualizarTablaResultados();
+
+        } else {
             JOptionPane.showMessageDialog(rootPane, "La cantidad no es valida");
         }
 
@@ -359,12 +340,10 @@ public class VentanaGenerarFacturas extends javax.swing.JFrame {
     private javax.swing.JComboBox<String> DesplegableClientes;
     private javax.swing.JComboBox<String> DesplegableProductos;
     private javax.swing.JTextField EntradaCantidad;
-    private javax.swing.JTextField EntradaFecha;
     private javax.swing.JTable TablaResultados;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
-    private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;

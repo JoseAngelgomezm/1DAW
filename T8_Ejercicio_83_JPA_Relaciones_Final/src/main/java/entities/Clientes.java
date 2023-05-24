@@ -5,6 +5,7 @@
 package entities;
 
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import javax.persistence.Basic;
@@ -15,7 +16,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
@@ -38,7 +38,7 @@ import javax.persistence.TemporalType;
     @NamedQuery(name = "Clientes.findByApellidosCliente", query = "SELECT c FROM Clientes c WHERE c.apellidosCliente = :apellidosCliente"),
     @NamedQuery(name = "Clientes.findByFechaNacimientocliente", query = "SELECT c FROM Clientes c WHERE c.fechaNacimientocliente = :fechaNacimientocliente")})
 public class Clientes implements Serializable {
-
+    
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -59,77 +59,79 @@ public class Clientes implements Serializable {
     @OneToOne
     @JoinColumn(name = "id_tarjetaBancaria", referencedColumnName = "id_tarjetaBancaria")
     private TarjetasBancarias idtarjetaBancaria;
-
+    
     public Clientes() {
     }
-
+    
     public Clientes(Integer idCliente) {
         this.idCliente = idCliente;
     }
-
+    
     public Integer getIdCliente() {
         return idCliente;
     }
-
+    
     public void setIdCliente(Integer idCliente) {
         this.idCliente = idCliente;
     }
-
+    
     public String getNifCliente() {
         return nifCliente;
     }
-
+    
     public void setNifCliente(String nifCliente) {
         this.nifCliente = nifCliente;
     }
-
+    
     public String getNombrecliente() {
         return nombrecliente;
     }
-
+    
     public void setNombrecliente(String nombrecliente) {
         this.nombrecliente = nombrecliente;
     }
-
+    
     public String getApellidosCliente() {
         return apellidosCliente;
     }
-
+    
     public void setApellidosCliente(String apellidosCliente) {
         this.apellidosCliente = apellidosCliente;
     }
-
-    public Date getFechaNacimientocliente() {
-        return fechaNacimientocliente;
+    
+    public String getFechaNacimientocliente() {
+        SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
+        
+        return formatter.format(fechaNacimientocliente);
     }
-
+    
     public void setFechaNacimientocliente(Date fechaNacimientocliente) {
         this.fechaNacimientocliente = fechaNacimientocliente;
     }
-
+    
     public List<Facturas> getFacturasList() {
         return facturasList;
     }
-
+    
     public void setFacturasList(List<Facturas> facturasList) {
         this.facturasList = facturasList;
     }
-
+    
     public TarjetasBancarias getIdtarjetaBancaria() {
         return idtarjetaBancaria;
     }
-
+    
     public void setIdtarjetaBancaria(TarjetasBancarias idtarjetaBancaria) {
         this.idtarjetaBancaria = idtarjetaBancaria;
     }
-
+    
     @Override
     public int hashCode() {
         int hash = 0;
         hash += (idCliente != null ? idCliente.hashCode() : 0);
         return hash;
     }
-
+    
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
@@ -142,7 +144,7 @@ public class Clientes implements Serializable {
         }
         return true;
     }
-
+    
     @Override
     public String toString() {
         return idCliente.toString();

@@ -371,9 +371,6 @@ public class VentanaAñadirClientes extends javax.swing.JFrame {
     private void BotonAñadirClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BotonAñadirClienteActionPerformed
         // TODO add your handling code here:
 
-        // obtener todos los registros de los clientes
-        List<Clientes> listaClientes = this.controladorClientes.findClientesEntities();
-
         // crear un cliente que sera el que se introducirá
         Clientes nuevoCliente = new Clientes();
 
@@ -450,7 +447,12 @@ public class VentanaAñadirClientes extends javax.swing.JFrame {
         List<TarjetasBancarias> tarjetas = controladorTarjetas.findTarjetasBancariasEntities();
 
         for (TarjetasBancarias t : tarjetas) {
-            this.DesplegableTarjetas.addItem(t.getIdtarjetaBancaria() + "-" + t.getNumeroTarjeta());
+            // añadir solo las que tengan un cliente a null 
+            // significando que la tarjeta esta libre para ser asignada
+            if (t.getCliente() == null) {
+                  this.DesplegableTarjetas.addItem(t.getIdtarjetaBancaria() + "-" + t.getNumeroTarjeta());
+            }
+          
         }
 
 
@@ -486,21 +488,49 @@ public class VentanaAñadirClientes extends javax.swing.JFrame {
 
     private void BotonModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BotonModificarActionPerformed
 
-        // TODO add your handling code here:
-        // crear un cliente para pasar al metodo actualizar
-        Clientes clienteActualizar = new Clientes();
+        try {
+            // TODO add your handling code here:
+            // crear un cliente para pasar al metodo actualizar
+            // obtener la fila que esta seleccionada
+            int fila = TablaResultadosClientes.getSelectedRow();
 
-        // obtener la fila que esta seleccionada
-        int fila = TablaResultadosClientes.getSelectedRow();
-        
-        // obtener el id del cliente a actualizar
-        int id = Integer.parseInt(TablaResultadosClientes.getValueAt(fila, 0).toString());
-        
-        // obtener los datos de la tabla modificados
-        
-        
-        // actualizar datos de la tabla
-        actualizarTablaResultados();
+            // obtener el id del cliente a actualizar
+            int id = Integer.parseInt(TablaResultadosClientes.getValueAt(fila, 0).toString());
+
+            // buscar el cliente por id para obtener el cliente
+            Clientes clienteModificar = controladorClientes.findClientes(id);
+
+            // obtener todos los datos de la tabla que han podido ser modificados
+            String nif = TablaResultadosClientes.getValueAt(fila, 2).toString();
+            String nombre = TablaResultadosClientes.getValueAt(fila, 3).toString();
+            String apellido = TablaResultadosClientes.getValueAt(fila, 4).toString();
+            String fechaString = TablaResultadosClientes.getValueAt(fila, 5).toString();
+
+            // parsear la fecha
+            SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
+
+            Date fechaDate = formatter.parse(fechaString);
+
+            // ponerle los datos al cliente obtenido
+            clienteModificar.setNifCliente(nif);
+            clienteModificar.setNombrecliente(nombre);
+            clienteModificar.setApellidosCliente(apellido);
+            clienteModificar.setFechaNacimientocliente(fechaDate);
+            
+            // modificar cliente
+            try {
+                controladorClientes.edit(clienteModificar);
+            } catch (NonexistentEntityException ex) {
+                Logger.getLogger(VentanaAñadirClientes.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (Exception ex) {
+                Logger.getLogger(VentanaAñadirClientes.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            
+            // actualizar datos de la tabla
+            actualizarTablaResultados();
+        } catch (ParseException ex) {
+            Logger.getLogger(VentanaAñadirClientes.class.getName()).log(Level.SEVERE, null, ex);
+        }
 
     }//GEN-LAST:event_BotonModificarActionPerformed
 
