@@ -19,7 +19,7 @@ import javax.persistence.Table;
 
 /**
  *
- * @author Jose Angel
+ * @author joseangel
  */
 @Entity
 @Table(name = "proveedores")
@@ -115,7 +115,7 @@ public class Proveedores implements Serializable {
 
     @Override
     public String toString() {
-        return  idProveedor.toString();
+        return "entities.Proveedores[ idProveedor=" + idProveedor + " ]";
     }
     
 }

@@ -43,9 +43,9 @@ create table if not exists facturas(
 	id_cliente int,
     id_producto int,
     cantidad_productos int,
-    fecha_factura date,
+    fecha_factura datetime,
     importe_total double,
-    constraint pk_facturas primary key (id_cliente, id_producto),
+    constraint pk_facturas primary key (id_cliente, id_producto, fecha_factura),
     constraint fk_facturas_clientes foreign key (id_cliente) references clientes (id_cliente),
     constraint fk_facturas_productos foreign key (id_producto) references productos (id_producto)
 );

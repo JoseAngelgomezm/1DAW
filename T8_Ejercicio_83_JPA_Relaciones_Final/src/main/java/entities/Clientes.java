@@ -19,13 +19,14 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 /**
  *
- * @author Jose Angel
+ * @author joseangel
  */
 @Entity
 @Table(name = "clientes")
@@ -55,8 +56,8 @@ public class Clientes implements Serializable {
     private Date fechaNacimientocliente;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "clientes")
     private List<Facturas> facturasList;
+    @OneToOne
     @JoinColumn(name = "id_tarjetaBancaria", referencedColumnName = "id_tarjetaBancaria")
-    @ManyToOne
     private TarjetasBancarias idtarjetaBancaria;
 
     public Clientes() {
@@ -144,7 +145,7 @@ public class Clientes implements Serializable {
 
     @Override
     public String toString() {
-        return idCliente.toString();
+        return "entities.Clientes[ idCliente=" + idCliente + " ]";
     }
     
 }

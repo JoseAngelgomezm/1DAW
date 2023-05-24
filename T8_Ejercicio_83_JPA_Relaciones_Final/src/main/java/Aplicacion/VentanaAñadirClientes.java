@@ -94,14 +94,14 @@ public class VentanaAñadirClientes extends javax.swing.JFrame {
                 EntradaApellidoClienteActionPerformed(evt);
             }
         });
-        jPanel1.add(EntradaApellidoCliente, new org.netbeans.lib.awtextra.AbsoluteConstraints(560, 390, 130, -1));
+        jPanel1.add(EntradaApellidoCliente, new org.netbeans.lib.awtextra.AbsoluteConstraints(570, 380, 130, -1));
 
         EntradaNombreCliente.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 EntradaNombreClienteActionPerformed(evt);
             }
         });
-        jPanel1.add(EntradaNombreCliente, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 390, 130, -1));
+        jPanel1.add(EntradaNombreCliente, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 380, 130, -1));
 
         TablaResultadosClientes.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -139,21 +139,21 @@ public class VentanaAñadirClientes extends javax.swing.JFrame {
                 EntradaNIFClienteActionPerformed(evt);
             }
         });
-        jPanel1.add(EntradaNIFCliente, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 440, 130, -1));
+        jPanel1.add(EntradaNIFCliente, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 430, 130, -1));
 
         EntradaFechaNacimientoCliente.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 EntradaFechaNacimientoClienteActionPerformed(evt);
             }
         });
-        jPanel1.add(EntradaFechaNacimientoCliente, new org.netbeans.lib.awtextra.AbsoluteConstraints(560, 440, 130, -1));
+        jPanel1.add(EntradaFechaNacimientoCliente, new org.netbeans.lib.awtextra.AbsoluteConstraints(570, 430, 130, -1));
 
         DesplegableTarjetas.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 DesplegableTarjetasActionPerformed(evt);
             }
         });
-        jPanel1.add(DesplegableTarjetas, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 490, 140, -1));
+        jPanel1.add(DesplegableTarjetas, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 480, 140, -1));
 
         jLabel5.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
         jLabel5.setText("Nombre:");
@@ -335,7 +335,7 @@ public class VentanaAñadirClientes extends javax.swing.JFrame {
         List<Clientes> listaClientes = this.controladorClientes.findClientesEntities();
 
         // crear las columnas que va a tener nuestra tabla        
-        String[] columnas = {"ID", "ID_Tarjeta", "NIF", "Nombre", "Apellido", "Fecha Nacimiento"};
+        String[] columnas = {"ID_Cliente", "ID_Tarjeta", "NIF_Cliente", "Nombre_Cliente", "Apellido_Cliente", "Fecha_Nacimiento"};
 
         // poner los identificadores de los campos en el modelo
         modelo.setColumnIdentifiers(columnas);
@@ -343,7 +343,7 @@ public class VentanaAñadirClientes extends javax.swing.JFrame {
         // recorrer la lista
         for (Clientes c : listaClientes) {
             // añadir los datos de cada factura a un array de object
-            Object[] datosFilaFactura = {c.getIdCliente(), c.getIdtarjetaBancaria(), c.getNifCliente(), c.getNombrecliente(), c.getApellidosCliente(), c.getFechaNacimientocliente()};
+            Object[] datosFilaFactura = {c.getIdCliente(), c.getIdtarjetaBancaria().getIdtarjetaBancaria(), c.getNifCliente(), c.getNombrecliente(), c.getApellidosCliente(), c.getFechaNacimientocliente()};
             // añadir el array de object como una fila del modelo de la tabla
             modelo.addRow(datosFilaFactura);
         }

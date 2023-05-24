@@ -46,7 +46,7 @@ public class Main_Aplicacion_83 extends javax.swing.JFrame {
                 BotonAñadirProveedoresActionPerformed(evt);
             }
         });
-        jPanel1.add(BotonAñadirProveedores, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 70, 380, 50));
+        jPanel1.add(BotonAñadirProveedores, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 70, 450, 50));
 
         BotonGenerarFactura.setBackground(new java.awt.Color(70, 73, 75));
         BotonGenerarFactura.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
@@ -57,7 +57,7 @@ public class Main_Aplicacion_83 extends javax.swing.JFrame {
                 BotonGenerarFacturaActionPerformed(evt);
             }
         });
-        jPanel1.add(BotonGenerarFactura, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 340, 260, 50));
+        jPanel1.add(BotonGenerarFactura, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 340, 330, 50));
 
         BotonAñadirProductos.setBackground(new java.awt.Color(70, 73, 75));
         BotonAñadirProductos.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
@@ -68,7 +68,7 @@ public class Main_Aplicacion_83 extends javax.swing.JFrame {
                 BotonAñadirProductosActionPerformed(evt);
             }
         });
-        jPanel1.add(BotonAñadirProductos, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 160, 380, 50));
+        jPanel1.add(BotonAñadirProductos, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 160, 450, 50));
 
         BotonAñadirClientes.setBackground(new java.awt.Color(70, 73, 75));
         BotonAñadirClientes.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
@@ -79,7 +79,7 @@ public class Main_Aplicacion_83 extends javax.swing.JFrame {
                 BotonAñadirClientesActionPerformed(evt);
             }
         });
-        jPanel1.add(BotonAñadirClientes, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 250, 380, 50));
+        jPanel1.add(BotonAñadirClientes, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 250, 450, 50));
 
         getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 560, 460));
 

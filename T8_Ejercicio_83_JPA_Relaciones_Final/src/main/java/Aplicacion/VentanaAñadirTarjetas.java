@@ -75,7 +75,7 @@ public class VentanaAñadirTarjetas extends javax.swing.JFrame {
                 EntradaNumeroTarjetaActionPerformed(evt);
             }
         });
-        jPanel1.add(EntradaNumeroTarjeta, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 390, 130, 30));
+        jPanel1.add(EntradaNumeroTarjeta, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 390, 130, 30));
 
         TablaResultadosTarjetas.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {

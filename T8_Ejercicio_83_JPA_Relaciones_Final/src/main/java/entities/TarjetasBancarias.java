@@ -14,12 +14,12 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 /**
  *
- * @author Jose Angel
+ * @author joseangel
  */
 @Entity
 @Table(name = "tarjetasBancarias")
@@ -37,8 +37,8 @@ public class TarjetasBancarias implements Serializable {
     private Integer idtarjetaBancaria;
     @Column(name = "numero_tarjeta")
     private String numeroTarjeta;
-    @OneToMany(mappedBy = "idtarjetaBancaria")
-    private List<Clientes> clientesList;
+    @OneToOne(mappedBy = "idtarjetaBancaria")
+    private Clientes cliente;
 
     public TarjetasBancarias() {
     }
@@ -62,15 +62,15 @@ public class TarjetasBancarias implements Serializable {
     public void setNumeroTarjeta(String numeroTarjeta) {
         this.numeroTarjeta = numeroTarjeta;
     }
-
-    public List<Clientes> getClientesList() {
-        return clientesList;
+    
+     public Clientes getCliente() {
+        return cliente;
     }
 
-    public void setClientesList(List<Clientes> clientesList) {
-        this.clientesList = clientesList;
+    public void setCliente(Clientes cliente) {
+        this.cliente = cliente;
     }
-
+   
     @Override
     public int hashCode() {
         int hash = 0;
@@ -93,7 +93,9 @@ public class TarjetasBancarias implements Serializable {
 
     @Override
     public String toString() {
-        return idtarjetaBancaria.toString();
+        return "entities.TarjetasBancarias[ idtarjetaBancaria=" + idtarjetaBancaria + " ]";
     }
+
+   
     
 }

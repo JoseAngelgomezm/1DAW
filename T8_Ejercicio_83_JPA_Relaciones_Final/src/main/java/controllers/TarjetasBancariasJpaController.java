@@ -12,14 +12,13 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import entities.Clientes;
 import entities.TarjetasBancarias;
-import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 
 /**
  *
- * @author Jose Angel
+ * @author joseangel
  */
 public class TarjetasBancariasJpaController implements Serializable {
 
@@ -33,28 +32,24 @@ public class TarjetasBancariasJpaController implements Serializable {
     }
 
     public void create(TarjetasBancarias tarjetasBancarias) {
-        if (tarjetasBancarias.getClientesList() == null) {
-            tarjetasBancarias.setClientesList(new ArrayList<Clientes>());
-        }
         EntityManager em = null;
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            List<Clientes> attachedClientesList = new ArrayList<Clientes>();
-            for (Clientes clientesListClientesToAttach : tarjetasBancarias.getClientesList()) {
-                clientesListClientesToAttach = em.getReference(clientesListClientesToAttach.getClass(), clientesListClientesToAttach.getIdCliente());
-                attachedClientesList.add(clientesListClientesToAttach);
+            Clientes cliente = tarjetasBancarias.getCliente();
+            if (cliente != null) {
+                cliente = em.getReference(cliente.getClass(), cliente.getIdCliente());
+                tarjetasBancarias.setCliente(cliente);
             }
-            tarjetasBancarias.setClientesList(attachedClientesList);
             em.persist(tarjetasBancarias);
-            for (Clientes clientesListClientes : tarjetasBancarias.getClientesList()) {
-                TarjetasBancarias oldIdtarjetaBancariaOfClientesListClientes = clientesListClientes.getIdtarjetaBancaria();
-                clientesListClientes.setIdtarjetaBancaria(tarjetasBancarias);
-                clientesListClientes = em.merge(clientesListClientes);
-                if (oldIdtarjetaBancariaOfClientesListClientes != null) {
-                    oldIdtarjetaBancariaOfClientesListClientes.getClientesList().remove(clientesListClientes);
-                    oldIdtarjetaBancariaOfClientesListClientes = em.merge(oldIdtarjetaBancariaOfClientesListClientes);
+            if (cliente != null) {
+                TarjetasBancarias oldIdtarjetaBancariaOfCliente = cliente.getIdtarjetaBancaria();
+                if (oldIdtarjetaBancariaOfCliente != null) {
+                    oldIdtarjetaBancariaOfCliente.setCliente(null);
+                    oldIdtarjetaBancariaOfCliente = em.merge(oldIdtarjetaBancariaOfCliente);
                 }
+                cliente.setIdtarjetaBancaria(tarjetasBancarias);
+                cliente = em.merge(cliente);
             }
             em.getTransaction().commit();
         } finally {
@@ -70,32 +65,25 @@ public class TarjetasBancariasJpaController implements Serializable {
             em = getEntityManager();
             em.getTransaction().begin();
             TarjetasBancarias persistentTarjetasBancarias = em.find(TarjetasBancarias.class, tarjetasBancarias.getIdtarjetaBancaria());
-            List<Clientes> clientesListOld = persistentTarjetasBancarias.getClientesList();
-            List<Clientes> clientesListNew = tarjetasBancarias.getClientesList();
-            List<Clientes> attachedClientesListNew = new ArrayList<Clientes>();
-            for (Clientes clientesListNewClientesToAttach : clientesListNew) {
-                clientesListNewClientesToAttach = em.getReference(clientesListNewClientesToAttach.getClass(), clientesListNewClientesToAttach.getIdCliente());
-                attachedClientesListNew.add(clientesListNewClientesToAttach);
+            Clientes clienteOld = persistentTarjetasBancarias.getCliente();
+            Clientes clienteNew = tarjetasBancarias.getCliente();
+            if (clienteNew != null) {
+                clienteNew = em.getReference(clienteNew.getClass(), clienteNew.getIdCliente());
+                tarjetasBancarias.setCliente(clienteNew);
             }
-            clientesListNew = attachedClientesListNew;
-            tarjetasBancarias.setClientesList(clientesListNew);
             tarjetasBancarias = em.merge(tarjetasBancarias);
-            for (Clientes clientesListOldClientes : clientesListOld) {
-                if (!clientesListNew.contains(clientesListOldClientes)) {
-                    clientesListOldClientes.setIdtarjetaBancaria(null);
-                    clientesListOldClientes = em.merge(clientesListOldClientes);
-                }
+            if (clienteOld != null && !clienteOld.equals(clienteNew)) {
+                clienteOld.setIdtarjetaBancaria(null);
+                clienteOld = em.merge(clienteOld);
             }
-            for (Clientes clientesListNewClientes : clientesListNew) {
-                if (!clientesListOld.contains(clientesListNewClientes)) {
-                    TarjetasBancarias oldIdtarjetaBancariaOfClientesListNewClientes = clientesListNewClientes.getIdtarjetaBancaria();
-                    clientesListNewClientes.setIdtarjetaBancaria(tarjetasBancarias);
-                    clientesListNewClientes = em.merge(clientesListNewClientes);
-                    if (oldIdtarjetaBancariaOfClientesListNewClientes != null && !oldIdtarjetaBancariaOfClientesListNewClientes.equals(tarjetasBancarias)) {
-                        oldIdtarjetaBancariaOfClientesListNewClientes.getClientesList().remove(clientesListNewClientes);
-                        oldIdtarjetaBancariaOfClientesListNewClientes = em.merge(oldIdtarjetaBancariaOfClientesListNewClientes);
-                    }
+            if (clienteNew != null && !clienteNew.equals(clienteOld)) {
+                TarjetasBancarias oldIdtarjetaBancariaOfCliente = clienteNew.getIdtarjetaBancaria();
+                if (oldIdtarjetaBancariaOfCliente != null) {
+                    oldIdtarjetaBancariaOfCliente.setCliente(null);
+                    oldIdtarjetaBancariaOfCliente = em.merge(oldIdtarjetaBancariaOfCliente);
                 }
+                clienteNew.setIdtarjetaBancaria(tarjetasBancarias);
+                clienteNew = em.merge(clienteNew);
             }
             em.getTransaction().commit();
         } catch (Exception ex) {
@@ -126,10 +114,10 @@ public class TarjetasBancariasJpaController implements Serializable {
             } catch (EntityNotFoundException enfe) {
                 throw new NonexistentEntityException("The tarjetasBancarias with id " + id + " no longer exists.", enfe);
             }
-            List<Clientes> clientesList = tarjetasBancarias.getClientesList();
-            for (Clientes clientesListClientes : clientesList) {
-                clientesListClientes.setIdtarjetaBancaria(null);
-                clientesListClientes = em.merge(clientesListClientes);
+            Clientes cliente = tarjetasBancarias.getCliente();
+            if (cliente != null) {
+                cliente.setIdtarjetaBancaria(null);
+                cliente = em.merge(cliente);
             }
             em.remove(tarjetasBancarias);
             em.getTransaction().commit();

@@ -83,14 +83,14 @@ public class VentanaAñadirProveedores extends javax.swing.JFrame {
                 EntradaDireccionProveedorActionPerformed(evt);
             }
         });
-        jPanel1.add(EntradaDireccionProveedor, new org.netbeans.lib.awtextra.AbsoluteConstraints(500, 400, 130, -1));
+        jPanel1.add(EntradaDireccionProveedor, new org.netbeans.lib.awtextra.AbsoluteConstraints(510, 390, 130, -1));
 
         EntradaNIFProveedor.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 EntradaNIFProveedorActionPerformed(evt);
             }
         });
-        jPanel1.add(EntradaNIFProveedor, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 450, 130, -1));
+        jPanel1.add(EntradaNIFProveedor, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 440, 130, -1));
 
         TablaResultadosProveedores.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -128,7 +128,7 @@ public class VentanaAñadirProveedores extends javax.swing.JFrame {
                 EntradaNombreProveedor1ActionPerformed(evt);
             }
         });
-        jPanel1.add(EntradaNombreProveedor1, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 400, 130, -1));
+        jPanel1.add(EntradaNombreProveedor1, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 390, 130, -1));
 
         BotonRegresar.setText("Regresar");
         BotonRegresar.addActionListener(new java.awt.event.ActionListener() {
@@ -342,14 +342,16 @@ public class VentanaAñadirProveedores extends javax.swing.JFrame {
 
         // obtener el id del proveedor a actualizar
         int id = Integer.parseInt(TablaResultadosProveedores.getValueAt(fila, 0).toString());
-
-        // obtener los nuevos datos de la tabla modificados
+        
+        // obtener el proveedor buscandolo por el id
+        Proveedores proveedorNuevo = controladorProveedores.findProveedores(id);
+        
+        // obtener los datos que se han modificado de la tabla
         String nif = TablaResultadosProveedores.getValueAt(fila, 1).toString();
         String nombre = TablaResultadosProveedores.getValueAt(fila, 2).toString();
         String direccion = TablaResultadosProveedores.getValueAt(fila, 3).toString();
         
-        // crear un nuevo proveedor con los datos obtenidos de la tabla modificados
-        Proveedores proveedorNuevo = new Proveedores();
+        // ponerle los nuevos datos al proveedor
         proveedorNuevo.setIdProveedor(id);
         proveedorNuevo.setNifProveedor(nif);
         proveedorNuevo.setNombreProveedor(nombre);

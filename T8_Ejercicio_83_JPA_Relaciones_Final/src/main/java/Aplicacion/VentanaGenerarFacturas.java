@@ -19,6 +19,7 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
+import org.eclipse.persistence.jpa.jpql.parser.DateTime;
 
 /**
  *
@@ -90,11 +91,11 @@ public class VentanaGenerarFacturas extends javax.swing.JFrame {
         jLabel3.setText("Generar Factura");
         jPanel1.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 70, -1, -1));
 
-        jPanel1.add(DesplegableProductos, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 200, 120, 30));
+        jPanel1.add(DesplegableProductos, new org.netbeans.lib.awtextra.AbsoluteConstraints(350, 200, 120, 30));
 
         jLabel5.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
         jLabel5.setText("Selecciona Producto:");
-        jPanel1.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 200, 250, -1));
+        jPanel1.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 200, 290, -1));
 
         jLabel6.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
         jLabel6.setText("Cantidad productos:");
@@ -102,9 +103,9 @@ public class VentanaGenerarFacturas extends javax.swing.JFrame {
 
         jLabel7.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
         jLabel7.setText("Fecha factura:");
-        jPanel1.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 300, -1, -1));
-        jPanel1.add(EntradaCantidad, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 250, 120, 30));
-        jPanel1.add(EntradaFecha, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 300, 120, 30));
+        jPanel1.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 300, -1, -1));
+        jPanel1.add(EntradaCantidad, new org.netbeans.lib.awtextra.AbsoluteConstraints(350, 250, 120, 30));
+        jPanel1.add(EntradaFecha, new org.netbeans.lib.awtextra.AbsoluteConstraints(350, 300, 120, 30));
 
         BotonRegresar.setText("Regresar");
         BotonRegresar.addActionListener(new java.awt.event.ActionListener() {
@@ -118,7 +119,7 @@ public class VentanaGenerarFacturas extends javax.swing.JFrame {
         jLabel8.setText("Selecciona Cliente:");
         jPanel1.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 150, -1, -1));
 
-        jPanel1.add(DesplegableClientes, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 150, 120, 30));
+        jPanel1.add(DesplegableClientes, new org.netbeans.lib.awtextra.AbsoluteConstraints(350, 150, 120, 30));
 
         TablaResultados.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -133,7 +134,7 @@ public class VentanaGenerarFacturas extends javax.swing.JFrame {
         ));
         jScrollPane1.setViewportView(TablaResultados);
 
-        jPanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(430, 60, 640, 340));
+        jPanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(480, 60, 640, 340));
 
         getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1090, 460));
 
@@ -257,7 +258,7 @@ public class VentanaGenerarFacturas extends javax.swing.JFrame {
                 // intentar parsear la fecha
                 try {
                     SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
-                    Date fecha = formatter.parse(this.EntradaFecha.getText());
+                    DateTime fecha = formatter.parse(this.EntradaFecha.getText());
                     facturaNueva.setFechaFactura(fecha);
                 } catch (ParseException ex) {
                     JOptionPane.showMessageDialog(rootPane, "FECHA no se ha podido convertir");

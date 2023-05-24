@@ -85,14 +85,14 @@ public class VentanaAñadirProductos extends javax.swing.JFrame {
                 EntradaImporteProductoActionPerformed(evt);
             }
         });
-        jPanel1.add(EntradaImporteProducto, new org.netbeans.lib.awtextra.AbsoluteConstraints(500, 400, 130, -1));
+        jPanel1.add(EntradaImporteProducto, new org.netbeans.lib.awtextra.AbsoluteConstraints(510, 390, 130, -1));
 
         EntradaREFProducto.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 EntradaREFProductoActionPerformed(evt);
             }
         });
-        jPanel1.add(EntradaREFProducto, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 450, 130, -1));
+        jPanel1.add(EntradaREFProducto, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 440, 130, -1));
 
         TablaResultadosProductos.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -130,7 +130,7 @@ public class VentanaAñadirProductos extends javax.swing.JFrame {
                 EntradaNombreProductoActionPerformed(evt);
             }
         });
-        jPanel1.add(EntradaNombreProducto, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 400, 130, -1));
+        jPanel1.add(EntradaNombreProducto, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 390, 130, -1));
 
         jLabel5.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
         jLabel5.setText("Proveedor:");
@@ -160,7 +160,7 @@ public class VentanaAñadirProductos extends javax.swing.JFrame {
         });
         jPanel1.add(BotonModificar, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 560, 90, 30));
 
-        jPanel1.add(DesplegableProveedores, new org.netbeans.lib.awtextra.AbsoluteConstraints(500, 450, 130, 20));
+        jPanel1.add(DesplegableProveedores, new org.netbeans.lib.awtextra.AbsoluteConstraints(510, 440, 130, 20));
 
         jLabel6.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
         jLabel6.setText("Importe:");

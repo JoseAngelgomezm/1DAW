@@ -19,7 +19,7 @@ import javax.persistence.EntityManagerFactory;
 
 /**
  *
- * @author Jose Angel
+ * @author joseangel
  */
 public class ProveedoresJpaController implements Serializable {
 

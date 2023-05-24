@@ -14,12 +14,10 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 
 /**
  *
- * @author Jose Angel
+ * @author joseangel
  */
 @Entity
 @Table(name = "facturas")
@@ -28,7 +26,7 @@ import javax.persistence.TemporalType;
     @NamedQuery(name = "Facturas.findByIdCliente", query = "SELECT f FROM Facturas f WHERE f.facturasPK.idCliente = :idCliente"),
     @NamedQuery(name = "Facturas.findByIdProducto", query = "SELECT f FROM Facturas f WHERE f.facturasPK.idProducto = :idProducto"),
     @NamedQuery(name = "Facturas.findByCantidadProductos", query = "SELECT f FROM Facturas f WHERE f.cantidadProductos = :cantidadProductos"),
-    @NamedQuery(name = "Facturas.findByFechaFactura", query = "SELECT f FROM Facturas f WHERE f.fechaFactura = :fechaFactura"),
+    @NamedQuery(name = "Facturas.findByFechaFactura", query = "SELECT f FROM Facturas f WHERE f.facturasPK.fechaFactura = :fechaFactura"),
     @NamedQuery(name = "Facturas.findByImporteTotal", query = "SELECT f FROM Facturas f WHERE f.importeTotal = :importeTotal")})
 public class Facturas implements Serializable {
 
@@ -37,9 +35,6 @@ public class Facturas implements Serializable {
     protected FacturasPK facturasPK;
     @Column(name = "cantidad_productos")
     private Integer cantidadProductos;
-    @Column(name = "fecha_factura")
-    @Temporal(TemporalType.DATE)
-    private Date fechaFactura;
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
     @Column(name = "importe_total")
     private Double importeTotal;
@@ -57,8 +52,8 @@ public class Facturas implements Serializable {
         this.facturasPK = facturasPK;
     }
 
-    public Facturas(int idCliente, int idProducto) {
-        this.facturasPK = new FacturasPK(idCliente, idProducto);
+    public Facturas(int idCliente, int idProducto, Date fechaFactura) {
+        this.facturasPK = new FacturasPK(idCliente, idProducto, fechaFactura);
     }
 
     public FacturasPK getFacturasPK() {
@@ -75,14 +70,6 @@ public class Facturas implements Serializable {
 
     public void setCantidadProductos(Integer cantidadProductos) {
         this.cantidadProductos = cantidadProductos;
-    }
-
-    public Date getFechaFactura() {
-        return fechaFactura;
-    }
-
-    public void setFechaFactura(Date fechaFactura) {
-        this.fechaFactura = fechaFactura;
     }
 
     public Double getImporteTotal() {

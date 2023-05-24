@@ -21,7 +21,7 @@ import javax.persistence.EntityManagerFactory;
 
 /**
  *
- * @author Jose Angel
+ * @author joseangel
  */
 public class ClientesJpaController implements Serializable {
 
@@ -55,7 +55,12 @@ public class ClientesJpaController implements Serializable {
             clientes.setFacturasList(attachedFacturasList);
             em.persist(clientes);
             if (idtarjetaBancaria != null) {
-                idtarjetaBancaria.getClientesList().add(clientes);
+                Clientes oldClienteOfIdtarjetaBancaria = idtarjetaBancaria.getCliente();
+                if (oldClienteOfIdtarjetaBancaria != null) {
+                    oldClienteOfIdtarjetaBancaria.setIdtarjetaBancaria(null);
+                    oldClienteOfIdtarjetaBancaria = em.merge(oldClienteOfIdtarjetaBancaria);
+                }
+                idtarjetaBancaria.setCliente(clientes);
                 idtarjetaBancaria = em.merge(idtarjetaBancaria);
             }
             for (Facturas facturasListFacturas : clientes.getFacturasList()) {
@@ -110,11 +115,16 @@ public class ClientesJpaController implements Serializable {
             clientes.setFacturasList(facturasListNew);
             clientes = em.merge(clientes);
             if (idtarjetaBancariaOld != null && !idtarjetaBancariaOld.equals(idtarjetaBancariaNew)) {
-                idtarjetaBancariaOld.getClientesList().remove(clientes);
+                idtarjetaBancariaOld.setCliente(null);
                 idtarjetaBancariaOld = em.merge(idtarjetaBancariaOld);
             }
             if (idtarjetaBancariaNew != null && !idtarjetaBancariaNew.equals(idtarjetaBancariaOld)) {
-                idtarjetaBancariaNew.getClientesList().add(clientes);
+                Clientes oldClienteOfIdtarjetaBancaria = idtarjetaBancariaNew.getCliente();
+                if (oldClienteOfIdtarjetaBancaria != null) {
+                    oldClienteOfIdtarjetaBancaria.setIdtarjetaBancaria(null);
+                    oldClienteOfIdtarjetaBancaria = em.merge(oldClienteOfIdtarjetaBancaria);
+                }
+                idtarjetaBancariaNew.setCliente(clientes);
                 idtarjetaBancariaNew = em.merge(idtarjetaBancariaNew);
             }
             for (Facturas facturasListNewFacturas : facturasListNew) {
@@ -170,7 +180,7 @@ public class ClientesJpaController implements Serializable {
             }
             TarjetasBancarias idtarjetaBancaria = clientes.getIdtarjetaBancaria();
             if (idtarjetaBancaria != null) {
-                idtarjetaBancaria.getClientesList().remove(clientes);
+                idtarjetaBancaria.setCliente(null);
                 idtarjetaBancaria = em.merge(idtarjetaBancaria);
             }
             em.remove(clientes);
