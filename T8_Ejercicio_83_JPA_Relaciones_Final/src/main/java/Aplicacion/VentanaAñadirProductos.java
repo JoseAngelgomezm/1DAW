@@ -272,8 +272,8 @@ public class VentanaAñadirProductos extends javax.swing.JFrame {
         }
         return noExiste;
     }
-    
-     private void actualizarTablaResultados() {
+
+    private void actualizarTablaResultados() {
         // crear un modelo para la tabla con la columna 0 no editable
         DefaultTableModel modelo = new DefaultTableModel() {
             @Override
@@ -306,7 +306,7 @@ public class VentanaAñadirProductos extends javax.swing.JFrame {
         // establecer el modelo a la tabla
         this.TablaResultadosProductos.setModel(modelo);
     }
-    
+
     private void BotonAñadirProductosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BotonAñadirProductosActionPerformed
         // TODO add your handling code here:
         // crear un producto
@@ -332,7 +332,6 @@ public class VentanaAñadirProductos extends javax.swing.JFrame {
 
                     // buscar el proveedor
                     Proveedores proveedorAsignado = controladorProveedores.findProveedores(id);
-
 
                     // asignar el proveedor al nuevo producto
                     productoIntroducir.setIdProveedor(proveedorAsignado);
@@ -360,7 +359,7 @@ public class VentanaAñadirProductos extends javax.swing.JFrame {
     private void EntradaNombreProductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_EntradaNombreProductoActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_EntradaNombreProductoActionPerformed
-   
+
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
         // TODO add your handling code here:
         actualizarTablaResultados();
@@ -409,7 +408,51 @@ public class VentanaAñadirProductos extends javax.swing.JFrame {
 
         // obtener la fila que esta seleccionada
         int fila = TablaResultadosProductos.getSelectedRow();
-        
+
+        // obtener el id del producto
+        int id = Integer.parseInt(TablaResultadosProductos.getValueAt(fila, 0).toString());
+
+        // obtener el producto buscandolo por id
+        Productos productoModificar = controladorProductos.findProductos(id);
+
+        // obtener los datos de la tabla que se han modificiado
+        // verificando que se han introducido correctamente y que la referencia
+        // no existe ya en la bd
+        if (verificarRef(TablaResultadosProductos.getValueAt(fila, 2).toString()) && comprobarSiNifExiste(TablaResultadosProductos.getValueAt(fila, 2).toString())) {
+
+            if (verificarNombre(TablaResultadosProductos.getValueAt(fila, 3).toString())) {
+
+                if (verificarImporte(TablaResultadosProductos.getValueAt(fila, 4).toString())) {
+
+                    // si todos los datos estan correctos asignarlos al producto a modificar
+                    productoModificar.setRefProducto(TablaResultadosProductos.getValueAt(fila, 2).toString());
+                    productoModificar.setNombreProducto(TablaResultadosProductos.getValueAt(fila, 3).toString());
+                    productoModificar.setImporteProducto(Double.valueOf(TablaResultadosProductos.getValueAt(fila, 4).toString()));
+
+                    try {
+                        // modificar el producto
+                        controladorProductos.edit(productoModificar);
+                    } catch (NonexistentEntityException ex) {
+                        Logger.getLogger(VentanaAñadirProductos.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (Exception ex) {
+                        Logger.getLogger(VentanaAñadirProductos.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+
+                    // actualizar los datos de la tabla
+                    actualizarTablaResultados();
+
+                } else {
+                    JOptionPane.showMessageDialog(rootPane, "Importe no valido o vacio");
+                }
+
+            } else {
+                JOptionPane.showMessageDialog(rootPane, "Nombre no puede estar vacío");
+            }
+
+        } else {
+            JOptionPane.showMessageDialog(rootPane, "Referencia no valida o existente");
+        }
+
         // actualizar datos de la tabla
         actualizarTablaResultados();
     }//GEN-LAST:event_BotonModificarActionPerformed

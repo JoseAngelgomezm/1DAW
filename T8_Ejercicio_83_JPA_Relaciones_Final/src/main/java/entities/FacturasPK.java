@@ -5,6 +5,7 @@
 package entities;
 
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -55,8 +56,9 @@ public class FacturasPK implements Serializable {
         this.idProducto = idProducto;
     }
 
-    public Date getFechaFactura() {
-        return fechaFactura;
+    public String getFechaFactura() {
+        SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
+        return formatter.format(fechaFactura);
     }
 
     public void setFechaFactura(Date fechaFactura) {
@@ -95,5 +97,5 @@ public class FacturasPK implements Serializable {
     public String toString() {
         return "entities.FacturasPK[ idCliente=" + idCliente + ", idProducto=" + idProducto + ", fechaFactura=" + fechaFactura + " ]";
     }
-    
+
 }
