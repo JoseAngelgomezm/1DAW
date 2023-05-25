@@ -6,9 +6,8 @@ package Aplicacion;
 
 import entities.Clientes;
 import entities.Facturas;
+import entities.FacturasPK;
 import entities.Productos;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
@@ -19,7 +18,7 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
-import org.eclipse.persistence.jpa.jpql.parser.DateTime;
+
 
 /**
  *
@@ -231,7 +230,7 @@ public class VentanaGenerarFacturas extends javax.swing.JFrame {
         String productoSeleccionado = DesplegableProductos.getSelectedItem().toString();
         
         // obtener el id de ese producto
-        int id_producto = Character.getNumericValue(clienteSeleccionado.charAt(0));
+        int id_producto = Character.getNumericValue(productoSeleccionado.charAt(0));
 
         // buscar el producto
         Productos productoAsignado = controladorProductos.findProductos(id_producto);
@@ -240,20 +239,23 @@ public class VentanaGenerarFacturas extends javax.swing.JFrame {
         facturaNueva.setClientes(clienteAsignado);
         // asignar el prodcuto a la nueva factura
         facturaNueva.setProductos(productoAsignado);
-
+        
+       // crear el objeto que contiene las primary keys de la factura
+        FacturasPK facturapk = new FacturasPK(clienteAsignado.getIdCliente(), productoAsignado.getIdProducto(), new Date());
+        
         // verificar los demas datos de entrada
         // cantidad
         if (verificarCantidad(EntradaCantidad.getText())) {
 
-            // si todos los datos son validos
-            // obtener fecha y hora actual
-            
-            // poner la cantidad a la nueva factura
+            // si todos los datos estan correctos asignarlos
             facturaNueva.setCantidadProductos(Integer.valueOf(EntradaCantidad.getText()));
 
             // poner el importe a la factura
             facturaNueva.setImporteTotal(Double.valueOf(EntradaCantidad.getText()) * productoAsignado.getImporteProducto());
-
+            
+            //asginar las claves primarias
+            facturaNueva.setFacturasPK(facturapk);
+            
             try {
                 // insertar la nueva factura
                 controladorFacturas.create(facturaNueva);

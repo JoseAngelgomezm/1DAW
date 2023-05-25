@@ -8,7 +8,6 @@ import entities.Productos;
 import controllers.exceptions.IllegalOrphanException;
 import controllers.exceptions.NonexistentEntityException;
 import entities.Proveedores;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -410,7 +409,7 @@ public class VentanaAñadirProductos extends javax.swing.JFrame {
 
         // obtener la fila que esta seleccionada
         int fila = TablaResultadosProductos.getSelectedRow();
-
+        
         // actualizar datos de la tabla
         actualizarTablaResultados();
     }//GEN-LAST:event_BotonModificarActionPerformed
