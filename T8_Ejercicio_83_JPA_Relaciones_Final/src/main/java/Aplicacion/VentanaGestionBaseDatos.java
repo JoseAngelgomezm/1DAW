@@ -9,8 +9,10 @@ import entities.Facturas;
 import entities.Productos;
 import entities.Proveedores;
 import entities.TarjetasBancarias;
+import entities.TarjetasBancarias_;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.AccessDeniedException;
@@ -18,10 +20,24 @@ import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
+import javax.persistence.Query;
+import javax.persistence.TypedQuery;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -31,22 +47,26 @@ public class VentanaGestionBaseDatos extends javax.swing.JFrame {
 
     // atributos de ventana
     private final EntityManagerFactory emf;
+    private final EntityManager em;
     private final controllers.ClientesJpaController controladorClientes;
     private final controllers.ProductosJpaController controladorProductos;
     private final controllers.ProveedoresJpaController controladorProveedores;
     private final controllers.FacturasJpaController controladorFacturas;
     private final controllers.TarjetasBancariasJpaController controladorTarjetas;
+    private Connection conexion1 = null;
 
     /**
      * Creates new form VentanaGestionBaseDatos
      */
     public VentanaGestionBaseDatos() {
         this.emf = Persistence.createEntityManagerFactory("bdp83");
+        this.em = emf.createEntityManager();
         this.controladorClientes = new controllers.ClientesJpaController(emf);
         this.controladorProductos = new controllers.ProductosJpaController(emf);
         this.controladorProveedores = new controllers.ProveedoresJpaController(emf);
         this.controladorFacturas = new controllers.FacturasJpaController(emf);
         this.controladorTarjetas = new controllers.TarjetasBancariasJpaController(emf);
+        this.conexion1 = Conexion.getInstance();
         initComponents();
 
     }
@@ -167,11 +187,212 @@ public class VentanaGestionBaseDatos extends javax.swing.JFrame {
         this.dispose();
     }//GEN-LAST:event_BotonRegresarActionPerformed
 
+    private List<Clientes> leerFicheroClientes(String ruta) {
+        List<Clientes> clientes = new ArrayList<>();
+        String linea; // string que contiene cada linea leida
+        String[] datosDivididos; // array que contiene los datos divididos
+
+        // bloque try catch para lectura del fichero
+        try ( Scanner datosFichero = new Scanner(new File(ruta), "UTF-8")) {
+            // leer mientras tengamos una linea disponible en el fichero
+            while (datosFichero.hasNextLine()) {
+                // obtener datos de cada linea
+                linea = datosFichero.nextLine();
+                // dividir cada linea por los dos puntos para obtener cada valor
+                datosDivididos = linea.split(";");
+                // crear un cliente temporal para pasarle los datos del archivo
+                Clientes clienteTmp = new Clientes();
+                // pasarle los datos al cliente
+                clienteTmp.setIdCliente(Integer.valueOf(datosDivididos[0]));
+
+                // obtener la tarjeta bancaria mediante el numero
+                TypedQuery<TarjetasBancarias> query = this.em.createNamedQuery("TarjetasBancarias.findByNumeroTarjeta", TarjetasBancarias.class);
+                query.setParameter("numeroTarjeta", datosDivididos[1]);
+                TarjetasBancarias tarjetaEncontrada = query.getSingleResult();
+                
+                // establecer la tarjeta
+                clienteTmp.setIdtarjetaBancaria(tarjetaEncontrada);
+
+                clienteTmp.setNifCliente(datosDivididos[2]);
+                clienteTmp.setNombrecliente(datosDivididos[3]);
+                clienteTmp.setApellidosCliente(datosDivididos[4]);
+
+                // obtener la fecha de nacimiento
+                try {
+                    SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
+                    Date fecha = formatter.parse(datosDivididos[5]);
+                    clienteTmp.setFechaNacimientocliente(fecha);
+                } catch (ParseException ex) {
+                    JOptionPane.showMessageDialog(rootPane, "FECHA no se ha podido convertir");
+                }
+
+                // agregar el cliente a la lista
+                clientes.add(clienteTmp);
+
+            }
+
+        } catch (FileNotFoundException e) {
+            System.out.println(e.getMessage());
+        }
+        return clientes;
+    }
+
+    private List<TarjetasBancarias> leerFicheroTarjetas(String ruta) {
+        List<TarjetasBancarias> tarjetas = new ArrayList<>();
+
+        String linea; // string que contiene cada linea leida
+        String[] datosDivididos; // array que contiene los datos divididos
+
+        // bloque try catch para lectura del fichero
+        try ( Scanner datosFichero = new Scanner(new File(ruta), "UTF-8")) {
+            // leer mientras tengamos una linea disponible en el fichero
+            while (datosFichero.hasNextLine()) {
+                // obtener datos de cada linea
+                linea = datosFichero.nextLine();
+                // dividir cada linea por los dos puntos para obtener cada valor
+                datosDivididos = linea.split(";");
+                // crear una tarjeta temporal para pasarle los datos del archivo
+                TarjetasBancarias tarjetaTmp = new TarjetasBancarias();
+                // pasarle los datos a la tarjeta
+                tarjetaTmp.setIdtarjetaBancaria(Integer.valueOf(datosDivididos[0]));
+                tarjetaTmp.setNumeroTarjeta(datosDivididos[1]);
+
+                // agregar el cliente a la lista
+                tarjetas.add(tarjetaTmp);
+
+            }
+
+        } catch (FileNotFoundException e) {
+            System.out.println(e.getMessage());
+        }
+
+        return tarjetas;
+    }
+
+    private List<Productos> leerFicheroProductos(String ruta) {
+        List<Productos> productos = new ArrayList<>();
+
+        String linea; // string que contiene cada linea leida
+        String[] datosDivididos; // array que contiene los datos divididos
+
+        // bloque try catch para lectura del fichero
+        try ( Scanner datosFichero = new Scanner(new File(ruta), "UTF-8")) {
+            // leer mientras tengamos una linea disponible en el fichero
+            while (datosFichero.hasNextLine()) {
+                // obtener datos de cada linea
+                linea = datosFichero.nextLine();
+                // dividir cada linea por los dos puntos para obtener cada valor
+                datosDivididos = linea.split(";");
+                // crear un producto temporal para pasarle los datos del archivo
+                Productos productoTmp = new Productos();
+                // pasarle los datos al producto
+                productoTmp.setIdProducto(Integer.valueOf(datosDivididos[0]));
+                // buscar el proveedor que le pertenece
+                Proveedores proveedorAsociado = controladorProveedores.findProveedores(Integer.valueOf(datosDivididos[1]));
+                productoTmp.setIdProveedor(proveedorAsociado);
+                // poner la referencia
+                productoTmp.setRefProducto(datosDivididos[2]);
+                productoTmp.setNombreProducto(datosDivididos[3]);
+                productoTmp.setImporteProducto(Double.valueOf(datosDivididos[4]));
+
+                // añadir el producto a la lista
+                productos.add(productoTmp);
+            }
+
+        } catch (FileNotFoundException e) {
+            System.out.println(e.getMessage());
+        }
+
+        return productos;
+    }
+
+    private List<Proveedores> leerFicheroProveedores(String ruta) {
+        List<Proveedores> proveedores = new ArrayList<>();
+
+        String linea; // string que contiene cada linea leida
+        String[] datosDivididos; // array que contiene los datos divididos
+
+        // bloque try catch para lectura del fichero
+        try ( Scanner datosFichero = new Scanner(new File(ruta), "UTF-8")) {
+            // leer mientras tengamos una linea disponible en el fichero
+            while (datosFichero.hasNextLine()) {
+                // obtener datos de cada linea
+                linea = datosFichero.nextLine();
+                // dividir cada linea por los dos puntos para obtener cada valor
+                datosDivididos = linea.split(";");
+                // crear un proveedor temporal para pasarle los datos del archivo
+                Proveedores proveedorTmp = new Proveedores();
+                // pasarle los datos al proveedor
+                proveedorTmp.setIdProveedor(Integer.valueOf(datosDivididos[0]));
+                proveedorTmp.setNifProveedor(datosDivididos[1]);
+                proveedorTmp.setNombreProveedor(datosDivididos[2]);
+                proveedorTmp.setDireccionProveedor(datosDivididos[3]);
+
+                // añadir el proveedor a la lista 
+                proveedores.add(proveedorTmp);
+            }
+
+        } catch (FileNotFoundException e) {
+            System.out.println(e.getMessage());
+        }
+
+        return proveedores;
+    }
+
+    private List<Facturas> leerFicheroFacturas(String ruta) {
+        List<Facturas> listaFacturas = new ArrayList<>();
+
+        return listaFacturas;
+    }
+
+    public int borrarTabla(String sentencia) throws SQLException {
+
+        int nfilas = 0;
+
+        // Preparamos el borrado de datos  mediante un Statement
+        // No hay parámetros en la sentencia SQL
+        try ( Statement st = conexion1.createStatement()) {
+            // Ejecución de la sentencia
+            nfilas = st.executeUpdate(sentencia);
+        }
+
+        // El borrado se realizó con éxito, devolvemos filas afectadas
+        return nfilas;
+    }
+
     private void BotonRecuperarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BotonRecuperarActionPerformed
         // TODO add your handling code here:
-        
-        
-        
+
+        // eliminar todos los datos de todas las tablas
+        try {
+            borrarTabla("delete from tarjetasBancarias");
+            borrarTabla("delete from clientes");
+            borrarTabla("delete from proveedores");
+            borrarTabla("delete from productos");
+            borrarTabla("delete from facturas");
+        } catch (SQLException ex) {
+            Logger.getLogger(VentanaGestionBaseDatos.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        // obtener el nombre de la carpeta da la que leer los archivos desde 
+        // el desplegable
+        String rutaCarpeta = "copias/" + this.ListaCopias.getSelectedItem();
+
+        // leer los archivos de las tarjeta
+        List<TarjetasBancarias> listaTarjetas = leerFicheroTarjetas(rutaCarpeta.concat("/tarjetas.csv"));
+        // añadir la lista de tarjetas a la tabla
+        for (TarjetasBancarias t : listaTarjetas) {
+            controladorTarjetas.create(t);
+        }
+
+        // leer los archivos de cada una de las tablas
+        List<Clientes> listaClientes = leerFicheroClientes(rutaCarpeta.concat("/clientes.csv"));
+        // añadir la lista de clientes a la tabla
+        for (Clientes c : listaClientes) {
+            controladorClientes.create(c);
+        }
+
+
     }//GEN-LAST:event_BotonRecuperarActionPerformed
 
     private void crearDirectorio(String ruta) {

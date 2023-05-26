@@ -18,7 +18,7 @@ create table if not exists productos(
 	nombre_producto varchar(60),
     importe_producto double,
     constraint pk_productos primary key (id_producto),
-	constraint fk_productos_proveedores foreign key (id_proveedor) references proveedores (id_proveedor)
+	constraint fk_productos_proveedores foreign key (id_proveedor) references proveedores (id_proveedor) on delete cascade
 );
 
 create table if not exists tarjetasBancarias(
@@ -36,7 +36,7 @@ create table if not exists clientes(
     apellidos_cliente varchar(120),
 	fechaNacimiento_cliente date,
     constraint pk_clientes primary key (id_cliente),
-    constraint fk_clientes_tarjetasBancarias foreign key (id_tarjetaBancaria)  references tarjetasBancarias (id_tarjetaBancaria)
+    constraint fk_clientes_tarjetasBancarias foreign key (id_tarjetaBancaria)  references tarjetasBancarias (id_tarjetaBancaria) on delete cascade
 );
 
 create table if not exists facturas(
@@ -46,8 +46,8 @@ create table if not exists facturas(
     fecha_factura datetime,
     importe_total double,
     constraint pk_facturas primary key (id_cliente, id_producto, fecha_factura),
-    constraint fk_facturas_clientes foreign key (id_cliente) references clientes (id_cliente),
-    constraint fk_facturas_productos foreign key (id_producto) references productos (id_producto)
+    constraint fk_facturas_clientes foreign key (id_cliente) references clientes (id_cliente) on delete cascade,
+    constraint fk_facturas_productos foreign key (id_producto) references productos (id_producto) on delete cascade
 );
 
 insert into proveedores values
