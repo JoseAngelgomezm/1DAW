@@ -4,6 +4,22 @@
  */
 package Aplicacion;
 
+import entities.Clientes;
+import entities.Facturas;
+import entities.Productos;
+import entities.Proveedores;
+import entities.TarjetasBancarias;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.nio.file.AccessDeniedException;
+import java.nio.file.FileAlreadyExistsException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.time.LocalDateTime;
+import java.util.List;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 
@@ -12,7 +28,7 @@ import javax.persistence.Persistence;
  * @author Jose Angel
  */
 public class VentanaGestionBaseDatos extends javax.swing.JFrame {
-    
+
     // atributos de ventana
     private final EntityManagerFactory emf;
     private final controllers.ClientesJpaController controladorClientes;
@@ -20,21 +36,19 @@ public class VentanaGestionBaseDatos extends javax.swing.JFrame {
     private final controllers.ProveedoresJpaController controladorProveedores;
     private final controllers.FacturasJpaController controladorFacturas;
     private final controllers.TarjetasBancariasJpaController controladorTarjetas;
-    
-    
-    
+
     /**
      * Creates new form VentanaGestionBaseDatos
      */
     public VentanaGestionBaseDatos() {
         this.emf = Persistence.createEntityManagerFactory("bdp83");
-        this.controladorClientes =  new controllers.ClientesJpaController(emf);
-        this.controladorProductos =  new controllers.ProductosJpaController(emf);
-        this.controladorProveedores =  new controllers.ProveedoresJpaController(emf);
+        this.controladorClientes = new controllers.ClientesJpaController(emf);
+        this.controladorProductos = new controllers.ProductosJpaController(emf);
+        this.controladorProveedores = new controllers.ProveedoresJpaController(emf);
         this.controladorFacturas = new controllers.FacturasJpaController(emf);
         this.controladorTarjetas = new controllers.TarjetasBancariasJpaController(emf);
         initComponents();
-        
+
     }
 
     /**
@@ -50,10 +64,15 @@ public class VentanaGestionBaseDatos extends javax.swing.JFrame {
         BotonRegresar = new javax.swing.JButton();
         BotonRealizarCopia = new javax.swing.JButton();
         BotonRecuperar = new javax.swing.JButton();
-        jComboBox1 = new javax.swing.JComboBox<>();
+        ListaCopias = new javax.swing.JComboBox<>();
         jLabel1 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowOpened(java.awt.event.WindowEvent evt) {
+                formWindowOpened(evt);
+            }
+        });
 
         BotonRegresar.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         BotonRegresar.setText("Regresar");
@@ -97,7 +116,7 @@ public class VentanaGestionBaseDatos extends javax.swing.JFrame {
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addComponent(jLabel1)
                                 .addGap(18, 18, 18)
-                                .addComponent(jComboBox1, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addComponent(ListaCopias, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                             .addComponent(BotonRecuperar))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(BotonRegresar)))
@@ -115,7 +134,7 @@ public class VentanaGestionBaseDatos extends javax.swing.JFrame {
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel1)
-                            .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(ListaCopias, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(25, 25, 25)
                         .addComponent(BotonRecuperar, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(72, 72, 72))
@@ -150,14 +169,200 @@ public class VentanaGestionBaseDatos extends javax.swing.JFrame {
 
     private void BotonRecuperarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BotonRecuperarActionPerformed
         // TODO add your handling code here:
+        
+        
+        
     }//GEN-LAST:event_BotonRecuperarActionPerformed
+
+    private void crearDirectorio(String ruta) {
+        // crear el objeto path
+        Path directory = Paths.get(ruta);
+
+        // control expecciones
+        try {
+            Files.createDirectory(directory);
+        } catch (FileAlreadyExistsException faee) {
+            System.out.println("No se puede crear " + ruta + " porque ya existe");
+        } catch (AccessDeniedException ade) {
+            System.out.println("No tiene permisos para crear " + ruta);
+        } catch (IOException e) {
+            System.out.println("Problema creando el directorio " + ruta);
+            System.out.println("Seguramente la ruta está mal escrita o no existe");
+        }
+
+    }
+
+    private void crearFicheroClientes(List<Clientes> clientes) {
+
+        // captura de expcepcion al crear el fichero
+        try ( BufferedWriter flujo = new BufferedWriter(new FileWriter("copias/" + obtenerFechaHoraActual() + "/clientes.csv"))) {// crea el objeto bufferedWriter + fileWriter
+            // recorrer la lista para obtener facturas
+            for (int i = 0; i < clientes.size(); i++) {
+                Clientes tmp = clientes.get(i);
+                flujo.write(tmp.getIdCliente() + ";"
+                        + tmp.getIdtarjetaBancaria().getIdtarjetaBancaria() + ";"
+                        + tmp.getNifCliente() + ";" + tmp.getNombrecliente()
+                        + ";" + tmp.getApellidosCliente() + ";" + tmp.getFechaNacimientocliente());
+                // añadir un salto de linea
+                flujo.newLine();
+                // guardar cambios en disco
+                flujo.flush();
+            }
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    private void crearFicheroProductos(List<Productos> productos) {
+
+        // captura de expcepcion al crear el fichero
+        try ( BufferedWriter flujo = new BufferedWriter(new FileWriter("copias/" + obtenerFechaHoraActual() + "/prodcutos.csv"))) {// crea el objeto bufferedWriter + fileWriter
+            // recorrer la lista para obtener facturas
+            for (int i = 0; i < productos.size(); i++) {
+                Productos tmp = productos.get(i);
+                flujo.write(tmp.getIdProducto() + ";" + tmp.getIdProveedor() + ";"
+                        + tmp.getRefProducto() + ";" + tmp.getNombreProducto() + ";"
+                        + tmp.getImporteProducto());
+                // añadir un salto de linea
+                flujo.newLine();
+                // guardar cambios en disco
+                flujo.flush();
+            }
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    private void crearFicheroProveedores(List<Proveedores> proveedores) {
+
+        // captura de expcepcion al crear el fichero
+        try ( BufferedWriter flujo = new BufferedWriter(new FileWriter("copias/" + obtenerFechaHoraActual() + "/proveedores.csv"))) {// crea el objeto bufferedWriter + fileWriter
+            // recorrer la lista para obtener facturas
+            for (int i = 0; i < proveedores.size(); i++) {
+                Proveedores tmp = proveedores.get(i);
+                flujo.write(tmp.getIdProveedor() + ";" + tmp.getNifProveedor() + ";"
+                        + tmp.getNombreProveedor() + ";" + tmp.getNombreProveedor() + ";"
+                        + tmp.getDireccionProveedor());
+                // añadir un salto de linea
+                flujo.newLine();
+                // guardar cambios en disco
+                flujo.flush();
+            }
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    private void crearFicheroTarjetasBancarias(List<TarjetasBancarias> tarjetas) {
+
+        // captura de expcepcion al crear el fichero
+        try ( BufferedWriter flujo = new BufferedWriter(new FileWriter("copias/" + obtenerFechaHoraActual() + "/tarjetas.csv"))) {// crea el objeto bufferedWriter + fileWriter
+            // recorrer la lista para obtener facturas
+            for (int i = 0; i < tarjetas.size(); i++) {
+                TarjetasBancarias tmp = tarjetas.get(i);
+                flujo.write(tmp.getIdtarjetaBancaria() + ";" + tmp.getNumeroTarjeta());
+                // añadir un salto de linea
+                flujo.newLine();
+                // guardar cambios en disco
+                flujo.flush();
+            }
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    private String obtenerFechaHoraActual() {
+        LocalDateTime localdate = LocalDateTime.now();
+
+        String fecha = localdate.getDayOfMonth() + "-"
+                + localdate.getMonthValue() + "-"
+                + localdate.getYear() + "-" + localdate.getHour() + "-"
+                + localdate.getMinute() + "-" + localdate.getSecond();
+
+        return fecha;
+    }
+
+    private void crearFicheroFacturas(List<Facturas> facturas) {
+
+        // captura de expcepcion al crear el fichero
+        try ( BufferedWriter flujo = new BufferedWriter(new FileWriter("copias/" + obtenerFechaHoraActual() + "/facturas.csv"))) {// crea el objeto bufferedWriter + fileWriter
+            // recorrer la lista para obtener facturas
+            for (int i = 0; i < facturas.size(); i++) {
+                Facturas tmp = facturas.get(i);
+                flujo.write(tmp.getFacturasPK().getIdCliente() + ";" + tmp.getFacturasPK().getIdProducto() + ";"
+                        + tmp.getCantidadProductos() + ";" + tmp.getFacturasPK().getFechaFactura() + tmp.getImporteTotal());
+                // añadir un salto de linea
+                flujo.newLine();
+                // guardar cambios en disco
+                flujo.flush();
+            }
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    private void actualizarListaCopias() {
+
+        // vaciar la lista 
+        this.ListaCopias.removeAllItems();
+
+        // crear el directorio a listar
+        File directorio = new File("copias");
+
+        // si el directorio existe
+        if (directorio.exists()) {
+            // obtener el nombre de los ficheros que contiene
+            File[] ficheros = directorio.listFiles();
+
+            // una vez tenemos la lista de directorios obtener los nombres
+            String[] nombreCarpetas = new String[ficheros.length];
+            for (int i = 0; i < ficheros.length; i++) {
+                nombreCarpetas[i] = ficheros[i].getName();
+
+            }
+
+            // una vez tenemos en un array los nombres de las carpetas, asignarlos
+            // al desplegable
+            for (int i = 0; i < nombreCarpetas.length; i++) {
+                this.ListaCopias.addItem(nombreCarpetas[i]);
+
+            }
+
+        }
+
+    }
 
     private void BotonRealizarCopiaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BotonRealizarCopiaActionPerformed
         // TODO add your handling code here:
-        
-        
-        
+
+        // crear el directorio copias
+        crearDirectorio("copias");
+
+        // crear la carpeta con la hora fecha y hora actual
+        crearDirectorio("copias/" + obtenerFechaHoraActual());
+
+        // obtener todos los datos de las tablas en listas
+        List<Clientes> listaClientes = controladorClientes.findClientesEntities();
+        List<Productos> listaProductos = controladorProductos.findProductosEntities();
+        List<Proveedores> listaProveedores = controladorProveedores.findProveedoresEntities();
+        List<Facturas> listaFacturas = controladorFacturas.findFacturasEntities();
+        List<TarjetasBancarias> listaTarjetasBancarias = controladorTarjetas.findTarjetasBancariasEntities();
+
+        // crear un fichero por cada lista de objetos que tenemos 
+        crearFicheroClientes(listaClientes);
+        crearFicheroFacturas(listaFacturas);
+        crearFicheroProductos(listaProductos);
+        crearFicheroProveedores(listaProveedores);
+        crearFicheroTarjetasBancarias(listaTarjetasBancarias);
+
+        actualizarListaCopias();
+
     }//GEN-LAST:event_BotonRealizarCopiaActionPerformed
+
+    private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
+        // TODO add your handling code here:
+        actualizarListaCopias();
+    }//GEN-LAST:event_formWindowOpened
 
     /**
      * @param args the command line arguments
@@ -198,7 +403,7 @@ public class VentanaGestionBaseDatos extends javax.swing.JFrame {
     private javax.swing.JButton BotonRealizarCopia;
     private javax.swing.JButton BotonRecuperar;
     private javax.swing.JButton BotonRegresar;
-    private javax.swing.JComboBox<String> jComboBox1;
+    private javax.swing.JComboBox<String> ListaCopias;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
     // End of variables declaration//GEN-END:variables
