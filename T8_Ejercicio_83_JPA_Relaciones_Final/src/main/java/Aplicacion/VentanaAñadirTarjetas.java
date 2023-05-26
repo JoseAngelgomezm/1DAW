@@ -175,7 +175,7 @@ public class VentanaAñadirTarjetas extends javax.swing.JFrame {
             return false;
         }
     }
-    
+
     private boolean comprobarSiNumeroTarjetaExiste(String numeroTarjeta) {
         boolean noExiste = true;
         // cargar los productos
@@ -225,7 +225,7 @@ public class VentanaAñadirTarjetas extends javax.swing.JFrame {
         // establecer el modelo a la tabla
         this.TablaResultadosTarjetas.setModel(modelo);
     }
-    
+
     private void BotonAñadirTarjetaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BotonAñadirTarjetaActionPerformed
         // TODO add your handling code here:
 
@@ -243,14 +243,13 @@ public class VentanaAñadirTarjetas extends javax.swing.JFrame {
             controladorTarjetas.create(nuevaTarjeta);
             // actualizar la tabla de resultados
             actualizarTablaResultados();
-        }else{
+        } else {
             JOptionPane.showMessageDialog(rootPane, "Numero tarjeta no valido o existente");
         }
-       
 
 
     }//GEN-LAST:event_BotonAñadirTarjetaActionPerformed
-   
+
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
         // TODO add your handling code here:
         actualizarTablaResultados();
@@ -289,6 +288,30 @@ public class VentanaAñadirTarjetas extends javax.swing.JFrame {
 
         // obtener la fila que esta seleccionada
         int fila = TablaResultadosTarjetas.getSelectedRow();
+
+        // obtener el id de la tarjeta que se esta modificando
+        int id = Integer.parseInt(TablaResultadosTarjetas.getValueAt(fila, 0).toString());
+
+        // buscar la tarjeta a modificar
+        TarjetasBancarias tarjetaModificar = controladorTarjetas.findTarjetasBancarias(id);
+
+        // verificar que el numero de tarjeta es correcto
+        if (verificarTarjeta(TablaResultadosTarjetas.getValueAt(fila, 1).toString())) {
+            try {
+                // si es correcto modificar el numero
+                tarjetaModificar.setNumeroTarjeta(TablaResultadosTarjetas.getValueAt(fila, 1).toString());
+
+                // modificar la tarjeta
+                controladorTarjetas.edit(tarjetaModificar);
+                
+                actualizarTablaResultados();
+            } catch (Exception ex) {
+                Logger.getLogger(VentanaAñadirTarjetas.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
+        } else {
+            JOptionPane.showMessageDialog(rootPane, "Numero tarjeta no valido o existente");
+        }
 
         // actualizar datos de la tabla
         actualizarTablaResultados();

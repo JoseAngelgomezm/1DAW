@@ -172,7 +172,7 @@ public class VentanaAñadirProveedores extends javax.swing.JFrame {
 // crear una expresion para que se introduzca un nif valido con un regex
         final String regexNIF = "[0-9]{8}[A-Z]";
         // crear el texto que vamos a comprobar que cumple la expresion regular
-        final String pruebaNIF = this.EntradaNIFProveedor.getText();
+        final String pruebaNIF = nif;
 
         // crear el pattern y pasarle el regex
         final Pattern patternNIF = Pattern.compile(regexNIF, Pattern.UNIX_LINES);
@@ -336,32 +336,48 @@ public class VentanaAñadirProveedores extends javax.swing.JFrame {
 
     private void BotonModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BotonModificarActionPerformed
         // TODO add your handling code here:
-   
+
         // obtener la fila que esta seleccionada
         int fila = TablaResultadosProveedores.getSelectedRow();
 
         // obtener el id del proveedor a actualizar
         int id = Integer.parseInt(TablaResultadosProveedores.getValueAt(fila, 0).toString());
-        
+
         // obtener el proveedor buscandolo por el id
-        Proveedores proveedorNuevo = controladorProveedores.findProveedores(id);
-        
-        // obtener los datos que se han modificado de la tabla
-        String nif = TablaResultadosProveedores.getValueAt(fila, 1).toString();
-        String nombre = TablaResultadosProveedores.getValueAt(fila, 2).toString();
-        String direccion = TablaResultadosProveedores.getValueAt(fila, 3).toString();
-        
-        // ponerle los nuevos datos al proveedor
-        proveedorNuevo.setIdProveedor(id);
-        proveedorNuevo.setNifProveedor(nif);
-        proveedorNuevo.setNombreProveedor(nombre);
-        proveedorNuevo.setDireccionProveedor(direccion);
-        
-        try {
-            // intentar actualizar
-            controladorProveedores.edit(proveedorNuevo);
-        } catch (Exception ex) {
-            Logger.getLogger(VentanaAñadirProveedores.class.getName()).log(Level.SEVERE, null, ex);
+        Proveedores proveedorModificar = controladorProveedores.findProveedores(id);
+
+        // comprobar que los datos de la tabla modificados son validos
+        if (verificarNif(TablaResultadosProveedores.getValueAt(fila, 1).toString())) {
+
+            if (verificarNombre(TablaResultadosProveedores.getValueAt(fila, 2).toString())) {
+
+                if (verificarNombre(TablaResultadosProveedores.getValueAt(fila, 3).toString())) {
+
+                    // si todos los datos son conrrectos
+                    // obtener los datos que se han modificado de la tabla y modificar el proveedor
+                    proveedorModificar.setNifProveedor(TablaResultadosProveedores.getValueAt(fila, 1).toString());
+                    proveedorModificar.setNombreProveedor(TablaResultadosProveedores.getValueAt(fila, 2).toString());
+                    proveedorModificar.setDireccionProveedor(TablaResultadosProveedores.getValueAt(fila, 3).toString());
+
+                    try {
+                        // modificar el proveedor
+                        controladorProveedores.edit(proveedorModificar);
+                    } catch (Exception ex) {
+                        Logger.getLogger(VentanaAñadirProveedores.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    
+                    // actualizar
+                    actualizarTablaResultados();
+                } else {
+                    JOptionPane.showMessageDialog(rootPane, "Direccion Proveedor no valida");
+                }
+
+            } else {
+                JOptionPane.showMessageDialog(rootPane, "Nombre Proveedor no valido");
+            }
+
+        } else {
+            JOptionPane.showMessageDialog(rootPane, "NIF Proveedor no valido o existente");
         }
 
         // actualizar datos de la tabla

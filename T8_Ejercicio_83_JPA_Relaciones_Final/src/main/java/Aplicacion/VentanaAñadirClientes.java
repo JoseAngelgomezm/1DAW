@@ -343,7 +343,7 @@ public class VentanaAñadirClientes extends javax.swing.JFrame {
         // recorrer la lista
         for (Clientes c : listaClientes) {
             // añadir los datos de cada factura a un array de object
-            Object[] datosFilaFactura = {c.getIdCliente(), c.getIdtarjetaBancaria().getIdtarjetaBancaria(), c.getNifCliente(), c.getNombrecliente(), c.getApellidosCliente(), c.getFechaNacimientocliente()};
+            Object[] datosFilaFactura = {c.getIdCliente(),c.getIdtarjetaBancaria().getIdtarjetaBancaria(), c.getNifCliente(), c.getNombrecliente(), c.getApellidosCliente(), c.getFechaNacimientocliente()};
             // añadir el array de object como una fila del modelo de la tabla
             modelo.addRow(datosFilaFactura);
         }
@@ -450,9 +450,9 @@ public class VentanaAñadirClientes extends javax.swing.JFrame {
             // añadir solo las que tengan un cliente a null 
             // significando que la tarjeta esta libre para ser asignada
             if (t.getCliente() == null) {
-                  this.DesplegableTarjetas.addItem(t.getIdtarjetaBancaria() + "-" + t.getNumeroTarjeta());
+                this.DesplegableTarjetas.addItem(t.getIdtarjetaBancaria() + "-" + t.getNumeroTarjeta());
             }
-          
+
         }
 
 
@@ -488,49 +488,74 @@ public class VentanaAñadirClientes extends javax.swing.JFrame {
 
     private void BotonModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BotonModificarActionPerformed
 
-        try {
-            // TODO add your handling code here:
-            // crear un cliente para pasar al metodo actualizar
-            // obtener la fila que esta seleccionada
-            int fila = TablaResultadosClientes.getSelectedRow();
+        // TODO add your handling code here:
+        // obtener la fila que esta seleccionada
+        int fila = TablaResultadosClientes.getSelectedRow();
 
-            // obtener el id del cliente a actualizar
-            int id = Integer.parseInt(TablaResultadosClientes.getValueAt(fila, 0).toString());
+        // obtener el id del cliente a actualizar
+        int id = Integer.parseInt(TablaResultadosClientes.getValueAt(fila, 0).toString());
 
-            // buscar el cliente por id para obtener el cliente
-            Clientes clienteModificar = controladorClientes.findClientes(id);
+        // buscar el cliente por id para obtener el cliente a modificar
+        Clientes clienteModificar = controladorClientes.findClientes(id);
 
-            // obtener todos los datos de la tabla que han podido ser modificados
-            String nif = TablaResultadosClientes.getValueAt(fila, 2).toString();
-            String nombre = TablaResultadosClientes.getValueAt(fila, 3).toString();
-            String apellido = TablaResultadosClientes.getValueAt(fila, 4).toString();
-            String fechaString = TablaResultadosClientes.getValueAt(fila, 5).toString();
+        // verificar que el nif sea valido
+        if (verificarNif(TablaResultadosClientes.getValueAt(fila, 2).toString())) {
 
-            // parsear la fecha
-            SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
+            // verificar la fecha de nacimiento
+            if (verificarFechaNacimiento(TablaResultadosClientes.getValueAt(fila, 5).toString())) {
+                // intentar parsear la fecha y establecer la fecha de nacimiento del cliente
+                try {
+                    SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
+                    Date fecha = formatter.parse(TablaResultadosClientes.getValueAt(fila, 5).toString());
+                    clienteModificar.setFechaNacimientocliente(fecha);
+                } catch (ParseException ex) {
+                    JOptionPane.showMessageDialog(rootPane, "FECHA no se ha podido convertir");
+                }
 
-            Date fechaDate = formatter.parse(fechaString);
+                // verificar el nombre
+                if (verificarNombre(TablaResultadosClientes.getValueAt(fila, 3).toString())) {
 
-            // ponerle los datos al cliente obtenido
-            clienteModificar.setNifCliente(nif);
-            clienteModificar.setNombrecliente(nombre);
-            clienteModificar.setApellidosCliente(apellido);
-            clienteModificar.setFechaNacimientocliente(fechaDate);
-            
-            // modificar cliente
-            try {
-                controladorClientes.edit(clienteModificar);
-            } catch (NonexistentEntityException ex) {
-                Logger.getLogger(VentanaAñadirClientes.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (Exception ex) {
-                Logger.getLogger(VentanaAñadirClientes.class.getName()).log(Level.SEVERE, null, ex);
+                    // verificar el apellido
+                    if (verificarApellido(TablaResultadosClientes.getValueAt(fila, 4).toString())) {
+                        
+                        // si todos los datos estan correctos, modificar los datos del cliente a editar
+                        
+                        // establecer los datos 
+                        clienteModificar.setNifCliente(TablaResultadosClientes.getValueAt(fila, 2).toString());
+                        clienteModificar.setNombrecliente(TablaResultadosClientes.getValueAt(fila, 3).toString());
+                        clienteModificar.setApellidosCliente(TablaResultadosClientes.getValueAt(fila, 4).toString());
+                        
+                       
+                        try {
+                            // modificar al cliente
+                            controladorClientes.edit(clienteModificar);
+                        } catch (NonexistentEntityException ex) {
+                            Logger.getLogger(VentanaAñadirClientes.class.getName()).log(Level.SEVERE, null, ex);
+                        } catch (Exception ex) {
+                            Logger.getLogger(VentanaAñadirClientes.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+
+                        // actualizar resultados
+                        actualizarTablaResultados();
+
+                    } else {
+                        JOptionPane.showMessageDialog(rootPane, "Apellido no valido");
+                    }
+
+                } else {
+                    JOptionPane.showMessageDialog(rootPane, "Nombre no valido");
+                }
+
+            } else {
+                JOptionPane.showMessageDialog(rootPane, "Fecha de nacimiento no valida");
             }
-            
-            // actualizar datos de la tabla
-            actualizarTablaResultados();
-        } catch (ParseException ex) {
-            Logger.getLogger(VentanaAñadirClientes.class.getName()).log(Level.SEVERE, null, ex);
+
+        } else {
+            JOptionPane.showMessageDialog(rootPane, "NIF no valido o existente");
         }
+        
+        // actualizar resultados
+        actualizarTablaResultados();
 
     }//GEN-LAST:event_BotonModificarActionPerformed
 
@@ -548,16 +573,24 @@ public class VentanaAñadirClientes extends javax.swing.JFrame {
                 if ("Nimbus".equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
                     break;
+
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(VentanaAñadirClientes.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(VentanaAñadirClientes.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
+
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(VentanaAñadirClientes.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(VentanaAñadirClientes.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
+
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(VentanaAñadirClientes.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(VentanaAñadirClientes.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
+
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(VentanaAñadirClientes.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(VentanaAñadirClientes.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
         //</editor-fold>

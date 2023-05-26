@@ -31,6 +31,7 @@ public class Main_Aplicacion_83 extends javax.swing.JFrame {
         BotonGenerarFactura = new javax.swing.JButton();
         BotonAñadirProductos = new javax.swing.JButton();
         BotonAñadirClientes = new javax.swing.JButton();
+        BotonGestionar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -52,6 +53,7 @@ public class Main_Aplicacion_83 extends javax.swing.JFrame {
         BotonGenerarFactura.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
         BotonGenerarFactura.setText("Generar Factura");
         BotonGenerarFactura.setBorder(null);
+        BotonGenerarFactura.setName(""); // NOI18N
         BotonGenerarFactura.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 BotonGenerarFacturaActionPerformed(evt);
@@ -81,7 +83,17 @@ public class Main_Aplicacion_83 extends javax.swing.JFrame {
         });
         jPanel1.add(BotonAñadirClientes, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 250, 450, 50));
 
-        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 560, 460));
+        BotonGestionar.setBackground(new java.awt.Color(70, 73, 75));
+        BotonGestionar.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
+        BotonGestionar.setText("Gestion Base de Datos");
+        BotonGestionar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                BotonGestionarActionPerformed(evt);
+            }
+        });
+        jPanel1.add(BotonGestionar, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 420, 310, 40));
+
+        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 560, 490));
 
         pack();
         setLocationRelativeTo(null);
@@ -114,6 +126,15 @@ public class Main_Aplicacion_83 extends javax.swing.JFrame {
         ventana.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_BotonGenerarFacturaActionPerformed
+
+    private void BotonGestionarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BotonGestionarActionPerformed
+        // TODO add your handling code here:
+        
+        VentanaGestionBaseDatos ventana = new VentanaGestionBaseDatos();
+        ventana.setVisible(true);
+        this.dispose();
+        
+    }//GEN-LAST:event_BotonGestionarActionPerformed
 
     /**
      * @param args the command line arguments
@@ -155,6 +176,7 @@ public class Main_Aplicacion_83 extends javax.swing.JFrame {
     private javax.swing.JButton BotonAñadirProductos;
     private javax.swing.JButton BotonAñadirProveedores;
     private javax.swing.JButton BotonGenerarFactura;
+    private javax.swing.JButton BotonGestionar;
     private javax.swing.JPanel jPanel1;
     // End of variables declaration//GEN-END:variables
 }

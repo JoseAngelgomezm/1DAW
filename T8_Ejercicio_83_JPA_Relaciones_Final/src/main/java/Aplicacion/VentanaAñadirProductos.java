@@ -159,7 +159,7 @@ public class VentanaAñadirProductos extends javax.swing.JFrame {
         });
         jPanel1.add(BotonModificar, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 560, 90, 30));
 
-        jPanel1.add(DesplegableProveedores, new org.netbeans.lib.awtextra.AbsoluteConstraints(510, 440, 130, 20));
+        jPanel1.add(DesplegableProveedores, new org.netbeans.lib.awtextra.AbsoluteConstraints(510, 440, 130, 30));
 
         jLabel6.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
         jLabel6.setText("Importe:");
@@ -257,7 +257,7 @@ public class VentanaAñadirProductos extends javax.swing.JFrame {
 
     }
 
-    private boolean comprobarSiNifExiste(String ref) {
+    private boolean comprobarSiNifExiste(String nif) {
         boolean noExiste = true;
         // cargar los productos
         List<Productos> listaProductos = this.controladorProductos.findProductosEntities();
@@ -265,7 +265,7 @@ public class VentanaAñadirProductos extends javax.swing.JFrame {
         // recorrer la lista
         for (Productos p : listaProductos) {
             // si encuentra algun nif de proveedor igual, devuelve false
-            if (p.getRefProducto().equalsIgnoreCase(ref)) {
+            if (p.getRefProducto().equalsIgnoreCase(nif)) {
                 noExiste = false;
                 break;
             }
@@ -418,7 +418,7 @@ public class VentanaAñadirProductos extends javax.swing.JFrame {
         // obtener los datos de la tabla que se han modificiado
         // verificando que se han introducido correctamente y que la referencia
         // no existe ya en la bd
-        if (verificarRef(TablaResultadosProductos.getValueAt(fila, 2).toString()) && comprobarSiNifExiste(TablaResultadosProductos.getValueAt(fila, 2).toString())) {
+        if (verificarRef(TablaResultadosProductos.getValueAt(fila, 2).toString())) {
 
             if (verificarNombre(TablaResultadosProductos.getValueAt(fila, 3).toString())) {
 
