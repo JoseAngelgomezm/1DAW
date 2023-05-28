@@ -381,7 +381,8 @@ public class VentanaAñadirClientes extends javax.swing.JFrame {
                         try {
                             String datosTarjetaSeleccionada = this.DesplegableTarjetas.getSelectedItem().toString();
                             // obtener el id de la tarjeta asociada al cliente
-                            int id = Character.getNumericValue(datosTarjetaSeleccionada.charAt(0));
+                            String[] datosTarjetaSeleccionadaDividida = datosTarjetaSeleccionada.split("-");
+                            int id = Integer.parseInt(datosTarjetaSeleccionadaDividida[0]);
                             // obtener la tarjeta asociada al cliente
                             TarjetasBancarias tarjetaAsociada = controladorTarjetas.findTarjetasBancarias(id);
 

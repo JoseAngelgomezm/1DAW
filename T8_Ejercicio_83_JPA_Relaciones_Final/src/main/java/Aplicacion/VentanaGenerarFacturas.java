@@ -227,24 +227,26 @@ public class VentanaGenerarFacturas extends javax.swing.JFrame {
         // TODO add your handling code here:
         // crear una nueva factura
         Facturas facturaNueva = new Facturas();
-        
+
         // obtener el dato del desplegable de clientes
         String clienteSeleccionado = DesplegableClientes.getSelectedItem().toString();
 
         // obtener el id de ese cliente
-        int id_cliente = Character.getNumericValue(clienteSeleccionado.charAt(0));
+        String[] ClienteSeleccionadoDividido = clienteSeleccionado.split("-");
+        int idCliente = Integer.parseInt(ClienteSeleccionadoDividido[0]);
 
         // buscar el cliente
-        Clientes clienteAsignado = controladorClientes.findClientes(id_cliente);
+        Clientes clienteAsignado = controladorClientes.findClientes(idCliente);
 
         // obtener el dato del desplegable de productos
         String productoSeleccionado = DesplegableProductos.getSelectedItem().toString();
 
         // obtener el id de ese producto
-        int id_producto = Character.getNumericValue(productoSeleccionado.charAt(0));
+        String[] productoSeleccionadoDividido = productoSeleccionado.split("-");
+        int idProducto = Integer.parseInt(productoSeleccionadoDividido[0]);
 
         // buscar el producto
-        Productos productoAsignado = controladorProductos.findProductos(id_producto);
+        Productos productoAsignado = controladorProductos.findProductos(idProducto);
 
         // asignar el cliente a la nueva factura
         facturaNueva.setClientes(clienteAsignado);

@@ -328,9 +328,11 @@ public class VentanaAñadirProductos extends javax.swing.JFrame {
                         // obtener el string de lo que tenemos en el desplegable
                         String proveedorSeleccionado = DesplegableProveedores.getSelectedItem().toString();
 
-                        // obtener el id de ese proveedor
-                        int id = Character.getNumericValue(proveedorSeleccionado.charAt(0));
-
+                        // obtener el id de ese proveedor, dividiendolo por el guion
+                        // y quedandonos con el primer valor que es el id
+                        String[] proveedorSeleccionadoDividido = proveedorSeleccionado.split("-");
+                        int id = Integer.parseInt(proveedorSeleccionadoDividido[0]);
+                        System.out.println(id);
                         // buscar el proveedor
                         Proveedores proveedorAsignado = controladorProveedores.findProveedores(id);
 
