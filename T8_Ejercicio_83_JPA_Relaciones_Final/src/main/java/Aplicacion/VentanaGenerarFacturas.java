@@ -227,7 +227,7 @@ public class VentanaGenerarFacturas extends javax.swing.JFrame {
         // TODO add your handling code here:
         // crear una nueva factura
         Facturas facturaNueva = new Facturas();
-
+        
         // obtener el dato del desplegable de clientes
         String clienteSeleccionado = DesplegableClientes.getSelectedItem().toString();
 

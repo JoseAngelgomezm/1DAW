@@ -324,23 +324,27 @@ public class VentanaAñadirProductos extends javax.swing.JFrame {
                     productoIntroducir.setNombreProducto(EntradaNombreProducto.getText());
                     productoIntroducir.setImporteProducto(Double.valueOf(EntradaImporteProducto.getText()));
 
-                    // obtener el string de lo que tenemos en el desplegable
-                    String proveedorSeleccionado = DesplegableProveedores.getSelectedItem().toString();
+                    try {
+                        // obtener el string de lo que tenemos en el desplegable
+                        String proveedorSeleccionado = DesplegableProveedores.getSelectedItem().toString();
 
-                    // obtener el id de ese proveedor
-                    int id = Character.getNumericValue(proveedorSeleccionado.charAt(0));
+                        // obtener el id de ese proveedor
+                        int id = Character.getNumericValue(proveedorSeleccionado.charAt(0));
 
-                    // buscar el proveedor
-                    Proveedores proveedorAsignado = controladorProveedores.findProveedores(id);
+                        // buscar el proveedor
+                        Proveedores proveedorAsignado = controladorProveedores.findProveedores(id);
 
-                    // asignar el proveedor al nuevo producto
-                    productoIntroducir.setIdProveedor(proveedorAsignado);
+                        // asignar el proveedor al nuevo producto
+                        productoIntroducir.setIdProveedor(proveedorAsignado);
 
-                    // introducir el producto en la base de datos
-                    controladorProductos.create(productoIntroducir);
+                        // introducir el producto en la base de datos
+                        controladorProductos.create(productoIntroducir);
 
-                    // actualizar la tabla de consulta
-                    actualizarTablaResultados();
+                        // actualizar la tabla de consulta
+                        actualizarTablaResultados();
+                    } catch (NullPointerException npe) {
+                        JOptionPane.showMessageDialog(rootPane, "No hay proveedor seleccionado, crea uno si esta vacio");
+                    }
 
                 } else {
                     JOptionPane.showMessageDialog(rootPane, "Importe del producto no valido");

@@ -245,12 +245,7 @@ public class VentanaAñadirClientes extends javax.swing.JFrame {
         final Matcher matcherNIF = patternNIF.matcher(pruebaNIF);
 
         // si el nif introducido es valido
-        if (matcherNIF.matches()) {
-            return true;
-
-        } else {
-            return false;
-        }
+        return matcherNIF.matches();
 
     }
 
@@ -267,12 +262,7 @@ public class VentanaAñadirClientes extends javax.swing.JFrame {
         final Matcher matcherNombre = patternNombre.matcher(pruebaNombre);
 
         // si el nombre introducido es valido
-        if (matcherNombre.matches()) {
-            return true;
-
-        } else {// si el nombre no es valido
-            return false;
-        }
+        return matcherNombre.matches(); // si el nombre no es valido
     }
 
     private boolean verificarApellido(String apellido) {
@@ -288,12 +278,8 @@ public class VentanaAñadirClientes extends javax.swing.JFrame {
         final Matcher matcherApellido = patternApelllido.matcher(pruebaApellido);
 
         // si el apellido introducido es valido
-        if (matcherApellido.matches()) {
-            // obtener el apellido
-            return true;
-        } else {// si el apellido no es valido
-            return false;
-        }
+        return matcherApellido.matches();
+
     }
 
     private boolean verificarFechaNacimiento(String fecha) {
@@ -310,12 +296,7 @@ public class VentanaAñadirClientes extends javax.swing.JFrame {
         final Matcher matcherFechaNacimiento = patternFechaNacimiento.matcher(pruebaFechaNacimiento);
 
         // si la fecha introducida coincide
-        if (matcherFechaNacimiento.matches()) {
-            // intentar parsear la fecha y establecer la fecha de nacimiento
-            return true;
-        } else {
-            return false;
-        }
+        return matcherFechaNacimiento.matches();
     }
 
     private void actualizarTablaResultados() {
@@ -323,10 +304,7 @@ public class VentanaAñadirClientes extends javax.swing.JFrame {
         DefaultTableModel modelo = new DefaultTableModel() {
             @Override
             public boolean isCellEditable(int row, int column) {
-                if (column == 0 || column == 1) {
-                    return false;
-                }
-                return true;
+                return !(column == 0 || column == 1);
             }
 
         };
@@ -400,22 +378,24 @@ public class VentanaAñadirClientes extends javax.swing.JFrame {
                         nuevoCliente.setApellidosCliente(this.EntradaApellidoCliente.getText());
 
                         // tarjeta bancaria desde el desplegable
-                        String datosTarjetaSeleccionada = this.DesplegableTarjetas.getSelectedItem().toString();
+                        try {
+                            String datosTarjetaSeleccionada = this.DesplegableTarjetas.getSelectedItem().toString();
+                            // obtener el id de la tarjeta asociada al cliente
+                            int id = Character.getNumericValue(datosTarjetaSeleccionada.charAt(0));
+                            // obtener la tarjeta asociada al cliente
+                            TarjetasBancarias tarjetaAsociada = controladorTarjetas.findTarjetasBancarias(id);
 
-                        // obtener el id de la tarjeta asociada al cliente
-                        int id = Character.getNumericValue(datosTarjetaSeleccionada.charAt(0));
+                            // poner la tarjeta al nuevo cliente
+                            nuevoCliente.setIdtarjetaBancaria(tarjetaAsociada);
 
-                        // obtener la tarjeta asociada al cliente
-                        TarjetasBancarias tarjetaAsociada = controladorTarjetas.findTarjetasBancarias(id);
+                            // insertar el cliente
+                            controladorClientes.create(nuevoCliente);
 
-                        // poner la tarjeta al nuevo cliente
-                        nuevoCliente.setIdtarjetaBancaria(tarjetaAsociada);
-
-                        // insertar el cliente
-                        controladorClientes.create(nuevoCliente);
-
-                        // actualizar resultados
-                        actualizarTablaResultados();
+                            // actualizar resultados
+                            actualizarTablaResultados();
+                        } catch (NullPointerException npe) {
+                            JOptionPane.showMessageDialog(rootPane, "No hay tarjeta seleccionada, añade una si esta vacio");
+                        }
 
                     } else {
                         JOptionPane.showMessageDialog(rootPane, "Apellido no valido");
@@ -480,10 +460,10 @@ public class VentanaAñadirClientes extends javax.swing.JFrame {
             try {
                 // obtener el id del cliente de la columna
                 int idBorrar = Integer.parseInt(TablaResultadosClientes.getValueAt(fila, 0).toString());
-                
+
                 // intentar borrar la factura por el id
                 controladorClientes.destroy(idBorrar);
-                
+
                 actualizarTablaResultados();
                 actualizarDesplegableTarjetas();
             } catch (IllegalOrphanException ex) {
@@ -500,75 +480,74 @@ public class VentanaAñadirClientes extends javax.swing.JFrame {
         // TODO add your handling code here:
         // obtener la fila que esta seleccionada
         int fila = TablaResultadosClientes.getSelectedRow();
-        
+
         if (fila < 0) {
             JOptionPane.showMessageDialog(rootPane, "No hay nada seleccionado");
-        }else{
+        } else {
             // obtener el id del cliente a actualizar
-        int id = Integer.parseInt(TablaResultadosClientes.getValueAt(fila, 0).toString());
+            int id = Integer.parseInt(TablaResultadosClientes.getValueAt(fila, 0).toString());
 
-        // buscar el cliente por id para obtener el cliente a modificar
-        Clientes clienteModificar = controladorClientes.findClientes(id);
+            // buscar el cliente por id para obtener el cliente a modificar
+            Clientes clienteModificar = controladorClientes.findClientes(id);
 
-        // verificar que el nif sea valido
-        if (verificarNif(TablaResultadosClientes.getValueAt(fila, 2).toString())) {
+            // verificar que el nif sea valido
+            if (verificarNif(TablaResultadosClientes.getValueAt(fila, 2).toString())) {
 
-            // verificar la fecha de nacimiento
-            if (verificarFechaNacimiento(TablaResultadosClientes.getValueAt(fila, 5).toString())) {
-                // intentar parsear la fecha y establecer la fecha de nacimiento del cliente
-                try {
-                    SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
-                    Date fecha = formatter.parse(TablaResultadosClientes.getValueAt(fila, 5).toString());
-                    clienteModificar.setFechaNacimientocliente(fecha);
-                } catch (ParseException ex) {
-                    JOptionPane.showMessageDialog(rootPane, "FECHA no se ha podido convertir");
-                }
+                // verificar la fecha de nacimiento
+                if (verificarFechaNacimiento(TablaResultadosClientes.getValueAt(fila, 5).toString())) {
+                    // intentar parsear la fecha y establecer la fecha de nacimiento del cliente
+                    try {
+                        SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
+                        Date fecha = formatter.parse(TablaResultadosClientes.getValueAt(fila, 5).toString());
+                        clienteModificar.setFechaNacimientocliente(fecha);
+                    } catch (ParseException ex) {
+                        JOptionPane.showMessageDialog(rootPane, "FECHA no se ha podido convertir");
+                    }
 
-                // verificar el nombre
-                if (verificarNombre(TablaResultadosClientes.getValueAt(fila, 3).toString())) {
+                    // verificar el nombre
+                    if (verificarNombre(TablaResultadosClientes.getValueAt(fila, 3).toString())) {
 
-                    // verificar el apellido
-                    if (verificarApellido(TablaResultadosClientes.getValueAt(fila, 4).toString())) {
+                        // verificar el apellido
+                        if (verificarApellido(TablaResultadosClientes.getValueAt(fila, 4).toString())) {
 
-                        // si todos los datos estan correctos, modificar los datos del cliente a editar
-                        // establecer los datos 
-                        clienteModificar.setNifCliente(TablaResultadosClientes.getValueAt(fila, 2).toString());
-                        clienteModificar.setNombrecliente(TablaResultadosClientes.getValueAt(fila, 3).toString());
-                        clienteModificar.setApellidosCliente(TablaResultadosClientes.getValueAt(fila, 4).toString());
+                            // si todos los datos estan correctos, modificar los datos del cliente a editar
+                            // establecer los datos 
+                            clienteModificar.setNifCliente(TablaResultadosClientes.getValueAt(fila, 2).toString());
+                            clienteModificar.setNombrecliente(TablaResultadosClientes.getValueAt(fila, 3).toString());
+                            clienteModificar.setApellidosCliente(TablaResultadosClientes.getValueAt(fila, 4).toString());
 
-                        try {
-                            // modificar al cliente
-                            controladorClientes.edit(clienteModificar);
-                        } catch (NonexistentEntityException ex) {
-                            Logger.getLogger(VentanaAñadirClientes.class.getName()).log(Level.SEVERE, null, ex);
-                        } catch (Exception ex) {
-                            Logger.getLogger(VentanaAñadirClientes.class.getName()).log(Level.SEVERE, null, ex);
+                            try {
+                                // modificar al cliente
+                                controladorClientes.edit(clienteModificar);
+                            } catch (NonexistentEntityException ex) {
+                                Logger.getLogger(VentanaAñadirClientes.class.getName()).log(Level.SEVERE, null, ex);
+                            } catch (Exception ex) {
+                                Logger.getLogger(VentanaAñadirClientes.class.getName()).log(Level.SEVERE, null, ex);
+                            }
+
+                            // actualizar resultados
+                            actualizarTablaResultados();
+
+                        } else {
+                            JOptionPane.showMessageDialog(rootPane, "Apellido no valido");
                         }
 
-                        // actualizar resultados
-                        actualizarTablaResultados();
-
                     } else {
-                        JOptionPane.showMessageDialog(rootPane, "Apellido no valido");
+                        JOptionPane.showMessageDialog(rootPane, "Nombre no valido");
                     }
 
                 } else {
-                    JOptionPane.showMessageDialog(rootPane, "Nombre no valido");
+                    JOptionPane.showMessageDialog(rootPane, "Fecha de nacimiento no valida");
                 }
 
             } else {
-                JOptionPane.showMessageDialog(rootPane, "Fecha de nacimiento no valida");
+                JOptionPane.showMessageDialog(rootPane, "NIF no valido o existente");
             }
 
-        } else {
-            JOptionPane.showMessageDialog(rootPane, "NIF no valido o existente");
+            // actualizar resultados
+            actualizarTablaResultados();
         }
 
-        // actualizar resultados
-        actualizarTablaResultados();
-        }
-        
-        
 
     }//GEN-LAST:event_BotonModificarActionPerformed
 
