@@ -6,10 +6,10 @@ package Aplicacion;
 
 import entities.Clientes;
 import entities.Facturas;
+import entities.FacturasPK;
 import entities.Productos;
 import entities.Proveedores;
 import entities.TarjetasBancarias;
-import entities.TarjetasBancarias_;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -20,9 +20,6 @@ import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -34,8 +31,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
-import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import javax.swing.JOptionPane;
 
@@ -53,7 +50,6 @@ public class VentanaGestionBaseDatos extends javax.swing.JFrame {
     private final controllers.ProveedoresJpaController controladorProveedores;
     private final controllers.FacturasJpaController controladorFacturas;
     private final controllers.TarjetasBancariasJpaController controladorTarjetas;
-    private Connection conexion1 = null;
 
     /**
      * Creates new form VentanaGestionBaseDatos
@@ -66,7 +62,7 @@ public class VentanaGestionBaseDatos extends javax.swing.JFrame {
         this.controladorProveedores = new controllers.ProveedoresJpaController(emf);
         this.controladorFacturas = new controllers.FacturasJpaController(emf);
         this.controladorTarjetas = new controllers.TarjetasBancariasJpaController(emf);
-        this.conexion1 = Conexion.getInstance();
+
         initComponents();
 
     }
@@ -202,14 +198,13 @@ public class VentanaGestionBaseDatos extends javax.swing.JFrame {
                 datosDivididos = linea.split(";");
                 // crear un cliente temporal para pasarle los datos del archivo
                 Clientes clienteTmp = new Clientes();
-                // pasarle los datos al cliente
-                clienteTmp.setIdCliente(Integer.valueOf(datosDivididos[0]));
+                
 
                 // obtener la tarjeta bancaria mediante el numero
                 TypedQuery<TarjetasBancarias> query = this.em.createNamedQuery("TarjetasBancarias.findByNumeroTarjeta", TarjetasBancarias.class);
                 query.setParameter("numeroTarjeta", datosDivididos[1]);
                 TarjetasBancarias tarjetaEncontrada = query.getSingleResult();
-                
+
                 // establecer la tarjeta
                 clienteTmp.setIdtarjetaBancaria(tarjetaEncontrada);
 
@@ -253,8 +248,7 @@ public class VentanaGestionBaseDatos extends javax.swing.JFrame {
                 datosDivididos = linea.split(";");
                 // crear una tarjeta temporal para pasarle los datos del archivo
                 TarjetasBancarias tarjetaTmp = new TarjetasBancarias();
-                // pasarle los datos a la tarjeta
-                tarjetaTmp.setIdtarjetaBancaria(Integer.valueOf(datosDivididos[0]));
+                
                 tarjetaTmp.setNumeroTarjeta(datosDivididos[1]);
 
                 // agregar el cliente a la lista
@@ -286,9 +280,12 @@ public class VentanaGestionBaseDatos extends javax.swing.JFrame {
                 // crear un producto temporal para pasarle los datos del archivo
                 Productos productoTmp = new Productos();
                 // pasarle los datos al producto
-                productoTmp.setIdProducto(Integer.valueOf(datosDivididos[0]));
-                // buscar el proveedor que le pertenece
-                Proveedores proveedorAsociado = controladorProveedores.findProveedores(Integer.valueOf(datosDivididos[1]));
+                
+                // buscar el proveedor que le pertenece por el nif
+                TypedQuery<Proveedores> query = this.em.createNamedQuery("Proveedores.findByNifProveedor", Proveedores.class);
+                query.setParameter("nifProveedor", datosDivididos[1]);
+                // asignarle el proveedor al producto
+                Proveedores proveedorAsociado = query.getSingleResult();
                 productoTmp.setIdProveedor(proveedorAsociado);
                 // poner la referencia
                 productoTmp.setRefProducto(datosDivididos[2]);
@@ -323,7 +320,7 @@ public class VentanaGestionBaseDatos extends javax.swing.JFrame {
                 // crear un proveedor temporal para pasarle los datos del archivo
                 Proveedores proveedorTmp = new Proveedores();
                 // pasarle los datos al proveedor
-                proveedorTmp.setIdProveedor(Integer.valueOf(datosDivididos[0]));
+                
                 proveedorTmp.setNifProveedor(datosDivididos[1]);
                 proveedorTmp.setNombreProveedor(datosDivididos[2]);
                 proveedorTmp.setDireccionProveedor(datosDivididos[3]);
@@ -342,42 +339,98 @@ public class VentanaGestionBaseDatos extends javax.swing.JFrame {
     private List<Facturas> leerFicheroFacturas(String ruta) {
         List<Facturas> listaFacturas = new ArrayList<>();
 
+        String linea; // string que contiene cada linea leida
+        String[] datosDivididos; // array que contiene los datos divididos
+
+        // bloque try catch para lectura del fichero
+        try ( Scanner datosFichero = new Scanner(new File(ruta), "UTF-8")) {
+            // leer mientras tengamos una linea disponible en el fichero
+            while (datosFichero.hasNextLine()) {
+                // obtener datos de cada linea
+                linea = datosFichero.nextLine();
+                // dividir cada linea por los dos puntos para obtener cada valor
+                datosDivididos = linea.split(";");
+                // crear una facturaPK para asignarle a la factura
+                FacturasPK pkFactura = new FacturasPK();
+                // buscar por el nif al cliente para obtener el id
+                // buscar el proveedor que le pertenece por el nif
+                TypedQuery<Clientes> queryCliente = this.em.createNamedQuery("Clientes.findByNifCliente", Clientes.class);
+                queryCliente.setParameter("nifCliente", datosDivididos[0]);
+                // obtener el cliente mediante la named query
+                Clientes clienteAsociado = queryCliente.getSingleResult();
+                // asignarle el id del cliente asociado al pkFactura
+                pkFactura.setIdCliente(clienteAsociado.getIdCliente());
+                
+                // obtener el producto asociado mediante la ref para obtener el id
+                TypedQuery<Productos> queryProducto = this.em.createNamedQuery("Productos.findByRefProducto", Productos.class);
+                queryProducto.setParameter("refProducto", datosDivididos[1]);
+                // obtener el producto mediante la named query
+                Productos productoAsociado = queryProducto.getSingleResult();
+                // asignarle el id del prodcuto asociado al pkFactura
+                pkFactura.setIdProducto(productoAsociado.getIdProducto());
+                 // obtener la fecha de la factura
+                try {
+                    SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
+                    Date fecha = formatter.parse(datosDivididos[3]);
+                    pkFactura.setFechaFactura(fecha);
+                } catch (ParseException ex) {
+                    JOptionPane.showMessageDialog(rootPane, "FECHA no se ha podido convertir");
+                }
+                
+                // crear la factura tmp para añadirla a la bd
+                Facturas facturaTmp = new Facturas();
+                facturaTmp.setFacturasPK(pkFactura);
+                facturaTmp.setCantidadProductos(Integer.valueOf(datosDivididos[2]));
+                facturaTmp.setImporteTotal(Double.valueOf(datosDivididos[4]));
+                facturaTmp.setClientes(clienteAsociado);
+                facturaTmp.setProductos(productoAsociado);
+                // añadir la factura a la lista 
+                listaFacturas.add(facturaTmp);
+            }
+
+        } catch (FileNotFoundException e) {
+            System.out.println(e.getMessage());
+        }
+
         return listaFacturas;
     }
 
-    public int borrarTabla(String sentencia) throws SQLException {
+    public void borrarTablas() {
 
-        int nfilas = 0;
+        // obtener una transiccion del entity manager
+        EntityTransaction transaction = this.em.getTransaction();
+        transaction.begin();
 
-        // Preparamos el borrado de datos  mediante un Statement
-        // No hay parámetros en la sentencia SQL
-        try ( Statement st = conexion1.createStatement()) {
-            // Ejecución de la sentencia
-            nfilas = st.executeUpdate(sentencia);
-        }
-
-        // El borrado se realizó con éxito, devolvemos filas afectadas
-        return nfilas;
+        TypedQuery<Clientes> queryBorrarClientes = this.em.createNamedQuery("Clientes.deleteAll", Clientes.class);
+        TypedQuery<Facturas> queryBorrarFacturas = this.em.createNamedQuery("Facturas.deleteAll", Facturas.class);
+        TypedQuery<Productos> queryBorrarProductos = this.em.createNamedQuery("Productos.deleteAll", Productos.class);
+        TypedQuery<Proveedores> queryBorrarProveedores = this.em.createNamedQuery("Proveedores.deleteAll", Proveedores.class);
+        TypedQuery<TarjetasBancarias> queryBorrarTarjetas = this.em.createNamedQuery("TarjetasBancarias.deleteAll", TarjetasBancarias.class);
+        
+        queryBorrarClientes.executeUpdate();
+        queryBorrarTarjetas.executeUpdate();
+        queryBorrarProductos.executeUpdate();
+        queryBorrarProveedores.executeUpdate();
+        queryBorrarFacturas.executeUpdate();
+        
+        
+        
+        
+        // hacer commit de la transicion
+        transaction.commit();
     }
 
     private void BotonRecuperarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BotonRecuperarActionPerformed
         // TODO add your handling code here:
 
-        // eliminar todos los datos de todas las tablas
-        try {
-            borrarTabla("delete from tarjetasBancarias");
-            borrarTabla("delete from clientes");
-            borrarTabla("delete from proveedores");
-            borrarTabla("delete from productos");
-            borrarTabla("delete from facturas");
-        } catch (SQLException ex) {
-            Logger.getLogger(VentanaGestionBaseDatos.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        borrarTablas();
 
         // obtener el nombre de la carpeta da la que leer los archivos desde 
         // el desplegable
         String rutaCarpeta = "copias/" + this.ListaCopias.getSelectedItem();
-
+        
+        // leer los archivos de cada una de las tablas
+        
         // leer los archivos de las tarjeta
         List<TarjetasBancarias> listaTarjetas = leerFicheroTarjetas(rutaCarpeta.concat("/tarjetas.csv"));
         // añadir la lista de tarjetas a la tabla
@@ -385,14 +438,35 @@ public class VentanaGestionBaseDatos extends javax.swing.JFrame {
             controladorTarjetas.create(t);
         }
 
-        // leer los archivos de cada una de las tablas
+        
         List<Clientes> listaClientes = leerFicheroClientes(rutaCarpeta.concat("/clientes.csv"));
         // añadir la lista de clientes a la tabla
         for (Clientes c : listaClientes) {
             controladorClientes.create(c);
         }
+        
+        List<Proveedores> listaProveedores = leerFicheroProveedores(rutaCarpeta.concat("/proveedores.csv"));
+        // añadir la lista de proveedores a la tabla
+        for (Proveedores p : listaProveedores) {
+            controladorProveedores.create(p);
+        }
+        
+        List<Productos> listaProductos = leerFicheroProductos(rutaCarpeta.concat("/productos.csv"));
+        // añadir a la base de datos la lista de productos
+        for (Productos p : listaProductos) {
+            controladorProductos.create(p);
+        }
+        
+        List<Facturas> listaFacturas = leerFicheroFacturas(rutaCarpeta.concat("/facturas.csv"));
+        for (Facturas f : listaFacturas) {
+            try {
+                controladorFacturas.create(f);
+            } catch (Exception ex) {
+                Logger.getLogger(VentanaGestionBaseDatos.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
 
-
+        JOptionPane.showMessageDialog(rootPane, "Base de datos reestablecida");
     }//GEN-LAST:event_BotonRecuperarActionPerformed
 
     private void crearDirectorio(String ruta) {
@@ -421,7 +495,7 @@ public class VentanaGestionBaseDatos extends javax.swing.JFrame {
             for (int i = 0; i < clientes.size(); i++) {
                 Clientes tmp = clientes.get(i);
                 flujo.write(tmp.getIdCliente() + ";"
-                        + tmp.getIdtarjetaBancaria().getIdtarjetaBancaria() + ";"
+                        + tmp.getIdtarjetaBancaria().getNumeroTarjeta() + ";"
                         + tmp.getNifCliente() + ";" + tmp.getNombrecliente()
                         + ";" + tmp.getApellidosCliente() + ";" + tmp.getFechaNacimientocliente());
                 // añadir un salto de linea
@@ -437,11 +511,11 @@ public class VentanaGestionBaseDatos extends javax.swing.JFrame {
     private void crearFicheroProductos(List<Productos> productos) {
 
         // captura de expcepcion al crear el fichero
-        try ( BufferedWriter flujo = new BufferedWriter(new FileWriter("copias/" + obtenerFechaHoraActual() + "/prodcutos.csv"))) {// crea el objeto bufferedWriter + fileWriter
+        try ( BufferedWriter flujo = new BufferedWriter(new FileWriter("copias/" + obtenerFechaHoraActual() + "/productos.csv"))) {// crea el objeto bufferedWriter + fileWriter
             // recorrer la lista para obtener facturas
             for (int i = 0; i < productos.size(); i++) {
                 Productos tmp = productos.get(i);
-                flujo.write(tmp.getIdProducto() + ";" + tmp.getIdProveedor() + ";"
+                flujo.write(tmp.getIdProducto() + ";" + tmp.getIdProveedor().getNifProveedor() + ";"
                         + tmp.getRefProducto() + ";" + tmp.getNombreProducto() + ";"
                         + tmp.getImporteProducto());
                 // añadir un salto de linea
@@ -510,8 +584,8 @@ public class VentanaGestionBaseDatos extends javax.swing.JFrame {
             // recorrer la lista para obtener facturas
             for (int i = 0; i < facturas.size(); i++) {
                 Facturas tmp = facturas.get(i);
-                flujo.write(tmp.getFacturasPK().getIdCliente() + ";" + tmp.getFacturasPK().getIdProducto() + ";"
-                        + tmp.getCantidadProductos() + ";" + tmp.getFacturasPK().getFechaFactura() + tmp.getImporteTotal());
+                flujo.write(tmp.getClientes().getNifCliente() + ";" + tmp.getProductos().getRefProducto() + ";"
+                        + tmp.getCantidadProductos() + ";" + tmp.getFacturasPK().getFechaFactura() + ";" + tmp.getImporteTotal());
                 // añadir un salto de linea
                 flujo.newLine();
                 // guardar cambios en disco

@@ -27,6 +27,7 @@ import javax.persistence.Table;
     @NamedQuery(name = "Proveedores.findAll", query = "SELECT p FROM Proveedores p"),
     @NamedQuery(name = "Proveedores.findByIdProveedor", query = "SELECT p FROM Proveedores p WHERE p.idProveedor = :idProveedor"),
     @NamedQuery(name = "Proveedores.findByNifProveedor", query = "SELECT p FROM Proveedores p WHERE p.nifProveedor = :nifProveedor"),
+    @NamedQuery(name = "Proveedores.deleteAll", query = "DELETE FROM Proveedores"),
     @NamedQuery(name = "Proveedores.findByNombreProveedor", query = "SELECT p FROM Proveedores p WHERE p.nombreProveedor = :nombreProveedor"),
     @NamedQuery(name = "Proveedores.findByDireccionProveedor", query = "SELECT p FROM Proveedores p WHERE p.direccionProveedor = :direccionProveedor")})
 public class Proveedores implements Serializable {

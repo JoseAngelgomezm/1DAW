@@ -18,7 +18,7 @@ create table if not exists productos(
 	nombre_producto varchar(60),
     importe_producto double,
     constraint pk_productos primary key (id_producto),
-	constraint fk_productos_proveedores foreign key (id_proveedor) references proveedores (id_proveedor) on delete cascade
+	constraint fk_productos_proveedores foreign key (id_proveedor) references proveedores (id_proveedor)
 );
 
 create table if not exists tarjetasBancarias(

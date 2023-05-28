@@ -382,23 +382,28 @@ public class VentanaAñadirProductos extends javax.swing.JFrame {
 
     private void BotonEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BotonEliminarActionPerformed
 
-        try {
-            // TODO add your handling code here:
-            // obtener la fila que esta seleccionada
-            int fila = TablaResultadosProductos.getSelectedRow();
-
+        // TODO add your handling code here:
+        // obtener la fila que esta seleccionada
+        int fila = TablaResultadosProductos.getSelectedRow();
+        if (fila < 0) {
+            JOptionPane.showMessageDialog(rootPane, "No hay nada seleccionado");
+        } else {
             // obtener el id del producto de la columna
             int idBorrar = Integer.parseInt(TablaResultadosProductos.getValueAt(fila, 0).toString());
 
-            // intentar borrar el producto por el id
-            controladorProductos.destroy(idBorrar);
+            try {
+                // intentar borrar el producto por el id
+                controladorProductos.destroy(idBorrar);
+            } catch (IllegalOrphanException ex) {
+                JOptionPane.showMessageDialog(rootPane, "Producto referenciado en facturas");
+            } catch (NonexistentEntityException ex) {
+                Logger.getLogger(VentanaAñadirProductos.class.getName()).log(Level.SEVERE, null, ex);
+            }
 
             actualizarTablaResultados();
-        } catch (IllegalOrphanException ex) {
-            Logger.getLogger(VentanaAñadirProductos.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (NonexistentEntityException ex) {
-            Logger.getLogger(VentanaAñadirProductos.class.getName()).log(Level.SEVERE, null, ex);
         }
+
+
     }//GEN-LAST:event_BotonEliminarActionPerformed
 
     private void BotonModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BotonModificarActionPerformed

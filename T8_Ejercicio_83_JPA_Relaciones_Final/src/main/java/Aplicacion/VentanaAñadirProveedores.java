@@ -321,17 +321,22 @@ public class VentanaAñadirProveedores extends javax.swing.JFrame {
         // obtener la fila que esta seleccionada
         int fila = TablaResultadosProveedores.getSelectedRow();
 
-        // obtener el id del cliente de la columna
-        int idBorrar = Integer.parseInt(TablaResultadosProveedores.getValueAt(fila, 0).toString());
+        if (fila < 0) {
+            JOptionPane.showMessageDialog(rootPane, "");
+        } else {
+            // obtener el id del cliente de la columna
+            int idBorrar = Integer.parseInt(TablaResultadosProveedores.getValueAt(fila, 0).toString());
+            try {
+                // intentar borrar el proveedor por el id
+                controladorProveedores.destroy(idBorrar);
+            } catch (NonexistentEntityException ex) {
+                Logger.getLogger(VentanaAñadirProveedores.class.getName()).log(Level.SEVERE, null, ex);
+            }
 
-        try {
-            // intentar borrar el proveedor por el id
-            controladorProveedores.destroy(idBorrar);
-        } catch (NonexistentEntityException ex) {
-            Logger.getLogger(VentanaAñadirProveedores.class.getName()).log(Level.SEVERE, null, ex);
+            actualizarTablaResultados();
         }
 
-        actualizarTablaResultados();
+
     }//GEN-LAST:event_BotonEliminarActionPerformed
 
     private void BotonModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BotonModificarActionPerformed
@@ -365,7 +370,7 @@ public class VentanaAñadirProveedores extends javax.swing.JFrame {
                     } catch (Exception ex) {
                         Logger.getLogger(VentanaAñadirProveedores.class.getName()).log(Level.SEVERE, null, ex);
                     }
-                    
+
                     // actualizar
                     actualizarTablaResultados();
                 } else {

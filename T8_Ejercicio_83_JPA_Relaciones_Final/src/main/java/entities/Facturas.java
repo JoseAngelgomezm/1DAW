@@ -27,6 +27,7 @@ import javax.persistence.Table;
     @NamedQuery(name = "Facturas.findByIdProducto", query = "SELECT f FROM Facturas f WHERE f.facturasPK.idProducto = :idProducto"),
     @NamedQuery(name = "Facturas.findByCantidadProductos", query = "SELECT f FROM Facturas f WHERE f.cantidadProductos = :cantidadProductos"),
     @NamedQuery(name = "Facturas.findByFechaFactura", query = "SELECT f FROM Facturas f WHERE f.facturasPK.fechaFactura = :fechaFactura"),
+    @NamedQuery(name = "Facturas.deleteAll", query = "DELETE FROM Facturas"),
     @NamedQuery(name = "Facturas.findByImporteTotal", query = "SELECT f FROM Facturas f WHERE f.importeTotal = :importeTotal")})
 public class Facturas implements Serializable {
 

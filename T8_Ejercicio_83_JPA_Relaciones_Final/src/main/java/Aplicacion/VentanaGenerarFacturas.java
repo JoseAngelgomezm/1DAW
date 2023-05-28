@@ -4,10 +4,13 @@
  */
 package Aplicacion;
 
+import controllers.exceptions.NonexistentEntityException;
 import entities.Clientes;
 import entities.Facturas;
 import entities.FacturasPK;
 import entities.Productos;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
@@ -18,7 +21,6 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
-
 
 /**
  *
@@ -65,6 +67,7 @@ public class VentanaGenerarFacturas extends javax.swing.JFrame {
         DesplegableClientes = new javax.swing.JComboBox<>();
         jScrollPane1 = new javax.swing.JScrollPane();
         TablaResultados = new javax.swing.JTable();
+        BotonEliminar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         addWindowListener(new java.awt.event.WindowAdapter() {
@@ -82,7 +85,7 @@ public class VentanaGenerarFacturas extends javax.swing.JFrame {
                 BotonAñadirFacturaActionPerformed(evt);
             }
         });
-        jPanel1.add(BotonAñadirFactura, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 370, -1, 30));
+        jPanel1.add(BotonAñadirFactura, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 370, -1, 30));
 
         jLabel3.setFont(new java.awt.Font("Segoe UI", 0, 48)); // NOI18N
         jLabel3.setText("Generar Factura");
@@ -105,7 +108,7 @@ public class VentanaGenerarFacturas extends javax.swing.JFrame {
                 BotonRegresarActionPerformed(evt);
             }
         });
-        jPanel1.add(BotonRegresar, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 370, -1, 30));
+        jPanel1.add(BotonRegresar, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 370, -1, 30));
 
         jLabel8.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
         jLabel8.setText("Selecciona Cliente:");
@@ -128,7 +131,15 @@ public class VentanaGenerarFacturas extends javax.swing.JFrame {
 
         jPanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(480, 60, 640, 340));
 
-        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1090, 460));
+        BotonEliminar.setText("Eliminar");
+        BotonEliminar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                BotonEliminarActionPerformed(evt);
+            }
+        });
+        jPanel1.add(BotonEliminar, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 370, 80, 30));
+
+        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1090, 470));
 
         pack();
         setLocationRelativeTo(null);
@@ -219,7 +230,7 @@ public class VentanaGenerarFacturas extends javax.swing.JFrame {
 
         // obtener el dato del desplegable de clientes
         String clienteSeleccionado = DesplegableClientes.getSelectedItem().toString();
-        
+
         // obtener el id de ese cliente
         int id_cliente = Character.getNumericValue(clienteSeleccionado.charAt(0));
 
@@ -228,7 +239,7 @@ public class VentanaGenerarFacturas extends javax.swing.JFrame {
 
         // obtener el dato del desplegable de productos
         String productoSeleccionado = DesplegableProductos.getSelectedItem().toString();
-        
+
         // obtener el id de ese producto
         int id_producto = Character.getNumericValue(productoSeleccionado.charAt(0));
 
@@ -239,10 +250,10 @@ public class VentanaGenerarFacturas extends javax.swing.JFrame {
         facturaNueva.setClientes(clienteAsignado);
         // asignar el prodcuto a la nueva factura
         facturaNueva.setProductos(productoAsignado);
-        
-       // crear el objeto que contiene las primary keys de la factura
+
+        // crear el objeto que contiene las primary keys de la factura
         FacturasPK facturapk = new FacturasPK(clienteAsignado.getIdCliente(), productoAsignado.getIdProducto(), new Date());
-        
+
         // verificar los demas datos de entrada
         // cantidad
         if (verificarCantidad(EntradaCantidad.getText())) {
@@ -252,10 +263,10 @@ public class VentanaGenerarFacturas extends javax.swing.JFrame {
 
             // poner el importe a la factura
             facturaNueva.setImporteTotal(Double.valueOf(EntradaCantidad.getText()) * productoAsignado.getImporteProducto());
-            
+
             //asginar las claves primarias
             facturaNueva.setFacturasPK(facturapk);
-            
+
             try {
                 // insertar la nueva factura
                 controladorFacturas.create(facturaNueva);
@@ -298,6 +309,45 @@ public class VentanaGenerarFacturas extends javax.swing.JFrame {
 
     }//GEN-LAST:event_formWindowOpened
 
+    private void BotonEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BotonEliminarActionPerformed
+
+        // TODO add your handling code here:
+        // obtener la fila que esta seleccionada
+        int fila = TablaResultados.getSelectedRow();
+
+        // crear una facturaPk para pasar al metodo borrar
+        FacturasPK idFactura = new FacturasPK();
+
+        // obtener los datos de la factura seleccionada
+        // id cliente
+        if (fila < 0) {
+            JOptionPane.showMessageDialog(rootPane, "No hay nada seleccionado");
+        } else {
+            idFactura.setIdCliente(Integer.parseInt(TablaResultados.getValueAt(fila, 0).toString()));
+            // id producto
+            idFactura.setIdProducto(Integer.parseInt(TablaResultados.getValueAt(fila, 1).toString()));
+            // fecha 
+            SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
+            Date fecha;
+            try {
+                fecha = formatter.parse(this.TablaResultados.getValueAt(fila, 3).toString());
+                idFactura.setFechaFactura(fecha);
+            } catch (ParseException ex) {
+                Logger.getLogger(VentanaGenerarFacturas.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
+            try {
+                // intentar borrar la factura por el id
+                controladorFacturas.destroy(idFactura);
+            } catch (NonexistentEntityException ex) {
+                Logger.getLogger(VentanaGenerarFacturas.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
+            actualizarTablaResultados();
+        }
+
+    }//GEN-LAST:event_BotonEliminarActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -338,6 +388,7 @@ public class VentanaGenerarFacturas extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton BotonAñadirFactura;
+    private javax.swing.JButton BotonEliminar;
     private javax.swing.JButton BotonRegresar;
     private javax.swing.JComboBox<String> DesplegableClientes;
     private javax.swing.JComboBox<String> DesplegableProductos;

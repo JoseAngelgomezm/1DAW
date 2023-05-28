@@ -30,6 +30,7 @@ import javax.persistence.Table;
     @NamedQuery(name = "Productos.findAll", query = "SELECT p FROM Productos p"),
     @NamedQuery(name = "Productos.findByIdProducto", query = "SELECT p FROM Productos p WHERE p.idProducto = :idProducto"),
     @NamedQuery(name = "Productos.findByRefProducto", query = "SELECT p FROM Productos p WHERE p.refProducto = :refProducto"),
+    @NamedQuery(name = "Productos.deleteAll", query = "DELETE FROM Productos"),
     @NamedQuery(name = "Productos.findByNombreProducto", query = "SELECT p FROM Productos p WHERE p.nombreProducto = :nombreProducto"),
     @NamedQuery(name = "Productos.findByImporteProducto", query = "SELECT p FROM Productos p WHERE p.importeProducto = :importeProducto")})
 public class Productos implements Serializable {

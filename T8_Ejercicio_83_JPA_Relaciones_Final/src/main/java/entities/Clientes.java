@@ -36,6 +36,7 @@ import javax.persistence.TemporalType;
     @NamedQuery(name = "Clientes.findByNifCliente", query = "SELECT c FROM Clientes c WHERE c.nifCliente = :nifCliente"),
     @NamedQuery(name = "Clientes.findByNombrecliente", query = "SELECT c FROM Clientes c WHERE c.nombrecliente = :nombrecliente"),
     @NamedQuery(name = "Clientes.findByApellidosCliente", query = "SELECT c FROM Clientes c WHERE c.apellidosCliente = :apellidosCliente"),
+    @NamedQuery(name = "Clientes.deleteAll", query = "DELETE FROM Clientes"),
     @NamedQuery(name = "Clientes.findByFechaNacimientocliente", query = "SELECT c FROM Clientes c WHERE c.fechaNacimientocliente = :fechaNacimientocliente")})
 public class Clientes implements Serializable {
     
@@ -56,7 +57,7 @@ public class Clientes implements Serializable {
     private Date fechaNacimientocliente;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "clientes")
     private List<Facturas> facturasList;
-    @OneToOne
+    @OneToOne(cascade = CascadeType.REMOVE)
     @JoinColumn(name = "id_tarjetaBancaria", referencedColumnName = "id_tarjetaBancaria")
     private TarjetasBancarias idtarjetaBancaria;
     

@@ -343,7 +343,7 @@ public class VentanaAñadirClientes extends javax.swing.JFrame {
         // recorrer la lista
         for (Clientes c : listaClientes) {
             // añadir los datos de cada factura a un array de object
-            Object[] datosFilaFactura = {c.getIdCliente(),c.getIdtarjetaBancaria().getIdtarjetaBancaria(), c.getNifCliente(), c.getNombrecliente(), c.getApellidosCliente(), c.getFechaNacimientocliente()};
+            Object[] datosFilaFactura = {c.getIdCliente(), c.getIdtarjetaBancaria().getIdtarjetaBancaria(), c.getNifCliente(), c.getNombrecliente(), c.getApellidosCliente(), c.getFechaNacimientocliente()};
             // añadir el array de object como una fila del modelo de la tabla
             modelo.addRow(datosFilaFactura);
         }
@@ -443,6 +443,12 @@ public class VentanaAñadirClientes extends javax.swing.JFrame {
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
         actualizarTablaResultados();
 
+        actualizarDesplegableTarjetas();
+
+
+    }//GEN-LAST:event_formWindowOpened
+
+    private void actualizarDesplegableTarjetas() {
         // recoger las tarjetas para mostrarlas en el desplegable
         List<TarjetasBancarias> tarjetas = controladorTarjetas.findTarjetasBancariasEntities();
 
@@ -454,9 +460,7 @@ public class VentanaAñadirClientes extends javax.swing.JFrame {
             }
 
         }
-
-
-    }//GEN-LAST:event_formWindowOpened
+    }
 
     private void BotonRegresarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BotonRegresarActionPerformed
         // TODO add your handling code here:
@@ -466,23 +470,28 @@ public class VentanaAñadirClientes extends javax.swing.JFrame {
     }//GEN-LAST:event_BotonRegresarActionPerformed
 
     private void BotonEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BotonEliminarActionPerformed
-        try {
-            // TODO add your handling code here:
-            // obtener la fila que esta seleccionada
-            int fila = TablaResultadosClientes.getSelectedRow();
 
-            // obtener el id del cliente de la columna
-            int idBorrar = Integer.parseInt(TablaResultadosClientes.getValueAt(fila, 0).toString());
-
-            // intentar borrar la factura por el id
-            controladorClientes.destroy(idBorrar);
-        } catch (IllegalOrphanException ex) {
-            Logger.getLogger(VentanaAñadirClientes.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (NonexistentEntityException ex) {
-            Logger.getLogger(VentanaAñadirClientes.class.getName()).log(Level.SEVERE, null, ex);
+        // TODO add your handling code here:
+        // obtener la fila que esta seleccionada
+        int fila = TablaResultadosClientes.getSelectedRow();
+        if (fila < 0) {
+            JOptionPane.showMessageDialog(rootPane, "no hay nada seleccionado");
+        } else {
+            try {
+                // obtener el id del cliente de la columna
+                int idBorrar = Integer.parseInt(TablaResultadosClientes.getValueAt(fila, 0).toString());
+                
+                // intentar borrar la factura por el id
+                controladorClientes.destroy(idBorrar);
+                
+                actualizarTablaResultados();
+                actualizarDesplegableTarjetas();
+            } catch (IllegalOrphanException ex) {
+                JOptionPane.showMessageDialog(rootPane, "cliente referenciado en factura");
+            } catch (NonexistentEntityException ex) {
+                Logger.getLogger(VentanaAñadirClientes.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
-
-        actualizarTablaResultados();
 
     }//GEN-LAST:event_BotonEliminarActionPerformed
 
@@ -491,8 +500,11 @@ public class VentanaAñadirClientes extends javax.swing.JFrame {
         // TODO add your handling code here:
         // obtener la fila que esta seleccionada
         int fila = TablaResultadosClientes.getSelectedRow();
-
-        // obtener el id del cliente a actualizar
+        
+        if (fila < 0) {
+            JOptionPane.showMessageDialog(rootPane, "No hay nada seleccionado");
+        }else{
+            // obtener el id del cliente a actualizar
         int id = Integer.parseInt(TablaResultadosClientes.getValueAt(fila, 0).toString());
 
         // buscar el cliente por id para obtener el cliente a modificar
@@ -517,15 +529,13 @@ public class VentanaAñadirClientes extends javax.swing.JFrame {
 
                     // verificar el apellido
                     if (verificarApellido(TablaResultadosClientes.getValueAt(fila, 4).toString())) {
-                        
+
                         // si todos los datos estan correctos, modificar los datos del cliente a editar
-                        
                         // establecer los datos 
                         clienteModificar.setNifCliente(TablaResultadosClientes.getValueAt(fila, 2).toString());
                         clienteModificar.setNombrecliente(TablaResultadosClientes.getValueAt(fila, 3).toString());
                         clienteModificar.setApellidosCliente(TablaResultadosClientes.getValueAt(fila, 4).toString());
-                        
-                       
+
                         try {
                             // modificar al cliente
                             controladorClientes.edit(clienteModificar);
@@ -553,9 +563,12 @@ public class VentanaAñadirClientes extends javax.swing.JFrame {
         } else {
             JOptionPane.showMessageDialog(rootPane, "NIF no valido o existente");
         }
-        
+
         // actualizar resultados
         actualizarTablaResultados();
+        }
+        
+        
 
     }//GEN-LAST:event_BotonModificarActionPerformed
 

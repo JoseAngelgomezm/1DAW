@@ -6,6 +6,7 @@ package entities;
 
 import java.io.Serializable;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -25,6 +26,7 @@ import javax.persistence.Table;
 @NamedQueries({
     @NamedQuery(name = "TarjetasBancarias.findAll", query = "SELECT t FROM TarjetasBancarias t"),
     @NamedQuery(name = "TarjetasBancarias.findByIdtarjetaBancaria", query = "SELECT t FROM TarjetasBancarias t WHERE t.idtarjetaBancaria = :idtarjetaBancaria"),
+    @NamedQuery(name = "TarjetasBancarias.deleteAll", query = "DELETE FROM TarjetasBancarias"),
     @NamedQuery(name = "TarjetasBancarias.findByNumeroTarjeta", query = "SELECT t FROM TarjetasBancarias t WHERE t.numeroTarjeta = :numeroTarjeta")})
 public class TarjetasBancarias implements Serializable {
 
@@ -36,7 +38,7 @@ public class TarjetasBancarias implements Serializable {
     private Integer idtarjetaBancaria;
     @Column(name = "numero_tarjeta")
     private String numeroTarjeta;
-    @OneToOne(mappedBy = "idtarjetaBancaria")
+    @OneToOne(mappedBy = "idtarjetaBancaria", cascade = CascadeType.ALL, orphanRemoval = true)
     private Clientes cliente;
 
     public TarjetasBancarias() {
